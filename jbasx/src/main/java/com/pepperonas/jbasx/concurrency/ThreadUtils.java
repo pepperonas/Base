@@ -32,7 +32,7 @@ public class ThreadUtils {
                 try {
                     l.onBaseThreadSuccess(func.call());
                 } catch (Exception e) {
-                    l.onBaseThreadFailed("Background calculation failed: " + e);
+                    l.onBaseThreadFailed(e.getMessage());
                 }
             }
         }).start();

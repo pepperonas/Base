@@ -3,10 +3,11 @@ package com.pepperonas.testlib;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.pepperonas.andbasx.interfaces.LoaderTaskListener;
 import com.pepperonas.jbasx.interfaces.ThreadListener;
 import com.pepperonas.jbasx.log.Log;
 
-public class MainActivity extends AppCompatActivity implements ThreadListener {
+public class MainActivity extends AppCompatActivity implements ThreadListener, LoaderTaskListener {
 
     private static final String TAG = "MainActivity";
     public static final String SOURCE_NAME = "gapps.zip";
@@ -17,12 +18,16 @@ public class MainActivity extends AppCompatActivity implements ThreadListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        new com.pepperonas.andbasx.concurrency.LoaderTask.Builder(this, this, "https://www.google.com").launch();
+
         //        testConcurrency();
         //        testAndroidStorageUtils();
         //        AndroidStorageUtils.getAppsExternalFileDir()
         //        testBitmapUtils();
         //        testNetworkBaseUtils();
     }
+
 
     private void testConcurrency() {
 
@@ -130,5 +135,17 @@ public class MainActivity extends AppCompatActivity implements ThreadListener {
     @Override
     public void onBaseThreadFailed(String s) {
         Log.d(TAG, "onBaseThreadFailed  " + s);
+    }
+
+
+    @Override
+    public void onLoaderTaskSuccess(String s) {
+        Log.d(TAG, "onLoaderTaskSuccess  " + s);
+    }
+
+
+    @Override
+    public void onLoaderTaskFailed(String s) {
+        Log.d(TAG, "onLoaderTaskFailed  " + "");
     }
 }
