@@ -1,0 +1,64 @@
+buildscript {
+
+    repositories {
+        jcenter()
+    }
+}
+
+apply plugin: 'com.android.library'
+
+
+repositories {
+    jcenter()
+}
+
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+    useLibrary 'org.apache.http.legacy'
+
+    defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion 23
+        versionCode 10
+        versionName "0.1.1"
+        project.archivesBaseName = "andcommon"
+        project.version = android.defaultConfig.versionName
+    }
+
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_6
+        targetCompatibility JavaVersion.VERSION_1_6
+    }
+
+
+    buildTypes {
+        all {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+    }
+    libraryVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.aar')) {
+                def fileName = "${archivesBaseName}-${version}.aar"
+                output.outputFile = new File(outputFile.parent, fileName)
+
+//                output.outputFile = new File("/home/pepperonas/IdeaProjects/Libraries/Base/test_lib/libs", fileName)
+//                output.outputFile = new File("/home/pepperonas/IdeaProjects/Libraries/Base/sample_splashview/libs", fileName)
+//                output.outputFile = new File("/home/pepperonas/IdeaProjects/Libraries/Base/sample_recordbreaker/libs", fileName)
+            }
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:23.1.0'
+    compile project(':jbasx')
+    compile files('libs/jbasx-0.1.1.jar')
+}

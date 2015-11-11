@@ -1,0 +1,9 @@
+apply plugin: 'java'
+
+group = 'com.pepperonas'
+version = '0.1.1'
+libsDirName = '../../andcommon/libs'
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+}
