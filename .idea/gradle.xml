@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/andcommon" />
             <option value="$PROJECT_DIR$/jbasx" />
+            <option value="$PROJECT_DIR$/sample_asynctask" />
             <option value="$PROJECT_DIR$/sample_fragment" />
             <option value="$PROJECT_DIR$/sample_recordbreaker" />
             <option value="$PROJECT_DIR$/sample_splashview" />
