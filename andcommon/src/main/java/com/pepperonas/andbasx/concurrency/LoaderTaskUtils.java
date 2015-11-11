@@ -22,14 +22,14 @@ import java.io.InputStreamReader;
 /**
  * @author Martin Pfeffer (pepperonas)
  */
-public class LoaderTask extends AsyncTask<String, String, String> {
+public class LoaderTaskUtils extends AsyncTask<String, String, String> {
 
-    private static final String TAG = "LoaderTask";
+    private static final String TAG = "LoaderTaskUtils";
 
     Builder builder;
 
 
-    public LoaderTask(Builder builder) {
+    public LoaderTaskUtils(Builder builder) {
         this.builder = builder;
         this.execute(this.builder.url);
     }
@@ -125,7 +125,7 @@ public class LoaderTask extends AsyncTask<String, String, String> {
 
 
         public void launch() {
-            new LoaderTask(this);
+            new LoaderTaskUtils(this);
         }
 
     }

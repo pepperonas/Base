@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity implements ThreadListener, L
         setContentView(R.layout.activity_main);
 
 
-        new com.pepperonas.andbasx.concurrency.LoaderTask.Builder(this, this, "https://www.google.com").launch();
+        new com.pepperonas.andbasx.concurrency.LoaderTaskUtils.Builder(this, this, "https://www.google.com").launch();
 
         //        testConcurrency();
         //        testAndroidStorageUtils();
