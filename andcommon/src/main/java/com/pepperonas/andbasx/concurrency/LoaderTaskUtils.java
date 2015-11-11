@@ -6,18 +6,16 @@ import android.os.AsyncTask;
 
 import com.pepperonas.andbasx.AndBasx;
 import com.pepperonas.andbasx.interfaces.LoaderTaskListener;
-import com.pepperonas.jbasx.log.Log;
+import com.pepperonas.jbasx.io.IoUtils;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.entity.BufferedHttpEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * @author Martin Pfeffer (pepperonas)
@@ -26,7 +24,21 @@ public class LoaderTaskUtils extends AsyncTask<String, String, String> {
 
     private static final String TAG = "LoaderTaskUtils";
 
-    Builder builder;
+
+    public enum Action {
+        GET_TEXT(0),
+        STORE_FILE(10);
+
+        int i;
+
+
+        Action(int i) {
+            this.i = i;
+        }
+    }
+
+
+    private Builder builder;
 
 
     public LoaderTaskUtils(Builder builder) {
@@ -39,6 +51,10 @@ public class LoaderTaskUtils extends AsyncTask<String, String, String> {
     protected void onPreExecute() {
         super.onPreExecute();
         if (this.builder.progressDialog != null) {
+            if (this.builder.action == Action.GET_TEXT) {
+                this.builder.progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                this.builder.progressDialog.setIndeterminate(true);
+            }
             this.builder.progressDialog.show();
         }
     }
@@ -46,34 +62,49 @@ public class LoaderTaskUtils extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... params) {
+        URL url;
 
-        StringBuilder result = new StringBuilder();
-
-        DefaultHttpClient httpClient = new DefaultHttpClient();
-
-        HttpGet httpPost = new HttpGet(params[0]);
-        HttpResponse response;
         try {
-            response = httpClient.execute(httpPost);
-            HttpEntity he = response.getEntity();
+            int count;
 
-            BufferedHttpEntity buf = new BufferedHttpEntity(he);
-            InputStream is = buf.getContent();
-            BufferedReader r = new BufferedReader(new InputStreamReader(is));
-            String line;
-            while ((line = r.readLine()) != null) {
-                result.append(line + "\n");
+            url = new URL(params[0]);
+
+            URLConnection urlConnection = url.openConnection();
+            urlConnection.connect();
+
+            int length = urlConnection.getContentLength();
+            InputStream is = new BufferedInputStream(url.openStream(), 8192);
+
+            if (builder.action == Action.STORE_FILE) {
+
+                OutputStream output = new FileOutputStream(new File(builder.dirPath, builder.fileName + builder.extension));
+                byte data[] = new byte[1024];
+
+                long total = 0;
+
+                while ((count = is.read(data)) != -1) {
+                    total += count;
+                    publishProgress("" + (int) ((total * 100) / length));
+                    output.write(data, 0, count);
+                }
+
+                output.flush();
+                output.close();
+
+                builder.loaderTaskListener.onLoaderTaskSuccess(builder.action, "File successfully stored.");
+                return "";
+            } else if (builder.action == Action.GET_TEXT) {
+                String text = IoUtils.convertStreamToString(is);
+                builder.loaderTaskListener.onLoaderTaskSuccess(builder.action, text);
+                return "";
             }
 
-            if (AndBasx.mLog == AndBasx.LogMode.ALL) {
-                Log.i(TAG, "Content load from web:\n" + result);
-            }
-
+            is.close();
         } catch (IOException e) {
-            builder.loaderTaskListener.onLoaderTaskFailed(e.getMessage());
+            builder.loaderTaskListener.onLoaderTaskFailed(builder.action, "An error occurred.");
+            e.printStackTrace();
         }
-        builder.loaderTaskListener.onLoaderTaskSuccess(result.toString());
-        return result.toString();
+        return "";
     }
 
 
@@ -102,6 +133,10 @@ public class LoaderTaskUtils extends AsyncTask<String, String, String> {
         private final Context ctx;
         private final LoaderTaskListener loaderTaskListener;
         private final String url;
+        private Action action = Action.GET_TEXT;
+        public String dirPath;
+        public String fileName;
+        public String extension;
         private ProgressDialog progressDialog;
 
 
@@ -112,14 +147,32 @@ public class LoaderTaskUtils extends AsyncTask<String, String, String> {
         }
 
 
-        public Builder showProgressDialog(String title, String message, boolean setIndeterminate, int max) {
+        public Builder storeContent(Action action, String dirPath, String fileName, String extension) {
+            this.action = action;
+            this.dirPath = dirPath;
+            this.fileName = fileName;
+            if (!extension.contains(".")) {
+                extension = "." + extension;
+            }
+            this.extension = extension;
+            return this;
+        }
+
+
+        public Builder showProgressDialog(int stringIdTitle, int stringIdMessage) {
+            showProgressDialog(AndBasx.getContext().getString(stringIdTitle),
+                               AndBasx.getContext().getString(stringIdMessage));
+            return this;
+        }
+
+
+        public Builder showProgressDialog(String title, String message) {
             progressDialog = new ProgressDialog(ctx);
             progressDialog.setTitle(title);
             progressDialog.setMessage(message);
             progressDialog.setProgress(0);
-            progressDialog.setMax(max);
+            progressDialog.setMax(100);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            progressDialog.setIndeterminate(setIndeterminate);
             return this;
         }
 

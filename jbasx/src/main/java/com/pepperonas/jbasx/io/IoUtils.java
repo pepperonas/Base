@@ -232,7 +232,7 @@ public class IoUtils {
     }
 
 
-    public static String toString(InputStream inputStream) {
+    public static String convertStreamToString(InputStream inputStream) {
         java.util.Scanner s = new java.util.Scanner(inputStream).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
     }

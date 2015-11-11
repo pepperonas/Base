@@ -3,11 +3,13 @@ package com.pepperonas.testlib;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.pepperonas.andbasx.base.AndroidStorageUtils;
+import com.pepperonas.andbasx.concurrency.LoaderTaskUtils;
 import com.pepperonas.andbasx.interfaces.LoaderTaskListener;
 import com.pepperonas.jbasx.interfaces.ThreadListener;
 import com.pepperonas.jbasx.log.Log;
 
-public class MainActivity extends AppCompatActivity implements ThreadListener, LoaderTaskListener {
+public class MainActivity extends AppCompatActivity implements ThreadListener {
 
     private static final String TAG = "MainActivity";
     public static final String SOURCE_NAME = "gapps.zip";
@@ -19,7 +21,38 @@ public class MainActivity extends AppCompatActivity implements ThreadListener, L
         setContentView(R.layout.activity_main);
 
 
-        new com.pepperonas.andbasx.concurrency.LoaderTaskUtils.Builder(this, this, "https://www.google.com").launch();
+        new LoaderTaskUtils.Builder(this, new LoaderTaskListener() {
+            @Override
+            public void onLoaderTaskSuccess(LoaderTaskUtils.Action action, String s) {
+                Log.d(TAG, "onLoaderTaskSuccess  " + s);
+            }
+
+
+            @Override
+            public void onLoaderTaskFailed(LoaderTaskUtils.Action action, String s) {
+                Log.e(TAG, "onLoaderTaskFailed " + s);
+            }
+        }, "https://www.google.com").launch();
+
+
+        new LoaderTaskUtils.Builder(this, new LoaderTaskListener() {
+            @Override
+            public void onLoaderTaskSuccess(LoaderTaskUtils.Action action, String s) {
+
+            }
+
+
+            @Override
+            public void onLoaderTaskFailed(LoaderTaskUtils.Action action, String s) {
+
+            }
+        }, "http://orig02.deviantart.net/5229/f/2010/011/8/a/sombrero_galaxy_by_bubimandril.jpg")
+                .storeContent(LoaderTaskUtils.Action.STORE_FILE,
+                              AndroidStorageUtils.getExternalRootDir(),
+                              "SombreroGalaxy", ".png")
+                .showProgressDialog("Downloading", "The Sombrero Galaxy will reach your phone soon.")
+                .launch();
+
 
         //        testConcurrency();
         //        testAndroidStorageUtils();
@@ -137,15 +170,4 @@ public class MainActivity extends AppCompatActivity implements ThreadListener, L
         Log.d(TAG, "onBaseThreadFailed  " + s);
     }
 
-
-    @Override
-    public void onLoaderTaskSuccess(String s) {
-        Log.d(TAG, "onLoaderTaskSuccess  " + s);
-    }
-
-
-    @Override
-    public void onLoaderTaskFailed(String s) {
-        Log.d(TAG, "onLoaderTaskFailed  " + "");
-    }
 }
