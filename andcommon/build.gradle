@@ -48,9 +48,9 @@ android {
                 def fileName = "${archivesBaseName}-${version}.aar"
                 output.outputFile = new File(outputFile.parent, fileName)
 
-                output.outputFile = new File("/home/pepperonas/IdeaProjects/Libraries/Base/test_lib/libs", fileName)
+//                output.outputFile = new File("/home/pepperonas/IdeaProjects/Libraries/Base/test_lib/libs", fileName)
 //                output.outputFile = new File("/home/pepperonas/IdeaProjects/Libraries/Base/sample_splashview/libs", fileName)
-                output.outputFile = new File("/home/pepperonas/IdeaProjects/Libraries/Base/sample_recordbreaker/libs", fileName)
+//                output.outputFile = new File("/home/pepperonas/IdeaProjects/Libraries/Base/sample_recordbreaker/libs", fileName)
             }
         }
     }

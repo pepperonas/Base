@@ -1,4 +1,4 @@
-package com.pepperonas.samplesplashview;
+package com.pepperonas.andbasx.animation;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,7 +15,10 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 
+import com.pepperonas.andbasx.AndBasx;
+import com.pepperonas.andbasx.system.AppUtils;
 import com.pepperonas.andbasx.system.DeviceUtils;
+import com.pepperonas.andcommon.R;
 
 /**
  * @author Martin Pfeffer (pepperonas)
@@ -27,6 +30,8 @@ public class SplashView extends View {
     private int radius = 0;
     private int rotate = 0;
     private Bitmap icon;
+    private final int color = R.color.light_blue_500;
+    private final int animationColor = R.color.orange_A400;
     private final Matrix matrix;
     private final int textColor;
     private final int textSize;
@@ -46,7 +51,7 @@ public class SplashView extends View {
     public SplashView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
-        setBackgroundColor(getResources().getColor(R.color.indigo_800));
+        setBackgroundColor(getResources().getColor(this.color));
         density = getResources().getDisplayMetrics().density;
         textColor = getResources().getColor(R.color.white);
         textSize = DeviceUtils.dp2px(32);
@@ -59,9 +64,8 @@ public class SplashView extends View {
 
         matrix = new Matrix();
         if (icon == null) {
-            icon = BitmapFactory.decodeResource(getResources(), com.pepperonas.andcommon.R.drawable.ic_test);
+            icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_test);
         }
-
 
         new Thread(new Runnable() {
             @Override
@@ -89,7 +93,9 @@ public class SplashView extends View {
 
 
     public void finish() {
-        mPaintCircle.setColor(getResources().getColor(R.color.orange_A200));
+
+        mPaintCircle.setColor(AndBasx.getContext().getResources().getColor(this.animationColor));
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -143,11 +149,12 @@ public class SplashView extends View {
         float textHeight = textPaint.descent() - textPaint.ascent();
         float textOffset = (textHeight / 2) - textPaint.descent();
 
-        canvas.drawText("xD", x / 2, y - textOffset - y / 4, textPaint);
+        canvas.drawText(AppUtils.getAppName(), x / 2, y - textOffset - y / 4, textPaint);
     }
 
 
     public void setIcon(Bitmap bitmap) {
         this.icon = bitmap;
     }
+
 }
