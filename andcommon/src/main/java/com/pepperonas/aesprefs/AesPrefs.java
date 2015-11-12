@@ -50,33 +50,33 @@ public class AesPrefs {
     private static long mDuration = 0;
 
 
-    public enum Mode {
+    public enum LogMode {
         NONE(-1), DEFAULT(0), GET(1), SET(2), ALL(3);
 
         private final int mode;
 
 
-        Mode(int i) {this.mode = i;}
+        LogMode(int i) {this.mode = i;}
     }
 
 
-    private static Mode mLog = Mode.DEFAULT;
+    private static LogMode mLog = LogMode.DEFAULT;
 
 
-    public static void logMode(Mode mode) {
-        mLog = mode;
+    public static void logMode(LogMode logMode) {
+        mLog = logMode;
     }
 
 
     public static void init(Context context, String filename, String password,
-                            Mode mode) {
-        mLog = mode;
+                            LogMode logMode) {
+        mLog = logMode;
         init(context, filename, password);
     }
 
 
     public static void init(Context context, String filename, String password) {
-        if (mLog != Mode.NONE) {
+        if (mLog != LogMode.NONE) {
             Log.i(TAG, "Initializing AesPrefs...");
         }
 
@@ -89,7 +89,7 @@ public class AesPrefs {
 
         if (sp.contains("aes_iv")) {
 
-            if (mLog != Mode.NONE) {
+            if (mLog != LogMode.NONE) {
                 Log.i(TAG, "IV found {" + mIv + "}");
             }
 
@@ -99,7 +99,7 @@ public class AesPrefs {
         } else {
             // this IV will be used to keep track of your preference keys.
             // preference values have their own IVs.
-            if (mLog != Mode.NONE) {
+            if (mLog != LogMode.NONE) {
                 Log.w(TAG, "New IV set {" + mIv + "}");
             }
 
@@ -167,7 +167,7 @@ public class AesPrefs {
           .putLong(encryptedKey + TAIL, iv)
           .apply();
 
-        if (mLog == Mode.ALL || mLog == Mode.SET) {
+        if (mLog == LogMode.ALL || mLog == LogMode.SET) {
             Log.d(TAG, "put " + key + " <- " + value);
         }
 
@@ -185,7 +185,7 @@ public class AesPrefs {
         long iv = sp.getLong(_key, 0);
         key = _key.substring(0, _key.length() - 1);
 
-        if (!sp.contains(key) && mLog != Mode.NONE) {
+        if (!sp.contains(key) && mLog != LogMode.NONE) {
             Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
                        "Return value: " + (defaultValue.isEmpty() ? "\"\"" : defaultValue));
             return defaultValue;
@@ -194,7 +194,7 @@ public class AesPrefs {
         try {
             mDuration = System.currentTimeMillis() - start;
             String value = Crypt.decrypt(mPassword, sp.getString(key, ""), iv);
-            if (mLog == Mode.ALL || mLog == Mode.GET) {
+            if (mLog == LogMode.ALL || mLog == LogMode.GET) {
                 Log.d(TAG, "get  " + param + " -> " + value);
             }
             return value;
@@ -219,7 +219,7 @@ public class AesPrefs {
           .putLong(encryptedKey + TAIL, iv)
           .apply();
 
-        if (mLog == Mode.ALL || mLog == Mode.SET) {
+        if (mLog == LogMode.ALL || mLog == LogMode.SET) {
             Log.d(TAG, "putInt " + key + " <- " + value);
         }
 
@@ -237,7 +237,7 @@ public class AesPrefs {
         long iv = sp.getLong(_key, 0);
         key = _key.substring(0, _key.length() - 1);
 
-        if (!sp.contains(key) && mLog != Mode.NONE) {
+        if (!sp.contains(key) && mLog != LogMode.NONE) {
             Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
                        "Return value: " + defaultValue);
             return defaultValue;
@@ -246,7 +246,7 @@ public class AesPrefs {
         try {
             mDuration = System.currentTimeMillis() - start;
             int value = Integer.parseInt(Crypt.decrypt(mPassword, sp.getString(key, ""), iv));
-            if (mLog == Mode.ALL || mLog == Mode.GET) {
+            if (mLog == LogMode.ALL || mLog == LogMode.GET) {
                 Log.d(TAG, "getInt  " + param + " -> " + value);
             }
             return value;
@@ -271,7 +271,7 @@ public class AesPrefs {
           .putLong(encryptedKey + TAIL, iv)
           .apply();
 
-        if (mLog == Mode.ALL || mLog == Mode.SET) {
+        if (mLog == LogMode.ALL || mLog == LogMode.SET) {
             Log.d(TAG, "putLong " + key + " <- " + value);
         }
 
@@ -289,7 +289,7 @@ public class AesPrefs {
         long iv = sp.getLong(_key, 0);
         key = _key.substring(0, _key.length() - 1);
 
-        if (!sp.contains(key) && mLog != Mode.NONE) {
+        if (!sp.contains(key) && mLog != LogMode.NONE) {
             Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
                        "Return value: " + defaultValue);
             return defaultValue;
@@ -298,7 +298,7 @@ public class AesPrefs {
         try {
             mDuration = System.currentTimeMillis() - start;
             long value = Long.parseLong(Crypt.decrypt(mPassword, sp.getString(key, ""), iv));
-            if (mLog == Mode.ALL || mLog == Mode.GET) {
+            if (mLog == LogMode.ALL || mLog == LogMode.GET) {
                 Log.d(TAG, "getLong  " + param + " -> " + value);
             }
             return value;
@@ -323,7 +323,7 @@ public class AesPrefs {
           .putLong(encryptedKey + TAIL, iv)
           .apply();
 
-        if (mLog == Mode.ALL || mLog == Mode.SET) {
+        if (mLog == LogMode.ALL || mLog == LogMode.SET) {
             Log.d(TAG, "putDouble " + key + " <- " + value);
         }
 
@@ -341,7 +341,7 @@ public class AesPrefs {
         long iv = sp.getLong(_key, 0);
         key = _key.substring(0, _key.length() - 1);
 
-        if (!sp.contains(key) && mLog != Mode.NONE) {
+        if (!sp.contains(key) && mLog != LogMode.NONE) {
             Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
                        "Return value: " + defaultValue);
             return defaultValue;
@@ -350,7 +350,7 @@ public class AesPrefs {
         try {
             mDuration = System.currentTimeMillis() - start;
             double value = Double.parseDouble(Crypt.decrypt(mPassword, sp.getString(key, ""), iv));
-            if (mLog == Mode.ALL || mLog == Mode.GET) {
+            if (mLog == LogMode.ALL || mLog == LogMode.GET) {
                 Log.d(TAG, "getDouble  " + param + " -> " + value);
             }
             return value;
@@ -375,7 +375,7 @@ public class AesPrefs {
           .putLong(encryptedKey + TAIL, iv)
           .apply();
 
-        if (mLog == Mode.ALL || mLog == Mode.SET) {
+        if (mLog == LogMode.ALL || mLog == LogMode.SET) {
             Log.d(TAG, "putFloat " + key + " <- " + value);
         }
 
@@ -393,7 +393,7 @@ public class AesPrefs {
         long iv = sp.getLong(_key, 0);
         key = _key.substring(0, _key.length() - 1);
 
-        if (!sp.contains(key) && mLog != Mode.NONE) {
+        if (!sp.contains(key) && mLog != LogMode.NONE) {
             Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
                        "Return value: " + defaultValue);
             return defaultValue;
@@ -402,7 +402,7 @@ public class AesPrefs {
         try {
             mDuration = System.currentTimeMillis() - start;
             float value = Float.parseFloat(Crypt.decrypt(mPassword, sp.getString(key, ""), iv));
-            if (mLog == Mode.ALL || mLog == Mode.GET) {
+            if (mLog == LogMode.ALL || mLog == LogMode.GET) {
                 Log.d(TAG, "getFloat  " + param + " -> " + value);
             }
             return value;
@@ -427,7 +427,7 @@ public class AesPrefs {
           .putLong(encryptedKey + TAIL, iv)
           .apply();
 
-        if (mLog == Mode.ALL || mLog == Mode.SET) {
+        if (mLog == LogMode.ALL || mLog == LogMode.SET) {
             Log.d(TAG, "putBoolean " + key + " <- " + value);
         }
 
@@ -445,7 +445,7 @@ public class AesPrefs {
         long iv = sp.getLong(_key, 0);
         key = _key.substring(0, _key.length() - 1);
 
-        if (!sp.contains(key) && mLog != Mode.NONE) {
+        if (!sp.contains(key) && mLog != LogMode.NONE) {
             Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
                        "Return value: " + defaultValue);
             return defaultValue;
@@ -454,7 +454,7 @@ public class AesPrefs {
         try {
             mDuration = System.currentTimeMillis() - start;
             boolean value = Boolean.parseBoolean(Crypt.decrypt(mPassword, sp.getString(key, ""), iv));
-            if (mLog == Mode.ALL || mLog == Mode.GET) {
+            if (mLog == LogMode.ALL || mLog == LogMode.GET) {
                 Log.d(TAG, "getBoolean  " + param + " -> " + value);
             }
             return value;
@@ -498,7 +498,7 @@ public class AesPrefs {
         key = _key.substring(0, _key.length() - 1);
         int size = sp.getInt(key + "_size", 0);
 
-        if (!sp.contains(key) && mLog != Mode.NONE) {
+        if (!sp.contains(key) && mLog != LogMode.NONE) {
             Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
                        "Return value: " + "new ArrayList<String>(0)");
             return new ArrayList<String>();
