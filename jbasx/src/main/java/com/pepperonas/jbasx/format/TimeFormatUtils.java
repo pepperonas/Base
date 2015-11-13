@@ -52,7 +52,7 @@ public class TimeFormatUtils {
     }
 
 
-    public static final String DEFAULT_FORMAT = "MM-dd HH:mm:ss";
+    public static final String DEFAULT_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     public static final String UTC_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 

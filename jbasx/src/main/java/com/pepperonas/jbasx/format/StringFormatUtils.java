@@ -39,13 +39,25 @@ public class StringFormatUtils {
 
 
     public static String formatDecimal(double value, int precision) {
-        DecimalFormat df = getDecimalFormat(precision);
+        DecimalFormat df = getDecimalFormat(precision, "#");
         return df.format(value);
     }
 
 
     public static String formatDecimal(String value, int precision) {
-        DecimalFormat df = getDecimalFormat(precision);
+        DecimalFormat df = getDecimalFormat(precision, "#");
+        return df.format(value);
+    }
+
+
+    public static String formatDecimalForcePrecision(double value, int precision) {
+        DecimalFormat df = getDecimalFormat(precision, "0");
+        return df.format(value);
+    }
+
+
+    public static String formatDecimalForcePrecision(String value, int precision) {
+        DecimalFormat df = getDecimalFormat(precision, "0");
         return df.format(value);
     }
 
@@ -107,9 +119,9 @@ public class StringFormatUtils {
     }
 
 
-    private static DecimalFormat getDecimalFormat(int precision) {
-        String s = "#,";
-        for (int i = 0; i < precision; i++) s += "#";
+    private static DecimalFormat getDecimalFormat(int precision, String force) {
+        String s = force + ".";
+        for (int i = 0; i < precision; i++) s += force;
         return new DecimalFormat(s);
     }
 

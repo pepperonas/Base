@@ -372,4 +372,22 @@ public class SystemUtils {
         }
     }
 
+
+    /**
+     * Start an intent to share text information.
+     *
+     * @param receiver   The addresses which should receive the message.
+     * @param intentInfo The intent's description.
+     * @param subject    The content's subject.
+     * @param msg        The content's message.
+     */
+    public static void sendShareTextIntent(Context ctx, String[] receiver, String intentInfo, String subject, String msg) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("message/rfc822");
+        intent.putExtra(Intent.EXTRA_EMAIL, receiver);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_TEXT, msg);
+        ctx.startActivity(Intent.createChooser(intent, intentInfo));
+    }
+
 }

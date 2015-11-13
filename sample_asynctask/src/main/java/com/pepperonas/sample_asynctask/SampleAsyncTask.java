@@ -35,18 +35,16 @@ public class SampleAsyncTask extends AsyncTask<String, String, String> {
         URL url;
 
         String text = "";
-
+        InputStream is;
         try {
-
             url = new URL(params[0]);
             URLConnection urlConnection = url.openConnection();
             urlConnection.connect();
 
-            InputStream is = new BufferedInputStream(url.openStream(), 8192);
+            is = new BufferedInputStream(url.openStream(), 8192);
             text = convertStreamToString(is);
 
             is.close();
-
         } catch (IOException e) {
             listener.onFailed("An error occurred.");
             e.printStackTrace();
