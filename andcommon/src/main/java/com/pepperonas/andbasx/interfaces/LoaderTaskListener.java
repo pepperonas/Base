@@ -7,8 +7,8 @@ import com.pepperonas.andbasx.concurrency.LoaderTaskUtils;
  */
 public interface LoaderTaskListener {
 
-    public void onLoaderTaskSuccess(LoaderTaskUtils.Action action, String msg);
+    void onLoaderTaskSuccess(LoaderTaskUtils.Action action, String msg);
 
-    public void onLoaderTaskFailed(LoaderTaskUtils.Action action, String msg);
+    void onLoaderTaskFailed(LoaderTaskUtils.Action action, String msg);
 
 }

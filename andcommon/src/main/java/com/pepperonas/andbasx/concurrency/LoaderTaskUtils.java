@@ -71,6 +71,8 @@ public class LoaderTaskUtils extends AsyncTask<String, String, String> {
 
             URLConnection urlConnection = url.openConnection();
             urlConnection.connect();
+            urlConnection.setReadTimeout(5000);
+            urlConnection.setConnectTimeout(5000);
 
             int length = urlConnection.getContentLength();
             InputStream is = new BufferedInputStream(url.openStream(), 8192);

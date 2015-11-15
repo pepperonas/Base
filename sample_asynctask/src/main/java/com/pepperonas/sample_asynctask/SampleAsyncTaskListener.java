@@ -5,8 +5,8 @@ package com.pepperonas.sample_asynctask;
  */
 public interface SampleAsyncTaskListener {
 
-    public void onSuccess(String s);
+    void onSuccess(String s);
 
-    public void onFailed(String s);
+    void onFailed(String s);
 
 }

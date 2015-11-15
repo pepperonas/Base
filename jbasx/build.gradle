@@ -1,8 +1,15 @@
 apply plugin: 'java'
 
+tasks.withType(JavaCompile) {
+    sourceCompatibility = "1.7"
+    targetCompatibility = "1.7"
+}
+
+
 group = 'com.pepperonas'
 version = '0.1.1'
 libsDirName = '../../andcommon/libs'
+
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')

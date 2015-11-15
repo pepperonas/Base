@@ -5,8 +5,8 @@ package com.pepperonas.jbasx.interfaces;
  */
 public interface ThreadListener {
 
-    public void onBaseThreadSuccess(String msg);
+    void onBaseThreadSuccess(String msg);
 
-    public void onBaseThreadFailed(String msg);
+    void onBaseThreadFailed(String msg);
 
 }

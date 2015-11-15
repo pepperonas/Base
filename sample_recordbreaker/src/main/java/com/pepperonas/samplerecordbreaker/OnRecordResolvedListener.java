@@ -5,8 +5,8 @@ package com.pepperonas.samplerecordbreaker;
  */
 public interface OnRecordResolvedListener {
 
-    public void onRecordBreakerSuccess(RecordBreaker.Status success, String... params);
+    void onRecordBreakerSuccess(RecordBreaker.Status success, String... params);
 
-    public void onRecordBreakerFailed(RecordBreaker.Status error);
+    void onRecordBreakerFailed(RecordBreaker.Status error);
 
 }

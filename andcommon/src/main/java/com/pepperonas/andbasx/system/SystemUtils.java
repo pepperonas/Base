@@ -269,7 +269,7 @@ public class SystemUtils {
     }
 
 
-    private static void runRootCmd(String cmd) {
+    public static void runRootCmd(String cmd) {
         if (TextUtils.isEmpty(cmd)) {
             return;
         }

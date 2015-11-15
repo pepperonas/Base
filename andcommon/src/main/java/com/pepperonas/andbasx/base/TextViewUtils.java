@@ -27,7 +27,7 @@ import com.pepperonas.jbasx.div.MaterialColor;
  */
 public class TextViewUtils {
 
-    public static enum TextSize {
+    public enum TextSize {
         SMALL("small"), NORMAL("normal"), LARGE("big");
 
         String textSize;

@@ -1,6 +1,7 @@
 package com.pepperonas.jbasx.io;
 
 import com.pepperonas.jbasx.Jbasx;
+import com.pepperonas.jbasx.log.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -195,11 +196,19 @@ public class IoUtils {
 
     public static void write(File output, byte[] bytes) {
         try {
-            FileOutputStream fos = new FileOutputStream(output.getAbsolutePath());
-            fos.write(bytes);
-            fos.close();
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(output.getAbsolutePath());
+                fos.write(bytes);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (fos != null) {
+                    fos.close();
+                }
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "write Error: " + e);
         }
     }
 

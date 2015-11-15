@@ -18,6 +18,11 @@ android {
     buildToolsVersion "23.0.2"
     useLibrary 'org.apache.http.legacy'
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 23
@@ -27,19 +32,11 @@ android {
         project.version = android.defaultConfig.versionName
     }
 
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_6
-        targetCompatibility JavaVersion.VERSION_1_6
-    }
-
-
     buildTypes {
         all {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-
     }
     libraryVariants.all { variant ->
         variant.outputs.each { output ->
@@ -55,6 +52,7 @@ android {
         }
     }
 }
+
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
