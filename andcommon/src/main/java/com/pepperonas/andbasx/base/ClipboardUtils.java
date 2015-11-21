@@ -29,7 +29,7 @@ public class ClipboardUtils {
 
 
     /**
-     * Copies text to the clipboard.
+     * Copy text to the clipboard.
      *
      * @param text The text to be copied.
      */
@@ -42,7 +42,7 @@ public class ClipboardUtils {
 
 
     /**
-     * Returns text from the clipboard.
+     * Retrieve text from the clipboard.
      *
      * @return The text which is stored in the clipboard.
      */

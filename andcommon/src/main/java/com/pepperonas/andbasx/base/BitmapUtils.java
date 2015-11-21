@@ -45,10 +45,10 @@ public class BitmapUtils {
      * @param fileName The name of the file.
      * @return The created {@link File}.
      */
-    public static File storeInAppsDataDir(Bitmap bitmap, String dirName, String fileName) {
+    public static File storeInDataDirectory(Bitmap bitmap, String dirName, String fileName) {
         if (fileName.contains(".")) {
             fileName = fileName.split("\\.")[0];
-            Log.d(TAG, "storeInAppsDir - Replaced file extension: " + fileName);
+            Log.d(TAG, "storeInDataDirectory - Replaced file extension: " + fileName);
         }
 
         String dirPath = AndBasx.getContext().getFilesDir().getAbsolutePath() + File.separator + dirName;
@@ -56,7 +56,7 @@ public class BitmapUtils {
         if (!path.exists()) {
             boolean success = path.mkdirs();
             if (AndBasx.mLog == AndBasx.LogMode.ALL || AndBasx.mLog == AndBasx.LogMode.DEFAULT) {
-                Log.d(TAG, "saveInAppsDir - " + (success ? "File created." : "File not created."));
+                Log.d(TAG, "storeInDataDirectory - " + (success ? "File created." : "File not created."));
             }
         }
 

@@ -12,13 +12,13 @@ public class ThreadUtils {
     private static final String TAG = "ThreadUtils";
 
 
-    public static Void runDelayed(int delay, final Callable<Void> func) {
+    public static Void runDelayed(int delay, final Callable<Void> callable) {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 try {
-                    func.call();
+                    callable.call();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

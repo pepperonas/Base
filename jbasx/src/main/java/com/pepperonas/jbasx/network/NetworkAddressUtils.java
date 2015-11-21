@@ -39,6 +39,10 @@ public class NetworkAddressUtils {
 
     private static final String TAG = "NetworkAddressUtils";
 
+    public static int CLASS_C = 1;
+    public static int CLASS_B = 2;
+    public static int CLASS_A = 3;
+
 
     /**
      * Replace bytes from an IP-address.

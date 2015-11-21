@@ -14,11 +14,9 @@ public class MainActivity extends AppCompatActivity implements SampleAsyncTaskLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Alternative A:
         new SampleAsyncTask(this).execute("http://ws.spotify.com/lookup/1/?uri=spotify:track:6NmXV4o6bmp704aPGyTVVG");
 
 
-        // B macht das gleiche:
         new SampleAsyncTask(new SampleAsyncTaskListener() {
             @Override
             public void onSuccess(String s) {

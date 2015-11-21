@@ -30,8 +30,8 @@ public class MainActivity extends AppCompatActivity implements OnRecordResolvedL
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new SendRecord.Builder(MainActivity.this, "swef", "Alfred X")
-                        .setValue1("okokokok")
+                new SendRecord.Builder(MainActivity.this, "swef", "Alf")
+                        .setValue1("ok")
                         .setValue2("1")
                         .expiresInMinutes(1)
                         .send();

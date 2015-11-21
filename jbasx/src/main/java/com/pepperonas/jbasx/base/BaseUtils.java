@@ -60,7 +60,9 @@ public class BaseUtils {
 
 
     /**
-     * @return An unique ID.
+     * Retrieve an unique ID.
+     *
+     * @return The ID.
      */
     public static int generateUniqueId() {
         for (; ; ) {

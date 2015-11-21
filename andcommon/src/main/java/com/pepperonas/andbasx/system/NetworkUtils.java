@@ -50,6 +50,9 @@ public class NetworkUtils {
     }
 
 
+    /**
+     * Requires {@link android.Manifest.permission#ACCESS_WIFI_STATE}
+     */
     public static boolean isWifiConnected() {
         ConnectivityManager connManager = (ConnectivityManager)
                 AndBasx.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -57,6 +60,16 @@ public class NetworkUtils {
         NetworkInfo info = connManager
                 .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         return info.isConnected();
+    }
+
+
+    public final synchronized NetworkType getNetworkType() {
+        return type;
+    }
+
+
+    public final void setListener(NetworkListener l) {
+        listener = l;
     }
 
 
@@ -74,16 +87,6 @@ public class NetworkUtils {
             }
         };
         AndBasx.getContext().registerReceiver(receiver, filter);
-    }
-
-
-    public final synchronized NetworkType getNetworkType() {
-        return type;
-    }
-
-
-    public final void setListener(NetworkListener l) {
-        listener = l;
     }
 
 
@@ -128,13 +131,15 @@ public class NetworkUtils {
 
         if (type == ConnectivityManager.TYPE_MOBILE) {
             switch (subType) {
+                // 2G
                 case TelephonyManager.NETWORK_TYPE_GPRS:
                 case TelephonyManager.NETWORK_TYPE_EDGE:
                 case TelephonyManager.NETWORK_TYPE_CDMA:
                 case TelephonyManager.NETWORK_TYPE_1xRTT:
                 case TelephonyManager.NETWORK_TYPE_IDEN:
-                    return NetworkType.MOBILE_SLOW; // 2G
+                    return NetworkType.MOBILE_SLOW;
 
+                // 3G
                 case TelephonyManager.NETWORK_TYPE_UMTS:
                 case TelephonyManager.NETWORK_TYPE_EVDO_0:
                 case TelephonyManager.NETWORK_TYPE_EVDO_A:
@@ -144,10 +149,11 @@ public class NetworkUtils {
                 case TelephonyManager.NETWORK_TYPE_EVDO_B:
                 case TelephonyManager.NETWORK_TYPE_EHRPD:
                 case TelephonyManager.NETWORK_TYPE_HSPAP:
-                    return NetworkType.MOBILE_MIDDLE;// 3G
+                    return NetworkType.MOBILE_MIDDLE;
 
+                // 4G
                 case TelephonyManager.NETWORK_TYPE_LTE:
-                    return NetworkType.MOBILE_FAST; // 4G
+                    return NetworkType.MOBILE_FAST;
             }
         }
 

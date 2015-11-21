@@ -47,19 +47,23 @@ public class ZipUtils {
      * @return Whenever the operation was successful.
      */
     public static boolean zip(String filePath, String zipPath) {
+        FileInputStream fis = null;
+        BufferedInputStream bis = null;
+        ZipOutputStream zos = null;
+
         try {
             File file = new File(filePath);
-            BufferedInputStream bis;
             FileOutputStream fos = new FileOutputStream(zipPath);
-            ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(fos));
+            zos = new ZipOutputStream(new BufferedOutputStream(fos));
 
             if (file.isDirectory()) {
                 int baseLength = file.getParent().length() + 1;
                 zipFolder(zos, file, baseLength);
             } else {
                 byte data[] = new byte[BUFFER_SIZE];
-                FileInputStream fis = new FileInputStream(filePath);
+                fis = new FileInputStream(filePath);
                 bis = new BufferedInputStream(fis, BUFFER_SIZE);
+
                 String entryName = file.getName();
 
                 if (Jbasx.mLog == Jbasx.LogMode.ALL) {
@@ -73,10 +77,24 @@ public class ZipUtils {
                     zos.write(data, 0, count);
                 }
             }
-            zos.close();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        } finally {
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+                if (bis != null) {
+                    bis.close();
+                }
+                if (zos != null) {
+                    zos.flush();
+                    zos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return true;
     }
@@ -90,6 +108,10 @@ public class ZipUtils {
      * @return Whenever the operation was successful.
      */
     public static boolean unzip(String zipPath, String unzipDir) {
+        FileInputStream fis = null;
+        ZipInputStream zin = null;
+        FileOutputStream fos = null;
+
         if (!FileUtils.exists(zipPath)) {
             if (Jbasx.mLog == Jbasx.LogMode.ALL) {
                 Log.e(TAG, "Zip path does not exist!");
@@ -105,8 +127,8 @@ public class ZipUtils {
         }
 
         try {
-            FileInputStream fin = new FileInputStream(zipPath);
-            ZipInputStream zin = new ZipInputStream(fin);
+            fis = new FileInputStream(zipPath);
+            zin = new ZipInputStream(fis);
             ZipEntry ze;
             while ((ze = zin.getNextEntry()) != null) {
                 String entryName = ze.getName();
@@ -121,32 +143,50 @@ public class ZipUtils {
                     if (!FileUtils.create(entryPath, true)) {
                         continue;
                     }
-                    FileOutputStream fos = new FileOutputStream(entryPath);
+                    fos = new FileOutputStream(entryPath);
                     byte[] buffer = new byte[BUFFER_SIZE];
                     int len;
                     while ((len = zin.read(buffer)) != -1) {
                         fos.write(buffer, 0, len);
                     }
-                    fos.close();
-                    zin.closeEntry();
                 }
             }
-            zin.close();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        } finally {
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+                if (zin != null) {
+                    zin.closeEntry();
+                    zin.close();
+                }
+                if (fos != null) {
+                    fos.flush();
+                    fos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return true;
     }
 
 
     private static boolean zipFolder(ZipOutputStream zos, File folder, int baseLength) {
+        FileInputStream fis;
+        BufferedInputStream bis = null;
+
         if (zos == null || folder == null) {
+            Log.e(TAG, "zipFolder failed.");
             return false;
         }
-        File[] fileList = folder.listFiles();
 
+        File[] fileList = folder.listFiles();
         if (fileList == null || fileList.length == 0) {
+            Log.e(TAG, "zipFolder failed.");
             return false;
         }
 
@@ -163,20 +203,28 @@ public class ZipUtils {
                 }
 
                 try {
-                    FileInputStream fis = new FileInputStream(unmodifiedFilePath);
-                    BufferedInputStream bis = new BufferedInputStream(fis, BUFFER_SIZE);
+                    fis = new FileInputStream(unmodifiedFilePath);
+                    bis = new BufferedInputStream(fis, BUFFER_SIZE);
                     ZipEntry entry = new ZipEntry(realPath);
                     zos.putNextEntry(entry);
                     int count;
                     while ((count = bis.read(data, 0, BUFFER_SIZE)) != -1) {
                         zos.write(data, 0, count);
                     }
-                    bis.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                     return false;
+                } finally {
+                    try {
+                        if (bis != null) {
+                            bis.close();
+                        }
+                        zos.flush();
+                        zos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-
             }
         }
         return true;

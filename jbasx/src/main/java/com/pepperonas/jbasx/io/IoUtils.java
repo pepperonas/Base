@@ -36,25 +36,33 @@ public class IoUtils {
 
     public static String readFile(File sourceFile) {
         FileReader reader;
+        BufferedReader bufferedReader;
+
+        StringBuilder builder = new StringBuilder();
+
         try {
             reader = new FileReader(sourceFile);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             return null;
         }
-        BufferedReader bufferedReader = new BufferedReader(reader);
-        StringBuilder res = new StringBuilder();
+        bufferedReader = new BufferedReader(reader);
         String line;
         try {
             while (((line = bufferedReader.readLine()) != null)) {
-                res.append(line).append("\n");
+                builder.append(line).append("\n");
             }
-            bufferedReader.close();
-            reader.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                bufferedReader.close();
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        return res.toString();
+        return builder.toString();
     }
 
 
@@ -65,17 +73,24 @@ public class IoUtils {
      * @param sourceFile File with data which should be read.
      */
     public static String readFileIso8859_1(File sourceFile) throws IOException {
+        FileInputStream fis = null;
+        InputStreamReader isr = null;
+
         StringBuilder builder = new StringBuilder();
+
         try {
-            FileInputStream fis = new FileInputStream(sourceFile);
+            fis = new FileInputStream(sourceFile);
             Charset inputCharset = Charset.forName("ISO-8859-1");
-            InputStreamReader isr = new InputStreamReader(fis, inputCharset);
+            isr = new InputStreamReader(fis, inputCharset);
             int i;
             while ((i = isr.read()) != -1) {
                 builder.append((char) i);
             }
         } catch (UnsupportedEncodingException | FileNotFoundException e) {
             e.printStackTrace();
+        } finally {
+            if (fis != null) fis.close();
+            if (isr != null) isr.close();
         }
         return builder.toString();
     }
@@ -89,25 +104,28 @@ public class IoUtils {
      * @return Whether the operation was successful or not.
      */
     public static boolean write(File file, String text) {
+        BufferedWriter writer = null;
+
         if (file == null) {
             if (Jbasx.mLog == Jbasx.LogMode.ALL || Jbasx.mLog == Jbasx.LogMode.DEFAULT) {
-                com.pepperonas.jbasx.log.Log.e(TAG, "write - " + "failed (File does not exist).");
+                Log.e(TAG, "write - " + "failed (File does not exist).");
             }
             return false;
         }
-        BufferedWriter writer = null;
+
         try {
             writer = new BufferedWriter(new FileWriter(file));
             writer.write(text);
         } catch (IOException e) {
             e.printStackTrace();
             if (Jbasx.mLog == Jbasx.LogMode.ALL || Jbasx.mLog == Jbasx.LogMode.DEFAULT) {
-                com.pepperonas.jbasx.log.Log.e(TAG, "write - " + "failed while writing.");
+                Log.e(TAG, "write - " + "failed while writing.");
             }
             return false;
         } finally {
             try {
                 if (writer != null) {
+                    writer.flush();
                     writer.close();
                 }
             } catch (IOException e) {
@@ -115,26 +133,29 @@ public class IoUtils {
             }
         }
         if (Jbasx.mLog == Jbasx.LogMode.ALL || Jbasx.mLog == Jbasx.LogMode.DEFAULT) {
-            com.pepperonas.jbasx.log.Log.d(TAG, "write " + "passed.");
+            Log.d(TAG, "write " + "passed.");
         }
         return true;
     }
 
 
     public static boolean write(InputStream inputStream, File destFile) {
+        OutputStream outputStream = null;
+
         if (inputStream == null) {
             if (Jbasx.mLog == Jbasx.LogMode.ALL || Jbasx.mLog == Jbasx.LogMode.DEFAULT) {
-                com.pepperonas.jbasx.log.Log.d(TAG, "write - " + "failed (Source is null).");
+                Log.d(TAG, "write - " + "failed (Source is null).");
             }
             return false;
         }
+
         if (destFile == null) {
             if (Jbasx.mLog == Jbasx.LogMode.ALL || Jbasx.mLog == Jbasx.LogMode.DEFAULT) {
-                com.pepperonas.jbasx.log.Log.e(TAG, "write - " + "failed (File does not exist).");
+                Log.e(TAG, "write - " + "failed (File does not exist).");
             }
             return false;
         }
-        OutputStream outputStream = null;
+
         try {
             outputStream = new FileOutputStream(destFile);
             int read;
@@ -145,99 +166,140 @@ public class IoUtils {
         } catch (IOException e) {
             e.printStackTrace();
             if (Jbasx.mLog == Jbasx.LogMode.ALL || Jbasx.mLog == Jbasx.LogMode.DEFAULT) {
-                com.pepperonas.jbasx.log.Log.e(TAG, "write - " + "failed while writing.");
+                Log.e(TAG, "write - " + "failed while writing.");
             }
             return false;
         } finally {
             try {
                 inputStream.close();
+                if (outputStream != null) {
+                    outputStream.flush();
+                    outputStream.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        try {
-            outputStream.flush();
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         if (Jbasx.mLog == Jbasx.LogMode.ALL || Jbasx.mLog == Jbasx.LogMode.DEFAULT) {
-            com.pepperonas.jbasx.log.Log.d(TAG, "write " + "passed.");
+            Log.d(TAG, "write " + "passed.");
         }
         return true;
     }
 
 
     public static void writeBuffered(File output, String text, int bufSize) {
+        FileWriter writer = null;
+        BufferedWriter bufferedWriter = null;
+
         bufSize = (bufSize == 0 ? 8192 : bufSize);
+
         try {
-            FileWriter writer = new FileWriter(output);
-            BufferedWriter bufferedWriter = new BufferedWriter(writer, bufSize);
+            writer = new FileWriter(output);
+            bufferedWriter = new BufferedWriter(writer, bufSize);
             List<String> list = new ArrayList<String>();
             list.add(text);
             write(list, bufferedWriter);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (writer != null) {
+                    writer.flush();
+                    writer.close();
+                }
+                if (bufferedWriter != null) {
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
     public static void writeBuffered(File output, List<String> records, int bufSize) {
+        FileWriter writer = null;
+        BufferedWriter bufferedWriter = null;
+
         bufSize = (bufSize == 0 ? 8192 : bufSize);
+
         try {
-            FileWriter writer = new FileWriter(output);
-            BufferedWriter bufferedWriter = new BufferedWriter(writer, bufSize);
+            writer = new FileWriter(output);
+            bufferedWriter = new BufferedWriter(writer, bufSize);
             write(records, bufferedWriter);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (writer != null) {
+                    writer.flush();
+                    writer.close();
+                }
+                if (bufferedWriter != null) {
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
 
     public static void write(File output, byte[] bytes) {
+        FileOutputStream fos = null;
+
         try {
-            FileOutputStream fos = null;
-            try {
-                fos = new FileOutputStream(output.getAbsolutePath());
-                fos.write(bytes);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (fos != null) {
+            fos = new FileOutputStream(output.getAbsolutePath());
+            fos.write(bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.flush();
                     fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
-        } catch (IOException e) {
-            Log.e(TAG, "write Error: " + e);
         }
     }
 
 
-    public static InputStream toInputStream(File file) {
+    public static byte[] toByteArray(File file) {
+        FileInputStream fis = null;
+
+        if (file.length() >= Integer.MAX_VALUE) {
+            Log.e(TAG, "File too large.");
+            return null;
+        }
+
+        byte[] data = new byte[(int) file.length()];
+        try {
+            fis = new FileInputStream(file);
+            fis.read(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (fis != null) try {
+                fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return data;
+    }
+
+
+    public static InputStream convertFileToInputStream(File file) {
         try {
             return new FileInputStream(file);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             return null;
         }
-    }
-
-
-    public static byte[] toByteArray(File file) {
-        if (file.length() >= Integer.MAX_VALUE) {
-            com.pepperonas.jbasx.log.Log.e(TAG, "File too large.");
-        }
-
-        FileInputStream fileInputStream;
-        byte[] data = new byte[(int) file.length()];
-        try {
-            fileInputStream = new FileInputStream(file);
-            fileInputStream.read(data);
-            fileInputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return data;
     }
 
 
@@ -252,10 +314,15 @@ public class IoUtils {
             for (String record : records) {
                 writer.write(record);
             }
-            writer.flush();
-            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                writer.flush();
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

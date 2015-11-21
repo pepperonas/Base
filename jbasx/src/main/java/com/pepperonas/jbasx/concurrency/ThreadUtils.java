@@ -12,11 +12,11 @@ public class ThreadUtils {
     private static final String TAG = "ThreadUtils";
 
 
-    public static Void runInBackground(final Callable<Void> func) {
+    public static Void runInBackground(final Callable<Void> callable) {
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    func.call();
+                    callable.call();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -26,13 +26,13 @@ public class ThreadUtils {
     }
 
 
-    public static Void calculateStringInBackground(final ThreadListener l, final Callable<String> func) {
+    public static Void calculateStringInBackground(final ThreadListener threadListener, final Callable<String> callable) {
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    l.onBaseThreadSuccess(func.call());
+                    threadListener.onBaseThreadSuccess(callable.call());
                 } catch (Exception e) {
-                    l.onBaseThreadFailed(e.getMessage());
+                    threadListener.onBaseThreadFailed(e.getMessage());
                 }
             }
         }).start();

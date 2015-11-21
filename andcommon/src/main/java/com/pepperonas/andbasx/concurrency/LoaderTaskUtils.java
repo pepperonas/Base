@@ -63,6 +63,8 @@ public class LoaderTaskUtils extends AsyncTask<String, String, String> {
     @Override
     protected String doInBackground(String... params) {
         URL url;
+        OutputStream output = null;
+        InputStream is = null;
 
         try {
             int count;
@@ -71,15 +73,15 @@ public class LoaderTaskUtils extends AsyncTask<String, String, String> {
 
             URLConnection urlConnection = url.openConnection();
             urlConnection.connect();
-            urlConnection.setReadTimeout(5000);
-            urlConnection.setConnectTimeout(5000);
+            urlConnection.setReadTimeout(builder.readTimeout);
+            urlConnection.setConnectTimeout(builder.connectionTimeout);
 
             int length = urlConnection.getContentLength();
-            InputStream is = new BufferedInputStream(url.openStream(), 8192);
+            is = new BufferedInputStream(url.openStream(), 8192);
 
             if (builder.action == Action.STORE_FILE) {
 
-                OutputStream output = new FileOutputStream(new File(builder.dirPath, builder.fileName + builder.extension));
+                output = new FileOutputStream(new File(builder.dirPath, builder.fileName + builder.extension));
                 byte data[] = new byte[1024];
 
                 long total = 0;
@@ -90,9 +92,6 @@ public class LoaderTaskUtils extends AsyncTask<String, String, String> {
                     output.write(data, 0, count);
                 }
 
-                output.flush();
-                output.close();
-
                 builder.loaderTaskListener.onLoaderTaskSuccess(builder.action, "File successfully stored.");
                 return "";
             } else if (builder.action == Action.GET_TEXT) {
@@ -100,11 +99,21 @@ public class LoaderTaskUtils extends AsyncTask<String, String, String> {
                 builder.loaderTaskListener.onLoaderTaskSuccess(builder.action, text);
                 return "";
             }
-
-            is.close();
         } catch (IOException e) {
             builder.loaderTaskListener.onLoaderTaskFailed(builder.action, "An error occurred.");
             e.printStackTrace();
+        } finally {
+            try {
+                if (output != null) {
+                    output.flush();
+                    output.close();
+                }
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return "";
     }
@@ -135,16 +144,18 @@ public class LoaderTaskUtils extends AsyncTask<String, String, String> {
         private final Context ctx;
         private final LoaderTaskListener loaderTaskListener;
         private final String url;
+        private int connectionTimeout = 5000;
+        private int readTimeout = 5000;
         private Action action = Action.GET_TEXT;
-        public String dirPath;
-        public String fileName;
-        public String extension;
+        private String dirPath;
+        private String fileName;
+        private String extension;
         private ProgressDialog progressDialog;
 
 
-        public Builder(Context ctx, LoaderTaskListener l, String url) {
-            this.ctx = ctx;
-            this.loaderTaskListener = l;
+        public Builder(Context context, LoaderTaskListener loaderTaskListener, String url) {
+            this.ctx = context;
+            this.loaderTaskListener = loaderTaskListener;
             this.url = url;
         }
 
@@ -175,6 +186,18 @@ public class LoaderTaskUtils extends AsyncTask<String, String, String> {
             progressDialog.setProgress(0);
             progressDialog.setMax(100);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            return this;
+        }
+
+
+        public Builder setConnectionTimeout(int timeout) {
+            connectionTimeout = timeout;
+            return this;
+        }
+
+
+        public Builder setReadTimeout(int timeout) {
+            readTimeout = timeout;
             return this;
         }
 

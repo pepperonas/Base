@@ -6,10 +6,10 @@ package com.pepperonas.jbasx.color;
 public class ColorUtils {
 
     /**
-     * Parse {@link com.pepperonas.jbasx.div.MaterialColor} to its integer representation.
+     * Parse {@link com.pepperonas.jbasx.div.MaterialColor} to it's integer representation.
      *
      * @param color The color in {@link String} format (such as '#ffebee').
-     * @return The color in its integer representation.
+     * @return The color in it's integer representation.
      */
     public static int toInt(String color) {
         return com.pepperonas.jbasx.color.android.ColorXs.parseColor(color);
@@ -17,7 +17,7 @@ public class ColorUtils {
 
 
     /**
-     * Convert a hex formatted Color value to its HTML representation.
+     * Convert a hex formatted Color value to it's HTML representation.
      *
      * @param color The color in hex format (such as '0xFFEBEE').
      * @return The color in HTML format (such as '#ffebee').
@@ -30,7 +30,7 @@ public class ColorUtils {
 
 
     /**
-     * Convert a HTML formatted Color value to its hex representation.
+     * Convert a HTML formatted Color value to it's hex representation.
      *
      * @param color The color in HTML format (such as '#ffebee').
      * @return The color in hex format (such as '0xffebee').
@@ -43,7 +43,7 @@ public class ColorUtils {
 
 
     /**
-     * Convert a hex formatted Color value with alpha to its HTML representation.
+     * Convert a hex formatted Color value with alpha to it's HTML representation.
      * NOTE: This function will apply 100% opacity to the value.
      *
      * @param color The color in hex format (such as '0xFFEBEEFF').

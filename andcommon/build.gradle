@@ -16,7 +16,7 @@ repositories {
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-    useLibrary 'org.apache.http.legacy'
+//    useLibrary 'org.apache.http.legacy'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -45,7 +45,7 @@ android {
                 def fileName = "${archivesBaseName}-${version}.aar"
                 output.outputFile = new File(outputFile.parent, fileName)
 
-//                output.outputFile = new File("/home/pepperonas/IdeaProjects/Libraries/Base/test_lib/libs", fileName)
+                output.outputFile = new File("/home/pepperonas/IdeaProjects/Libraries/Base/test_lib/libs", fileName)
 //                output.outputFile = new File("/home/pepperonas/IdeaProjects/Libraries/Base/sample_splashview/libs", fileName)
 //                output.outputFile = new File("/home/pepperonas/IdeaProjects/Libraries/Base/sample_recordbreaker/libs", fileName)
             }
@@ -56,7 +56,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:23.1.0'
+    compile 'com.android.support:appcompat-v7:23.1.1'
     compile project(':jbasx')
     compile files('libs/jbasx-0.1.1.jar')
 }

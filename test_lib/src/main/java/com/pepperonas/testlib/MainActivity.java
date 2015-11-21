@@ -3,8 +3,20 @@ package com.pepperonas.testlib;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.pepperonas.andbasx.base.AndroidStorageUtils;
+import com.pepperonas.andbasx.base.ToastUtils;
 import com.pepperonas.jbasx.interfaces.ThreadListener;
+import com.pepperonas.jbasx.io.FileUtils;
 import com.pepperonas.jbasx.log.Log;
+import com.pepperonas.jbasx.network.NetworkAddressUtils;
+import com.pepperonas.jbasx.network.NetworkBaseUtils;
+import com.pepperonas.jbasx.network.Networker;
+
+import java.io.File;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class MainActivity extends AppCompatActivity implements ThreadListener {
 
@@ -85,9 +97,9 @@ public class MainActivity extends AppCompatActivity implements ThreadListener {
     }
 
 
-    //    private void showString() {
-    //        ToastUtils.toastShort("delayed...");
-    //    }
+    private void showString() {
+        ToastUtils.toastShort("delayed...");
+    }
 
 
     //    private void testBitmapUtils() {
@@ -96,58 +108,58 @@ public class MainActivity extends AppCompatActivity implements ThreadListener {
     //    }
 
 
-    //    private void testAndroidStorageUtils() {
-    //        Log.d(TAG, "onCreate  " + AndroidStorageUtils.getAppsInternalDataDir());
-    //
-    //        Log.d(TAG, "onCreate  " + AndroidStorageUtils.getAppsExternalCacheDir());
-    //        Log.d(TAG, "onCreate  " + AndroidStorageUtils.getAppsExternalFileDir("dirName"));
-    //        Log.d(TAG, "onCreate  " + AndroidStorageUtils.getExternalRootDir());
-    //    }
-    //
-    //
-    //    private void copyCat() {
-    //        File sd = new File(AndroidStorageUtils.getExternalRootDir());
-    //        File ccSrc = new File(sd.getPath() + "/Download/" + SOURCE_NAME);
-    //        Log.i(TAG, "ccSrcName: " + ccSrc.getName());
-    //        FileUtils.copy(ccSrc, sd.getPath() + "/DownloadCopy/", true);
-    //    }
-    //
-    //
-    //    private void testNetworkBaseUtils() {
-    //        List<String> ips = NetworkBaseUtils.getNetworkAddresses(false);
-    //        for (String ip : ips) {
-    //            Log.d(TAG, "testNetworkBaseUtils (all): " + ip);
-    //        }
-    //
-    //        ips = NetworkBaseUtils.getNetworkAddresses(true);
-    //        for (String ip : ips) {
-    //            Log.d(TAG, "testNetworkBaseUtils (IP only): " + ip);
-    //        }
-    //
-    //        testHostIps(ips);
-    //    }
-    //
-    //
-    //    private void testHostIps(List<String> ips) {
-    //        for (String ip : ips) {
-    //
-    //            ip = NetworkAddressUtils.replaceBytes(ip, 1);
-    //
-    //            Log.d(TAG, "testHostIps: " + ip);
-    //
-    //            final ExecutorService exService = Executors.newFixedThreadPool(1);
-    //            final Future<List<String>> task = exService.submit(new Networker(Networker.Mode.IP_LOOKUP, ip, 100));
-    //            try {
-    //                List<String> hostName = task.get();
-    //                for (String s : hostName) {
-    //                    Log.d(TAG, "testHostIps IP: " + s);
-    //                }
-    //            } catch (Exception e) {
-    //                e.printStackTrace();
-    //            }
-    //            exService.shutdownNow();
-    //        }
-    //    }
+    private void testAndroidStorageUtils() {
+        Log.d(TAG, "onCreate  " + AndroidStorageUtils.getAppsInternalDataDir());
+
+        Log.d(TAG, "onCreate  " + AndroidStorageUtils.getAppsExternalCacheDir());
+        Log.d(TAG, "onCreate  " + AndroidStorageUtils.getAppsExternalFileDir("dirName"));
+        Log.d(TAG, "onCreate  " + AndroidStorageUtils.getExternalRootDir());
+    }
+
+
+    private void copyCat() {
+        File sd = new File(AndroidStorageUtils.getExternalRootDir());
+        File ccSrc = new File(sd.getPath() + "/Download/" + SOURCE_NAME);
+        Log.i(TAG, "ccSrcName: " + ccSrc.getName());
+        FileUtils.copy(ccSrc, sd.getPath() + "/DownloadCopy/", true);
+    }
+
+
+    private void testNetworkBaseUtils() {
+        List<String> ips = NetworkBaseUtils.getNetworkAddresses(false);
+        for (String ip : ips) {
+            Log.d(TAG, "testNetworkBaseUtils (all): " + ip);
+        }
+
+        ips = NetworkBaseUtils.getNetworkAddresses(true);
+        for (String ip : ips) {
+            Log.d(TAG, "testNetworkBaseUtils (IP only): " + ip);
+        }
+
+        testHostIps(ips);
+    }
+
+
+    private void testHostIps(List<String> ips) {
+        for (String ip : ips) {
+
+            ip = NetworkAddressUtils.replaceBytes(ip, 1);
+
+            Log.d(TAG, "testHostIps: " + ip);
+
+            final ExecutorService exService = Executors.newFixedThreadPool(1);
+            final Future<List<String>> task = exService.submit(new Networker(Networker.Mode.IP_LOOKUP, ip, 100));
+            try {
+                List<String> hostName = task.get();
+                for (String s : hostName) {
+                    Log.d(TAG, "testHostIps IP: " + s);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            exService.shutdownNow();
+        }
+    }
 
 
     @Override
