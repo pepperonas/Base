@@ -230,7 +230,7 @@ public class Log {
     private static void write2LogFile(String s, String tag, String msg) {
         String log;
         if (Jbasx.writeLogWithStamp()) {
-            log = "[" + TimeFormatUtils.getTimestamp(true) + "] " + s + tag + " -\n" + msg;
+            log = "[" + TimeFormatUtils.formatTime(System.currentTimeMillis(), TimeFormatUtils.LOG_FORMAT) + "] " + s + tag + " -\n" + msg;
         } else {
             log = s + tag + " - " + msg;
         }

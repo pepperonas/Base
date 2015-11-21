@@ -113,12 +113,12 @@ public class MainActivity extends AppCompatActivity implements ThreadListener {
 
         Log.d(TAG, "onCreate  " + AndroidStorageUtils.getAppsExternalCacheDir());
         Log.d(TAG, "onCreate  " + AndroidStorageUtils.getAppsExternalFileDir("dirName"));
-        Log.d(TAG, "onCreate  " + AndroidStorageUtils.getExternalRootDir());
+        Log.d(TAG, "onCreate  " + AndroidStorageUtils.getExternalDir());
     }
 
 
     private void copyCat() {
-        File sd = new File(AndroidStorageUtils.getExternalRootDir());
+        File sd = new File(AndroidStorageUtils.getExternalDir());
         File ccSrc = new File(sd.getPath() + "/Download/" + SOURCE_NAME);
         Log.i(TAG, "ccSrcName: " + ccSrc.getName());
         FileUtils.copy(ccSrc, sd.getPath() + "/DownloadCopy/", true);

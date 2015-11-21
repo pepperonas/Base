@@ -1,1 +1,1 @@
-include ':jbasx', ':andcommon', ':test_lib', ':sample_fragment', ':sample_splashview', ':sample_recordbreaker', ':sample_asynctask'
+include ':jbasx', ':andcommon', ':test_lib', ':sample_fragment', ':sample_splashview', ':sample_recordbreaker', ':sample_asynctask', ':sample_activityrecognition'

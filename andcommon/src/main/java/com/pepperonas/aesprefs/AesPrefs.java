@@ -21,6 +21,9 @@ import android.content.SharedPreferences;
 import android.support.v7.appcompat.BuildConfig;
 import android.util.Log;
 
+import com.pepperonas.jbasx.format.NumberFormatUtils;
+import com.pepperonas.jbasx.format.TimeFormatUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -68,10 +71,17 @@ public class AesPrefs {
     }
 
 
-    public static void init(Context context, String filename, String password,
-                            LogMode logMode) {
+    public static void init(Context context, String filename, String password, LogMode logMode) {
         mLog = logMode;
         init(context, filename, password);
+    }
+
+
+    public static void initCompleteConfig(Context context, String filename, String password, LogMode logMode) {
+        mLog = logMode;
+        init(context, filename, password);
+        initOrIncrementLaunchCounter();
+        storeInstallationDate();
     }
 
 
@@ -106,16 +116,6 @@ public class AesPrefs {
             mIv = System.currentTimeMillis();
             sp.edit().putLong("aes_iv", mIv).apply();
         }
-    }
-
-
-    public static long getExecTime() {
-        return mDuration;
-    }
-
-
-    public static void resetExecTime() {
-        mDuration = 0L;
     }
 
 
@@ -171,7 +171,7 @@ public class AesPrefs {
             Log.d(TAG, "put " + key + " <- " + value);
         }
 
-        mDuration = System.currentTimeMillis() - start;
+        mDuration += System.currentTimeMillis() - start;
     }
 
 
@@ -192,7 +192,7 @@ public class AesPrefs {
         }
 
         try {
-            mDuration = System.currentTimeMillis() - start;
+            mDuration += System.currentTimeMillis() - start;
             String value = Crypt.decrypt(mPassword, sp.getString(key, ""), iv);
             if (mLog == LogMode.ALL || mLog == LogMode.GET) {
                 Log.d(TAG, "get  " + param + " -> " + value);
@@ -223,7 +223,7 @@ public class AesPrefs {
             Log.d(TAG, "putInt " + key + " <- " + value);
         }
 
-        mDuration = System.currentTimeMillis() - start;
+        mDuration += System.currentTimeMillis() - start;
     }
 
 
@@ -244,7 +244,7 @@ public class AesPrefs {
         }
 
         try {
-            mDuration = System.currentTimeMillis() - start;
+            mDuration += System.currentTimeMillis() - start;
             int value = Integer.parseInt(Crypt.decrypt(mPassword, sp.getString(key, ""), iv));
             if (mLog == LogMode.ALL || mLog == LogMode.GET) {
                 Log.d(TAG, "getInt  " + param + " -> " + value);
@@ -275,7 +275,7 @@ public class AesPrefs {
             Log.d(TAG, "putLong " + key + " <- " + value);
         }
 
-        mDuration = System.currentTimeMillis() - start;
+        mDuration += System.currentTimeMillis() - start;
     }
 
 
@@ -296,7 +296,7 @@ public class AesPrefs {
         }
 
         try {
-            mDuration = System.currentTimeMillis() - start;
+            mDuration += System.currentTimeMillis() - start;
             long value = Long.parseLong(Crypt.decrypt(mPassword, sp.getString(key, ""), iv));
             if (mLog == LogMode.ALL || mLog == LogMode.GET) {
                 Log.d(TAG, "getLong  " + param + " -> " + value);
@@ -327,7 +327,7 @@ public class AesPrefs {
             Log.d(TAG, "putDouble " + key + " <- " + value);
         }
 
-        mDuration = System.currentTimeMillis() - start;
+        mDuration += System.currentTimeMillis() - start;
     }
 
 
@@ -348,7 +348,7 @@ public class AesPrefs {
         }
 
         try {
-            mDuration = System.currentTimeMillis() - start;
+            mDuration += System.currentTimeMillis() - start;
             double value = Double.parseDouble(Crypt.decrypt(mPassword, sp.getString(key, ""), iv));
             if (mLog == LogMode.ALL || mLog == LogMode.GET) {
                 Log.d(TAG, "getDouble  " + param + " -> " + value);
@@ -379,7 +379,7 @@ public class AesPrefs {
             Log.d(TAG, "putFloat " + key + " <- " + value);
         }
 
-        mDuration = System.currentTimeMillis() - start;
+        mDuration += System.currentTimeMillis() - start;
     }
 
 
@@ -400,7 +400,7 @@ public class AesPrefs {
         }
 
         try {
-            mDuration = System.currentTimeMillis() - start;
+            mDuration += System.currentTimeMillis() - start;
             float value = Float.parseFloat(Crypt.decrypt(mPassword, sp.getString(key, ""), iv));
             if (mLog == LogMode.ALL || mLog == LogMode.GET) {
                 Log.d(TAG, "getFloat  " + param + " -> " + value);
@@ -431,7 +431,7 @@ public class AesPrefs {
             Log.d(TAG, "putBoolean " + key + " <- " + value);
         }
 
-        mDuration = System.currentTimeMillis() - start;
+        mDuration += System.currentTimeMillis() - start;
     }
 
 
@@ -452,7 +452,7 @@ public class AesPrefs {
         }
 
         try {
-            mDuration = System.currentTimeMillis() - start;
+            mDuration += System.currentTimeMillis() - start;
             boolean value = Boolean.parseBoolean(Crypt.decrypt(mPassword, sp.getString(key, ""), iv));
             if (mLog == LogMode.ALL || mLog == LogMode.GET) {
                 Log.d(TAG, "getBoolean  " + param + " -> " + value);
@@ -483,13 +483,12 @@ public class AesPrefs {
             sp.edit().putString(encryptedKey + "_" + i, encryptedValue).apply();
         }
 
-        mDuration = System.currentTimeMillis() - start;
+        mDuration += System.currentTimeMillis() - start;
     }
 
 
     public static List<String> restoreArray(String key) {
         long start = System.currentTimeMillis();
-        String param = key;
 
         SharedPreferences sp = mCtx.getSharedPreferences(mFilename, Context.MODE_PRIVATE);
 
@@ -498,29 +497,24 @@ public class AesPrefs {
         key = _key.substring(0, _key.length() - 1);
         int size = sp.getInt(key + "_size", 0);
 
-        if (!sp.contains(key) && mLog != LogMode.NONE) {
-            Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
-                       "Return value: " + "new ArrayList<String>(0)");
-            return new ArrayList<String>();
-        }
-
         try {
-            List<String> strings = new ArrayList<String>();
+            List<String> strings = new ArrayList<>();
             for (int i = 0; i < size; i++) {
+
+                if (!sp.contains(key + "_" + i) && mLog != LogMode.NONE) {
+                    Log.e(TAG, "WARNING: Key '" + key + "_" + i + "' not found.\n" +
+                               "Return value: " + "new ArrayList<String>(0)");
+                    return new ArrayList<>();
+                }
+
                 strings.add(Crypt.decrypt(mPassword, sp.getString(key + "_" + i, ""), iv));
             }
-            mDuration = System.currentTimeMillis() - start;
+            mDuration += System.currentTimeMillis() - start;
             return strings;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        } catch (RuntimeException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ArrayList<String>();
+        return new ArrayList<>();
     }
 
 
@@ -595,8 +589,7 @@ public class AesPrefs {
 
 
     public static String getEncryptedContent() {
-        Map<String, ?> sp = mCtx.getSharedPreferences(
-                mFilename, Context.MODE_PRIVATE).getAll();
+        Map<String, ?> sp = mCtx.getSharedPreferences(mFilename, Context.MODE_PRIVATE).getAll();
 
         String result = "";
         for (String key : sp.keySet()) {
@@ -609,9 +602,8 @@ public class AesPrefs {
     }
 
 
-    public static int count() {
-        Map<String, ?> prefs = mCtx.getSharedPreferences(
-                mFilename, Context.MODE_PRIVATE).getAll();
+    public static int countEntries() {
+        Map<String, ?> prefs = mCtx.getSharedPreferences(mFilename, Context.MODE_PRIVATE).getAll();
         int ctr = 0;
 
         for (String key : prefs.keySet()) {
@@ -627,6 +619,62 @@ public class AesPrefs {
     public static void deleteAll() {
         SharedPreferences sp = mCtx.getSharedPreferences(mFilename, Context.MODE_PRIVATE);
         sp.edit().clear().apply();
+    }
+
+
+    public static void initOrIncrementLaunchCounter() {
+        LogMode tmp = mLog;
+        mLog = LogMode.NONE;
+        if (getInt("aes_app_launches", -1) == -1) {
+            // first launch returns 0
+            putInt("aes_app_launches", 0);
+        } else {
+            putInt("aes_app_launches", (getInt("aes_app_launches", 0) + 1));
+        }
+        mLog = tmp;
+    }
+
+
+    public static int getLaunchCounter() {
+        return AesPrefs.getInt("aes_app_launches", 0);
+    }
+
+
+    public static void storeInstallationDate() {
+        LogMode tmp = mLog;
+        mLog = LogMode.NONE;
+        if (getLong("aes_inst_date", 0L) == 0L) {
+            putLong("aes_inst_date", System.currentTimeMillis());
+        }
+        mLog = tmp;
+    }
+
+
+    public static long getInstallationDate() {
+        return getLong("aes_inst_date", 0L);
+    }
+
+
+    public static void printInstallationDate() {
+        LogMode tmp = mLog;
+        mLog = LogMode.NONE;
+        Log.i(TAG, "Installation date: " + TimeFormatUtils.formatTime(getLong("aes_inst_date", 0L), TimeFormatUtils.DEFAULT_FORMAT));
+        mLog = tmp;
+    }
+
+
+    public static void resetExecutionTime() {
+        mDuration = 0L;
+    }
+
+
+    public static long getExecutionTime() {
+        return mDuration;
+    }
+
+
+    public static void printExecutionTime() {
+        Log.i(TAG, "Execution time: " + String.valueOf(NumberFormatUtils.decimalPlaces((double) mDuration / 1000, 3) + " sec."));
     }
 
 
