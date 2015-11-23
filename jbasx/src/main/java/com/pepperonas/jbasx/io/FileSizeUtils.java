@@ -49,8 +49,8 @@ public class FileSizeUtils {
      *
      * @param fileSize The size of the file {@link File#length()}
      */
-    public static long fileSizeInKB(long fileSize, int decimalPlaces) {
-        return (long) NumberFormatUtils.decimalPlaces((double) fileSize / 1024, decimalPlaces);
+    public static long fileSizeInKB(long fileSize, int precision) {
+        return (long) NumberFormatUtils.decimalPlaces((double) fileSize / 1024, precision);
     }
 
 
@@ -69,8 +69,8 @@ public class FileSizeUtils {
      *
      * @param fileSize The size of the file {@link File#length()}
      */
-    public static double fileSizeInMB(double fileSize, int decimalPlaces) {
-        return NumberFormatUtils.decimalPlaces((fileSize / Math.pow(1024, 2)), decimalPlaces);
+    public static double fileSizeInMB(double fileSize, int precision) {
+        return NumberFormatUtils.decimalPlaces((fileSize / Math.pow(1024, 2)), precision);
     }
 
 
@@ -89,8 +89,8 @@ public class FileSizeUtils {
      *
      * @param fileSize The size of the file {@link File#length()}
      */
-    public static double fileSizeInGB(double fileSize, int decimalPlaces) {
-        return NumberFormatUtils.decimalPlaces(fileSize / Math.pow(1024, 3), decimalPlaces);
+    public static double fileSizeInGB(double fileSize, int precision) {
+        return NumberFormatUtils.decimalPlaces(fileSize / Math.pow(1024, 3), precision);
     }
 
 
@@ -109,8 +109,8 @@ public class FileSizeUtils {
      *
      * @param fileSize The size of the file {@link File#length()}
      */
-    public static double fileSizeInTB(double fileSize, int decimalPlaces) {
-        return NumberFormatUtils.decimalPlaces(fileSize / Math.pow(1024, 4), decimalPlaces);
+    public static double fileSizeInTB(double fileSize, int precision) {
+        return NumberFormatUtils.decimalPlaces(fileSize / Math.pow(1024, 4), precision);
     }
 
 

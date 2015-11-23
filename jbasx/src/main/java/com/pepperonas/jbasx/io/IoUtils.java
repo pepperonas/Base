@@ -29,12 +29,12 @@ public class IoUtils {
     private static final String TAG = "IoUtils";
 
 
-    public static String readFile(String sourcePath) {
-        return readFile(new File(sourcePath));
+    public static String readUtf8(String sourcePath) {
+        return readUtf8(new File(sourcePath));
     }
 
 
-    public static String readFile(File sourceFile) {
+    public static String readUtf8(File sourceFile) {
         FileReader reader;
         BufferedReader bufferedReader;
 
@@ -68,11 +68,10 @@ public class IoUtils {
 
     /**
      * Read the content of a ISO-8859-1 encoded file.
-     * Use this if German 'Umlaute' are shown messy.
      *
      * @param sourceFile File with data which should be read.
      */
-    public static String readFileIso8859_1(File sourceFile) throws IOException {
+    public static String readIso8859(File sourceFile) throws IOException {
         FileInputStream fis = null;
         InputStreamReader isr = null;
 
