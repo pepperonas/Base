@@ -19,6 +19,19 @@
             <option value="$PROJECT_DIR$/test_lib" />
           </set>
         </option>
+        <option name="myModules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/andcommon" />
+            <option value="$PROJECT_DIR$/jbasx" />
+            <option value="$PROJECT_DIR$/sample_activityrecognition" />
+            <option value="$PROJECT_DIR$/sample_asynctask" />
+            <option value="$PROJECT_DIR$/sample_fragment" />
+            <option value="$PROJECT_DIR$/sample_recordbreaker" />
+            <option value="$PROJECT_DIR$/sample_splashview" />
+            <option value="$PROJECT_DIR$/test_lib" />
+          </set>
+        </option>
       </GradleProjectSettings>
     </option>
   </component>

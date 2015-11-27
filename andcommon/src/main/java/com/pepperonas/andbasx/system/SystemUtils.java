@@ -16,6 +16,7 @@
 
 package com.pepperonas.andbasx.system;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.admin.DevicePolicyManager;
@@ -60,17 +61,27 @@ public class SystemUtils {
     }
 
 
+    public static void closeEntireApp(Activity activity) {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        activity.startActivity(intent);
+        int pid = android.os.Process.myPid();
+        android.os.Process.killProcess(pid);
+        activity.finish();
+    }
+
+
     public static boolean isInstalled(String packageName) {
         PackageInfo packageInfo;
         if (TextUtils.isEmpty(packageName)) {
             return false;
         }
         final PackageManager packageManager = AndBasx.getContext().getPackageManager();
-        List<PackageInfo> packageInfos = packageManager.getInstalledPackages(0);
-        if (packageInfos == null) {
+        List<PackageInfo> packageInformation = packageManager.getInstalledPackages(0);
+        if (packageInformation == null) {
             return false;
         }
-        for (PackageInfo packageInfo1 : packageInfos) {
+        for (PackageInfo packageInfo1 : packageInformation) {
             packageInfo = packageInfo1;
             final String name = packageInfo.packageName;
             if (packageName.equals(name)) {
@@ -138,7 +149,7 @@ public class SystemUtils {
             ContentResolver resolver = AndBasx.getContext().getContentResolver();
             Uri uri = Settings.System
                     .getUriFor(Settings.System.SCREEN_BRIGHTNESS);
-            Settings.System.putInt(resolver, Settings.System.SCREEN_BRIGHTNESS,
+            Settings.System.putInt           (resolver, Settings.System.SCREEN_BRIGHTNESS,
                                    brightness);
             resolver.notifyChange(uri, null);
         } catch (Exception e) {
@@ -150,7 +161,7 @@ public class SystemUtils {
     public static int getBrightnessMode() {
         int brightnessMode = Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL;
         try {
-            brightnessMode = Settings.System.getInt(
+            brightnessMode = Settings.System.getInt       (
                     AndBasx.getContext().getContentResolver(),
                     Settings.System.SCREEN_BRIGHTNESS_MODE);
         } catch (Exception e) {
@@ -165,7 +176,7 @@ public class SystemUtils {
      */
     public static void setBrightnessMode(int brightnessMode) {
         try {
-            Settings.System.putInt(
+            Settings.System.putInt                                        (
                     AndBasx.getContext().getContentResolver(),
                     Settings.System.SCREEN_BRIGHTNESS_MODE, brightnessMode);
         } catch (Exception e) {
@@ -342,7 +353,7 @@ public class SystemUtils {
         Intent intent = new Intent(AndBasx.getContext(), clazz);
         int pendingIntentId = 198964;
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(
+        PendingIntent pendingIntent = PendingIntent.getActivity                                 (
                 AndBasx.getContext(), pendingIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         AlarmManager am = (AlarmManager)
