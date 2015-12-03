@@ -34,6 +34,9 @@ public class CalcUtils {
     }
 
 
+    private int convertMsToKmh(float ms) { return (int) (ms * 3.6); }
+
+
     /**
      * Calculate the distance in meters between two geographical coordinates.
      *

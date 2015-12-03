@@ -61,6 +61,20 @@ public class SystemUtils {
     }
 
 
+    /**
+     * Handle action in {@link Activity#onRequestPermissionsResult}.
+     *
+     * @param activity    The calling {@link Activity}.
+     * @param requestCode The request code to handle in {@link Activity#onRequestPermissionsResult}.
+     */
+    private void launchAppSettings(Activity activity, int requestCode) {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + activity.getPackageName()));
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivityForResult(intent, requestCode);
+    }
+
+
     public static void closeEntireApp(Activity activity) {
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
