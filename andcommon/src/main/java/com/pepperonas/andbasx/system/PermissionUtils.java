@@ -21,16 +21,16 @@ public class PermissionUtils {
 
 
     public static boolean ensurePermissions(@NonNull String... permissions) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            Log.i(TAG, "ensurePermissions: Build.VERSION( " + Build.VERSION.SDK_INT + ") < 23. Return true.");
-            return true;
-        }
-
         for (String permission : permissions) {
-            if (PackageManager.PERMISSION_GRANTED != AndBasx.getContext().checkSelfPermission(permission)) {
-                Log.i(TAG, "ensurePermissions:  " + permission + " is not granted.");
-                return false;
-            } else Log.i(TAG, "ensurePermissions:  " + permission + " is granted.");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (PackageManager.PERMISSION_GRANTED != AndBasx.getContext().checkSelfPermission(permission)) {
+                    Log.i(TAG, "ensurePermissions:  " + permission + " is not granted.");
+                    return false;
+                } else Log.i(TAG, "ensurePermissions:  " + permission + " is granted.");
+            } else {
+                Log.i(TAG, "ensurePermissions: Build.VERSION( " + Build.VERSION.SDK_INT + ") < 23. Return true.");
+                return true;
+            }
         }
         return true;
     }

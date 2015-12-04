@@ -23,16 +23,21 @@ import android.view.animation.Animation;
 /**
  * @author Martin Pfeffer (pepperonas)
  */
-public class FadeAnitmation {
+public class FadeAnimation {
 
     private View view;
     private float maxBrightness = 1.0f;
     private float minBrightness = 0.1f;
-    private long duration = 300L;
+    private long duration = 400L;
     private long startOffset = 0L;
 
 
-    public FadeAnitmation(View view, float maxBrightness, float minBrightness, long duration, long startOffset) {
+    public FadeAnimation(View view) {
+        this.view = view;
+    }
+
+
+    public FadeAnimation(View view, float maxBrightness, float minBrightness, long duration, long startOffset) {
         this.view = view;
         this.maxBrightness = maxBrightness;
         this.minBrightness = minBrightness;

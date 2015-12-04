@@ -19,9 +19,9 @@ package com.pepperonas.jbasx.math;
 /**
  * @author Martin Pfeffer (pepperonas)
  */
-public class CalcUtils {
+public class CalculationUtils {
 
-    private static final String TAG = "CalcUtils";
+    private static final String TAG = "CalculationUtils";
 
 
     public static double percent(double percentageValue, double basicValue) {
@@ -34,29 +34,27 @@ public class CalcUtils {
     }
 
 
-    private int convertMsToKmh(float ms) { return (int) (ms * 3.6); }
-
-
     /**
      * Calculate the distance in meters between two geographical coordinates.
      *
      * @param latA The latitude of point A.
-     * @param lonA The longitude of point A.
+     * @param lngA The longitude of point A.
      * @param latB The latitude of point B.
-     * @param lonB The longitude of point B.
+     * @param lngB The longitude of point B.
      * @return The distance in meters.
      */
-    public static double geoCoordToMeter(double latA, double lonA, double latB, double lonB) {
-        double earthRadius = 6378.137d; // km
-        double dLat = (latB - latA) * Math.PI / 180d;
-        double dLon = (lonB - lonA) * Math.PI / 180d;
-        double a = Math.sin(dLat / 2d) * Math.sin(dLat / 2d)
-                   + Math.cos(latA * Math.PI / 180d)
-                     * Math.cos(latB * Math.PI / 180d)
-                     * Math.sin(dLon / 2d) * Math.sin(dLon / 2);
-        double c = 2d * Math.atan2(Math.sqrt(a), Math.sqrt(1d - a));
-        double d = earthRadius * c;
-        return (d * 1000d);
+    public static double distanceBetween2GeoPositionsInMeters(double latA, double lngA, double latB, double lngB) {
+        double earthRadius = 6371;
+        double dLat = Math.toRadians(latB - latA);
+        double dLng = Math.toRadians(lngB - lngA);
+        double a = Math.sin(dLat / 2)
+                   * Math.sin(dLat / 2)
+                   + Math.cos(Math.toRadians(latA))
+                     * Math.cos(Math.toRadians(latB))
+                     * Math.sin(dLng / 2)
+                     * Math.sin(dLng / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return (int) (earthRadius * c * 1000);
     }
 
 }

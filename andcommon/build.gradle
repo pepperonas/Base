@@ -24,11 +24,12 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 9
+        minSdkVersion 11
         targetSdkVersion 23
         versionCode 10
         versionName "0.1.1"
         project.archivesBaseName = "andcommon"
+        multiDexEnabled true
         project.version = android.defaultConfig.versionName
     }
 
@@ -57,6 +58,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile project(':jbasx')
     compile files('libs/jbasx-0.1.1.jar')

@@ -23,9 +23,11 @@ public class App extends Application {
 
         /*AndCommon*/
         AndBasx.init(this, AndBasx.LogMode.ALL);
-        AndBasx.storeLogFileOnExternalStorage("andcommon2.log", true);
+        //        AndBasx.storeLogFileOnExternalStorage("andcommon2.log", true);
 
         AesPrefs.init(this, "aes_config", "ihdO/()#+HJs3)", AesPrefs.LogMode.ALL);
+
+        AndBasx.Version.showVersionInfo();
 
     }
 

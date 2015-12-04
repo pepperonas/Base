@@ -21,6 +21,7 @@ import android.content.SharedPreferences;
 import android.support.v7.appcompat.BuildConfig;
 import android.util.Log;
 
+import com.pepperonas.andbasx.system.AppUtils;
 import com.pepperonas.jbasx.format.NumberFormatUtils;
 import com.pepperonas.jbasx.format.TimeFormatUtils;
 
@@ -121,7 +122,7 @@ public class AesPrefs {
 
     public static String getEncryptedKey(String key) {
         SharedPreferences sp = mCtx.getSharedPreferences(
-                mFilename, Context.MODE_PRIVATE);
+                mFilename, Context.MODE_PRIVATE         );
 
         String _key = Crypt.encrypt(mPassword, key, mIv) + TAIL;
         return _key.substring(0, _key.length() - 1);
@@ -632,6 +633,38 @@ public class AesPrefs {
             putInt("aes_app_launches", (getInt("aes_app_launches", 0) + 1));
         }
         mLog = tmp;
+    }
+
+
+    /**
+     * Initializes a counter to store the app's current version-code.
+     * <p/>
+     * If the counter exists and the version-code has changed,
+     * the counter will be updated and the method returns true.
+     *
+     * @return Whenever the app was updated or not.
+     */
+    public static boolean initOrCheckVersionCode() {
+        LogMode tmp = mLog;
+        mLog = LogMode.NONE;
+        int versionCode = getInt("aes_app_version_code", -1);
+        if ((versionCode != AppUtils.getVersionCode())
+            || (versionCode == -1)) {
+            putInt("aes_app_version_code", AppUtils.getVersionCode());
+            // restore mLog before return.
+            mLog = tmp;
+            if (tmp == LogMode.ALL) {
+                Log.i(TAG, "initOrCheckVersionCode: " + ((versionCode == -1) ? "Counter initialised." :
+                                                         "Version has changed."));
+            }
+            // return false when counter is initialised.
+            return versionCode != -1;
+        }
+        mLog = tmp;
+        if (tmp == LogMode.ALL) {
+            Log.i(TAG, "initOrCheckVersionCode: " + "Version has not changed.");
+        }
+        return false;
     }
 
 
