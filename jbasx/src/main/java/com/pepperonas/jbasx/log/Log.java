@@ -28,6 +28,7 @@ import java.io.RandomAccessFile;
 import java.io.StringWriter;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Martin Pfeffer (pepperonas)
@@ -182,6 +183,14 @@ public class Log {
     public static void wtf(String tag, String msg, Throwable tr) {
         System.out.println("WTF/" + Jbasx.getUniqueLogId() + tag + " - " + msg + '\n' + getStackTraceString(tr));
         if (Jbasx.writeLog()) writeLog("WTF/" + Jbasx.getUniqueLogId(), tag, msg, tr);
+    }
+
+
+    public static void logHashMap(String tag, int i, Map<String, Object> params) {
+        for (String name : params.keySet()) {
+            String v = params.get(name).toString();
+            Log.d(tag, "Map[" + (i++) + "] " + name + " = " + v);
+        }
     }
 
 

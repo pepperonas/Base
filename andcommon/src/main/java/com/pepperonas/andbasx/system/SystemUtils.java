@@ -69,8 +69,6 @@ public class SystemUtils {
      */
     private void launchAppSettings(Activity activity, int requestCode) {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + activity.getPackageName()));
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         activity.startActivityForResult(intent, requestCode);
     }
 
@@ -360,59 +358,6 @@ public class SystemUtils {
             e.printStackTrace();
         }
         return applicationDir;
-    }
-
-
-    public static void restartApplication(Class<?> clazz) {
-        Intent intent = new Intent(AndBasx.getContext(), clazz);
-        int pendingIntentId = 198964;
-
-        PendingIntent pendingIntent = PendingIntent.getActivity                                 (
-                AndBasx.getContext(), pendingIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-        AlarmManager am = (AlarmManager)
-                AndBasx.getContext().getSystemService(Context.ALARM_SERVICE);
-
-        am.set(AlarmManager.RTC, System.currentTimeMillis() + 500, pendingIntent);
-        System.exit(0);
-    }
-
-
-    public static boolean launchAppOrPlayStore(String packageName) {
-        PackageManager manager = AndBasx.getContext().getPackageManager();
-        boolean result = false;
-        try {
-            Intent i = manager.getLaunchIntentForPackage(packageName);
-            if (i == null) {
-                i = manager.getLaunchIntentForPackage("play.google.com/store/apps/details?id=" + packageName);
-            } else {
-                result = true;
-            }
-            i.addCategory(Intent.CATEGORY_LAUNCHER);
-            AndBasx.getContext().startActivity(i);
-            return result;
-        } catch (Exception e) {
-            android.util.Log.e(TAG, e.getMessage());
-            return result;
-        }
-    }
-
-
-    /**
-     * Start an intent to share text information.
-     *
-     * @param receiver   The addresses which should receive the message.
-     * @param intentInfo The intent's description.
-     * @param subject    The content's subject.
-     * @param msg        The content's message.
-     */
-    public static void sendShareTextIntent(Context ctx, String[] receiver, String intentInfo, String subject, String msg) {
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("message/rfc822");
-        intent.putExtra(Intent.EXTRA_EMAIL, receiver);
-        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        intent.putExtra(Intent.EXTRA_TEXT, msg);
-        ctx.startActivity(Intent.createChooser(intent, intentInfo));
     }
 
 }

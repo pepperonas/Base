@@ -10,23 +10,23 @@ import com.pepperonas.jbasx.io.IoUtils;
 import com.pepperonas.jbasx.log.Log;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedWriter;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.Reader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
-
-import javax.net.ssl.HttpsURLConnection;
+import java.util.Map;
 
 /**
  * @author Martin Pfeffer (pepperonas)
@@ -59,8 +59,8 @@ public class LoaderTaskUtils extends AsyncTask<String, String, String> {
             this.execute(this.builder.url);
         } else {
             String[] args = new String[this.builder.params.size() + 1];
-            args[0] = builder.url;
-            int i = 1;
+            //            args[0] = builder.url;
+            int i = 0;
             for (String s : this.builder.params) {
                 args[i++] = s;
             }
@@ -91,7 +91,9 @@ public class LoaderTaskUtils extends AsyncTask<String, String, String> {
         try {
             int count;
 
-            url = new URL(args[0]);
+            url = new URL(builder.url);
+
+            Log.d(TAG, "doInBackground URL:  " + "");
 
             if (builder.action == Action.READ || builder.action == Action.STORE_FILE) {
 
@@ -131,37 +133,43 @@ public class LoaderTaskUtils extends AsyncTask<String, String, String> {
                 Log.i(TAG, "doInBackground " + url);
                 Log.d(TAG, "doInBackground  ", args);
 
-                HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-                conn.setReadTimeout(builder.readTimeout);
-                conn.setConnectTimeout(builder.connectionTimeout);
-                conn.setRequestMethod("POST");
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-
-                List<AbstractMap.SimpleEntry<String, String>> urlParams = new ArrayList<>();
-
-                OutputStream os = conn.getOutputStream();
                 int i = 0;
                 String key = "";
-
+                Map<String, Object> params = new LinkedHashMap<>();
                 for (String param : args) {
-                    if (param.equals(args[0])) continue;
                     if (i % 2 == 0) {
                         key = param;
                     } else if (i % 2 == 1) {
-                        urlParams.add(new AbstractMap.SimpleEntry<>(key, param));
+                        params.put(key, param);
                     }
                     i++;
                 }
 
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                writer.write(processQuery(urlParams));
-                writer.flush();
-                writer.close();
-                os.close();
-                conn.connect();
-                return "";
+                Log.logHashMap(TAG, 0, params);
 
+                StringBuilder postData = new StringBuilder();
+                for (Map.Entry<String, Object> param : params.entrySet()) {
+                    if (postData.length() != 0) postData.append('&');
+                    postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+                    postData.append('=');
+                    postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
+                }
+                byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+                conn.setDoOutput(true);
+                conn.getOutputStream().write(postDataBytes);
+
+                StringBuilder result = new StringBuilder();
+                Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+                for (int c = in.read(); c != -1; c = in.read()) result.append((char) c);
+
+                builder.loaderTaskListener.onLoaderTaskSuccess(builder.action, result.toString());
+
+                return "";
             }
 
         } catch (IOException e) {
@@ -181,30 +189,6 @@ public class LoaderTaskUtils extends AsyncTask<String, String, String> {
             }
         }
         return "";
-    }
-
-
-    private String processQuery(List<AbstractMap.SimpleEntry<String, String>> params) throws UnsupportedEncodingException {
-        StringBuilder result = new StringBuilder();
-        boolean first = true;
-
-        int ctr = 0;
-
-        for (AbstractMap.SimpleEntry pair : params) {
-            if (first) first = false;
-            else result.append("&");
-
-            publishProgress("" + ((ctr * 100) / params.size()));
-
-            result.append(URLEncoder.encode((String) pair.getKey(), "UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode((String) pair.getValue(), "UTF-8"));
-
-            ctr++;
-        }
-
-        builder.loaderTaskListener.onLoaderTaskSuccess(builder.action, result.toString());
-        return result.toString();
     }
 
 
