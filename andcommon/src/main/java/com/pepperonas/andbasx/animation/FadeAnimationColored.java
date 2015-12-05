@@ -22,6 +22,8 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 
+import com.pepperonas.andbasx.AndBasx;
+
 /**
  * @author Martin Pfeffer (pepperonas)
  */
@@ -43,7 +45,7 @@ public class FadeAnimationColored {
 
     public FadeAnimationColored(View view, int colorId) {
         this.view = view;
-        this.colorId = colorId;
+        this.colorId = AndBasx.getContext().getResources().getColor(colorId);
         prepareView();
     }
 
@@ -78,7 +80,7 @@ public class FadeAnimationColored {
 
     public FadeAnimationColored(View view, int colorId, float maxBrightness, float minBrightness, long duration, long startOffset) {
         this.view = view;
-        this.colorId = colorId;
+        this.colorId = AndBasx.getContext().getResources().getColor(colorId);
         this.maxBrightness = maxBrightness;
         this.minBrightness = minBrightness;
         this.duration = duration;

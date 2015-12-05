@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId 'com.pepperonas.testlib'
-        minSdkVersion 9
+        minSdkVersion 11
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -30,10 +30,9 @@ android {
     }
 }
 
-
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile(name: 'andcommon-0.1.1', ext: 'aar')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile(name: 'andcommon-0.1.1', ext: 'aar')
 }
