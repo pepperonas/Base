@@ -186,9 +186,11 @@ public class AesPrefs {
         long iv = sp.getLong(_key, 0);
         key = _key.substring(0, _key.length() - 1);
 
-        if (!sp.contains(key) && mLog != LogMode.NONE) {
-            Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
-                       "Return value: " + (defaultValue.isEmpty() ? "\"\"" : defaultValue));
+        if (!sp.contains(key)) {
+            if (mLog != LogMode.NONE) {
+                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
+                           "Return value: " + (defaultValue.isEmpty() ? "\"\"" : defaultValue));
+            }
             return defaultValue;
         }
 
@@ -238,9 +240,11 @@ public class AesPrefs {
         long iv = sp.getLong(_key, 0);
         key = _key.substring(0, _key.length() - 1);
 
-        if (!sp.contains(key) && mLog != LogMode.NONE) {
-            Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
-                       "Return value: " + defaultValue);
+        if (!sp.contains(key)) {
+            if (mLog != LogMode.NONE) {
+                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
+                           "Return value: " + defaultValue);
+            }
             return defaultValue;
         }
 
@@ -290,9 +294,11 @@ public class AesPrefs {
         long iv = sp.getLong(_key, 0);
         key = _key.substring(0, _key.length() - 1);
 
-        if (!sp.contains(key) && mLog != LogMode.NONE) {
-            Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
-                       "Return value: " + defaultValue);
+        if (!sp.contains(key)) {
+            if (mLog != LogMode.NONE) {
+                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
+                           "Return value: " + defaultValue);
+            }
             return defaultValue;
         }
 
@@ -342,9 +348,11 @@ public class AesPrefs {
         long iv = sp.getLong(_key, 0);
         key = _key.substring(0, _key.length() - 1);
 
-        if (!sp.contains(key) && mLog != LogMode.NONE) {
-            Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
-                       "Return value: " + defaultValue);
+        if (!sp.contains(key)) {
+            if (mLog != LogMode.NONE) {
+                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
+                           "Return value: " + defaultValue);
+            }
             return defaultValue;
         }
 
@@ -394,9 +402,11 @@ public class AesPrefs {
         long iv = sp.getLong(_key, 0);
         key = _key.substring(0, _key.length() - 1);
 
-        if (!sp.contains(key) && mLog != LogMode.NONE) {
-            Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
-                       "Return value: " + defaultValue);
+        if (!sp.contains(key)) {
+            if (mLog != LogMode.NONE) {
+                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
+                           "Return value: " + defaultValue);
+            }
             return defaultValue;
         }
 
@@ -446,10 +456,44 @@ public class AesPrefs {
         long iv = sp.getLong(_key, 0);
         key = _key.substring(0, _key.length() - 1);
 
-        if (!sp.contains(key) && mLog != LogMode.NONE) {
-            Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
-                       "Return value: " + defaultValue);
+        if (!sp.contains(key)) {
+            if (mLog != LogMode.NONE) {
+                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
+                           "Return value: " + defaultValue);
+            }
             return defaultValue;
+        }
+
+        try {
+            mDuration += System.currentTimeMillis() - start;
+            boolean value = Boolean.parseBoolean(Crypt.decrypt(mPassword, sp.getString(key, ""), iv));
+            if (mLog == LogMode.ALL || mLog == LogMode.GET) {
+                Log.d(TAG, "getBoolean  " + param + " -> " + value);
+            }
+            return value;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return defaultValue;
+        }
+    }
+
+
+    public static Boolean getBooleanNullable(String key, Boolean defaultValue) {
+        long start = System.currentTimeMillis();
+        String param = key;
+
+        SharedPreferences sp = mCtx.getSharedPreferences(mFilename, Context.MODE_PRIVATE);
+
+        String _key = Crypt.encrypt(mPassword, key, mIv) + TAIL;
+        long iv = sp.getLong(_key, 0);
+        key = _key.substring(0, _key.length() - 1);
+
+        if (!sp.contains(key)) {
+            if (mLog != LogMode.NONE) {
+                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
+                           "Return value: " + defaultValue);
+            }
+            return null;
         }
 
         try {
@@ -579,13 +623,64 @@ public class AesPrefs {
     }
 
 
+    public static void initInt(String key, int value) {
+        LogMode tmp = mLog;
+        mLog = LogMode.NONE;
+        if (getInt(key, Integer.MIN_VALUE + 1) == Integer.MIN_VALUE + 1) {
+            putInt(key, value);
+        } else {
+            Log.w(TAG, "initInt failed ('" + key + "' already exists, value=" + (getInt(key, 0)) + ").");
+            mLog = tmp;
+            return;
+        }
+        mLog = tmp;
+        if (mLog == LogMode.ALL) {
+            Log.i(TAG, "initInt: '" + key + "' as " + value);
+        }
+    }
+
+
+    public static void initString(String key, String value) {
+        LogMode tmp = mLog;
+        mLog = LogMode.NONE;
+        if (get(key, "xeeee!q_").equals("xeeee!q_")) {
+            put(key, value);
+        } else {
+            Log.w(TAG, "initString failed ('" + key + "' already exists, value=" + (get(key, "")) + ").");
+            mLog = tmp;
+            return;
+        }
+        mLog = tmp;
+        if (mLog == LogMode.ALL) {
+            Log.i(TAG, "initString: '" + key + "' as " + value);
+        }
+    }
+
+
+    public static void initBoolean(String key, boolean value) {
+        LogMode tmp = mLog;
+        mLog = LogMode.NONE;
+        if (getBooleanNullable(key, null) == null) {
+            putBoolean(key, value);
+        } else {
+            Log.w(TAG, "initBoolean failed ('" + key + "' already exists, value=" + (getBoolean(key, false)) + ").");
+            mLog = tmp;
+            return;
+        }
+        mLog = tmp;
+        if (mLog == LogMode.ALL) {
+            Log.i(TAG, "initBoolean: '" + key + "' as " + value);
+        }
+    }
+
+
     public static void initToggle(String key, boolean enabled) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
         if (getInt(key, -1) == -1) {
             putInt(key, (enabled ? 1 : 0));
         } else {
-            Log.w(TAG, "initToggle failed (toggle already exists, state=" + (getInt(key, 0) != 0) + ").");
+            Log.w(TAG, "initToggle failed (toggle '" + key + "' already exists, state=" + (getInt(key, 0) != 0) + ").");
             mLog = tmp;
             return;
         }
