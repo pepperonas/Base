@@ -62,4 +62,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile project(':jbasx')
     compile files('libs/jbasx-0.1.1.jar')
+    compile 'com.google.android.gms:play-services-basement:8.3.0'
 }

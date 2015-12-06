@@ -3,6 +3,7 @@ package com.pepperonas.andbasx.system;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,6 +11,8 @@ import android.net.Uri;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.common.AccountPicker;
 import com.pepperonas.andbasx.AndBasx;
 
 /**
@@ -43,6 +46,16 @@ public class UsabilityUtils {
         } catch (Exception e) {
             android.util.Log.e(TAG, e.getMessage());
             return result;
+        }
+    }
+
+
+    public static void launchAccountPicker(Activity activity, int requestCode) {
+        try {
+            Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE}, false, null, null, null, null);
+            activity.startActivityForResult(intent, requestCode);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
         }
     }
 

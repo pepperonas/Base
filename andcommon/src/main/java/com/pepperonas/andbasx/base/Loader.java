@@ -16,9 +16,12 @@
 
 package com.pepperonas.andbasx.base;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
+import android.util.TypedValue;
 
 import com.pepperonas.andbasx.AndBasx;
 
@@ -27,17 +30,30 @@ import com.pepperonas.andbasx.AndBasx;
  */
 public class Loader {
 
-    public static Drawable getDrawable(int id) {
+    public static Drawable getDrawable(int drawableId) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return AndBasx.getContext().getResources().getDrawable(id, AndBasx.getContext().getTheme());
+            return AndBasx.getContext().getResources().getDrawable(drawableId, AndBasx.getContext().getTheme());
         } else {
-            return AndBasx.getContext().getResources().getDrawable(id);
+            return AndBasx.getContext().getResources().getDrawable(drawableId);
         }
     }
 
 
-    public static int getColor(int id) {
-        return ContextCompat.getColor(AndBasx.getContext(), id);
+    public static int getAttr(Context context, int attrId) {
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(attrId, typedValue, true);
+        return typedValue.data;
+    }
+
+
+    public static int getColor(int colorId) {
+        return AndBasx.getContext().getResources().getColor(colorId);
+    }
+
+
+    public static int getColorContextCompat(int colorId) {
+        return ContextCompat.getColor(AndBasx.getContext(), colorId);
     }
 
 }

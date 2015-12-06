@@ -627,12 +627,17 @@ public class AesPrefs {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
         if (getInt("aes_app_launches", -1) == -1) {
-            // first launch returns 0
+            // first launch insert 0
             putInt("aes_app_launches", 0);
         } else {
             putInt("aes_app_launches", (getInt("aes_app_launches", 0) + 1));
         }
         mLog = tmp;
+    }
+
+
+    public static int getLaunchCounter() {
+        return AesPrefs.getInt("aes_app_launches", 0);
     }
 
 
@@ -665,11 +670,6 @@ public class AesPrefs {
             Log.i(TAG, "initOrCheckVersionCode: " + "Version has not changed.");
         }
         return false;
-    }
-
-
-    public static int getLaunchCounter() {
-        return AesPrefs.getInt("aes_app_launches", 0);
     }
 
 

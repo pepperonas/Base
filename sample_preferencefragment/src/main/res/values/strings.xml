@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Sample.PreferenceFragment</string>
+    <string name="settings">Settings</string>
+</resources>

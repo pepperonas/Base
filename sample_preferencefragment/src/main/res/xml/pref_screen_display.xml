@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:title="Display">
+
+    <CheckBoxPreference
+        android:key="screen_key_01"
+        android:title="Full brightness"
+        android:summary="Enable a brighter screen"/>
+
+    <Preference
+        android:key="screen_key_02"
+        android:title="Show test image"/>
+
+    <EditTextPreference
+        android:key="screen_key_03"
+        android:title="Screen params"
+        android:summary="Enter your screen params"/>
+
+</PreferenceScreen>

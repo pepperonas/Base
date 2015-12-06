@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <header
+        android:fragment="com.pepperonas.sample_preferencefragment.SettingsFragment"
+        android:title="Display"
+        android:summary="Display configuration"
+        >
+        <extra
+            android:name="key_value"
+            android:value="display"/>
+    </header>
+
+    <header
+        android:fragment="com.pepperonas.sample_preferencefragment.SettingsFragment"
+        android:title="Notifications"
+        android:summary="Notification behaviour"
+        >
+        <extra
+            android:name="key_value"
+            android:value="notification"/>
+    </header>
+
+    <header
+        android:fragment="com.pepperonas.sample_preferencefragment.SettingsFragment"
+        android:title="Updates"
+        android:summary="Update settings"
+        >
+        <extra
+            android:name="key_value"
+            android:value="update"/>
+    </header>
+
+</preference-headers>

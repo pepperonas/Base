@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:title="Updates">
+
+    <CheckBoxPreference
+        android:key="update_key_01"
+        android:title="Update automatically"
+        android:summary="Get faster updates"/>
+
+    <Preference
+        android:key="update_key_02"
+        android:title="Check for updates"/>
+
+</PreferenceScreen>
