@@ -2,11 +2,6 @@ package com.pepperonas.testlib;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-
-import com.pepperonas.andbasx.base.AndroidStorageUtils;
-import com.pepperonas.andbasx.concurrency.LoaderTaskUtils;
-import com.pepperonas.andbasx.interfaces.LoaderTaskListener;
 
 import java.util.List;
 
@@ -24,35 +19,37 @@ public class MainActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        new LoaderTaskUtils.Builder(this, new LoaderTaskListener() {
-            @Override
-            public void onLoaderTaskSuccess(LoaderTaskUtils.Action action, String s) {
-                Log.d(TAG, "onLoaderTaskSuccess  " + s);
-            }
+//        new LoaderTaskUtils.Builder(this, new LoaderTaskListener() {
+//            @Override
+//            public void onLoaderTaskSuccess(LoaderTaskUtils.Action action, String s) {
+//                Log.d(TAG, "onLoaderTaskSuccess  " + s);
+//            }
+//
+//
+//            @Override
+//            public void onLoaderTaskFailed(LoaderTaskUtils.Action action, String s) {
+//                Log.e(TAG, "onLoaderTaskFailed " + s);
+//            }
+//        }, "https://www.google.com").launch();
+//
+//
+//        new LoaderTaskUtils.Builder(this, new LoaderTaskListener() {
+//            @Override
+//            public void onLoaderTaskSuccess(LoaderTaskUtils.Action action, String s) {
+//
+//            }
+//
+//
+//            @Override
+//            public void onLoaderTaskFailed(LoaderTaskUtils.Action action, String s) {
+//
+//            }
+//        }, "http://orig02.deviantart.net/5229/f/2010/011/8/a/sombrero_galaxy_by_bubimandril.jpg")
+//                .storeContent(AndroidStorageUtils.getAppsInternalDataDir(), "SombreroGalaxy", ".png")
+//                .showProgressDialog("Downloading", "The Sombrero Galaxy will reach your phone soon.")
+//                .launch();
 
-
-            @Override
-            public void onLoaderTaskFailed(LoaderTaskUtils.Action action, String s) {
-                Log.e(TAG, "onLoaderTaskFailed " + s);
-            }
-        }, "https://www.google.com").launch();
-
-
-        new LoaderTaskUtils.Builder(this, new LoaderTaskListener() {
-            @Override
-            public void onLoaderTaskSuccess(LoaderTaskUtils.Action action, String s) {
-
-            }
-
-
-            @Override
-            public void onLoaderTaskFailed(LoaderTaskUtils.Action action, String s) {
-
-            }
-        }, "http://orig02.deviantart.net/5229/f/2010/011/8/a/sombrero_galaxy_by_bubimandril.jpg")
-                .storeContent(AndroidStorageUtils.getAppsInternalDataDir(), "SombreroGalaxy", ".png")
-                .showProgressDialog("Downloading", "The Sombrero Galaxy will reach your phone soon.")
-                .launch();
+        new AesTest();
 
 
         //        testConcurrency();

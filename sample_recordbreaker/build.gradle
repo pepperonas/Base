@@ -10,7 +10,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0-beta3'
+        classpath 'com.android.tools.build:gradle:2.0.0-alpha2'
     }
 }
 
@@ -44,6 +44,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile(name: 'andcommon-0.1.1', ext: 'aar')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.0'
     compile(name: 'andcommon-0.1.1', ext: 'aar')

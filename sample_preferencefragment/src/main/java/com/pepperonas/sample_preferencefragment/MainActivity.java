@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.pepperonas.sample_preferencefragment.multipref.MultiPrefActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -25,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getTitle().equals(getString(R.string.settings))) {
-            startActivity(new Intent(this, PreferenceActivity.class));
+            startActivity(new Intent(this, MultiPrefActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }

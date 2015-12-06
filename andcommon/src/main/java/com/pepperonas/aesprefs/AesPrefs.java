@@ -579,6 +579,48 @@ public class AesPrefs {
     }
 
 
+    public static void initToggle(String key, boolean enabled) {
+        LogMode tmp = mLog;
+        mLog = LogMode.NONE;
+        if (getInt(key, -1) == -1) {
+            putInt(key, (enabled ? 1 : 0));
+        } else {
+            Log.w(TAG, "initToggle failed (toggle already exists, state=" + (getInt(key, 0) != 0) + ").");
+            mLog = tmp;
+            return;
+        }
+        mLog = tmp;
+        if (mLog == LogMode.ALL) {
+            Log.i(TAG, "initToggle: '" + key + "' as " + enabled);
+        }
+    }
+
+
+    public static boolean toggle(String key) {
+        LogMode tmp = mLog;
+        mLog = LogMode.NONE;
+        boolean state = getInt(key, 0) == 1;
+        putInt(key, state ? 1 : 0);
+        mLog = tmp;
+        if (mLog == LogMode.ALL) {
+            Log.i(TAG, "toggle: (old=" + state + ") current -> " + !state);
+        }
+        return !state;
+    }
+
+
+    public static boolean readToggle(String key) {
+        LogMode tmp = mLog;
+        mLog = LogMode.NONE;
+        boolean state = getInt(key, 0) == 1;
+        mLog = tmp;
+        if (mLog == LogMode.ALL) {
+            Log.i(TAG, "readToggle: " + state);
+        }
+        return state;
+    }
+
+
     public static void storeArray(int stringId, List<String> values) {
         storeArray(mCtx.getString(stringId), values);
     }

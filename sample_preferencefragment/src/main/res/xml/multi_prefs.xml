@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Preferences">
+        <SwitchPreference android:title="Preference"/>
+        <PreferenceScreen
+            android:title="Sub Preferences"
+            android:fragment="com.pepperonas.sample_preferencefragment.multipref.MultiSubPrefFragment"/>
+    </PreferenceCategory>
+</PreferenceScreen>

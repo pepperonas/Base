@@ -15,8 +15,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".PreferenceActivity">
-        </activity>
+        <activity android:name=".PreferenceActivity"/>
+        <activity android:name=".multipref.MultiPrefActivity"/>
     </application>
 
 </manifest>

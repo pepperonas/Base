@@ -58,8 +58,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Preference preference = findPreference("update_key_02");
-        preference.setOnPreferenceClickListener(this);
+        //        Preference preference = findPreference("update_key_02");
+        //        preference.setOnPreferenceClickListener(this);
     }
 
 
