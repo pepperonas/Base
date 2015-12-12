@@ -4,9 +4,103 @@ import java.util.HashMap;
 import java.util.Locale;
 
 /**
- * @author Martin Pfeffer (pepperonas)
+ * The Color class defines methods for creating and converting color ints.
+ * Colors are represented as packed ints, made up of 4 bytes: alpha, red,
+ * green, blue. The values are unpremultiplied, meaning any transparency is
+ * stored solely in the alpha component, and not in the color components. The
+ * components are stored as follows (alpha << 24) | (red << 16) |
+ * (green << 8) | blue. Each component ranges between 0..255 with 0
+ * meaning no contribution for that component, and 255 meaning 100%
+ * contribution. Thus opaque-black would be 0xFF000000 (100% opaque but
+ * no contributions from red, green, or blue), and opaque-white would be
+ * 0xFFFFFFFF
  */
 public class ColorXs {
+
+    /**
+     * Return the alpha component of a color int. This is the same as saying
+     * color >>> 24
+     */
+    public static int alpha(int color) {
+        return color >>> 24;
+    }
+
+
+    /**
+     * Return the red component of a color int. This is the same as saying
+     * (color >> 16) & 0xFF
+     */
+    public static int red(int color) {
+        return (color >> 16) & 0xFF;
+    }
+
+
+    /**
+     * Return the green component of a color int. This is the same as saying
+     * (color >> 8) & 0xFF
+     */
+    public static int green(int color) {
+        return (color >> 8) & 0xFF;
+    }
+
+
+    /**
+     * Return the blue component of a color int. This is the same as saying
+     * color & 0xFF
+     */
+    public static int blue(int color) {
+        return color & 0xFF;
+    }
+
+
+    /**
+     * Return a color-int from red, green, blue components.
+     * The alpha component is implicity 255 (fully opaque).
+     * These component values should be [0..255], but there is no
+     * range check performed, so if they are out of range, the
+     * returned color is undefined.
+     *
+     * @param red   Red component [0..255] of the color
+     * @param green Green component [0..255] of the color
+     * @param blue  Blue component [0..255] of the color
+     */
+    public static int rgb(int red, int green, int blue) {
+        return (0xFF << 24) | (red << 16) | (green << 8) | blue;
+    }
+
+
+    /**
+     * Return a color-int from alpha, red, green, blue components.
+     * These component values should be [0..255], but there is no
+     * range check performed, so if they are out of range, the
+     * returned color is undefined.
+     *
+     * @param alpha Alpha component [0..255] of the color
+     * @param red   Red component [0..255] of the color
+     * @param green Green component [0..255] of the color
+     * @param blue  Blue component [0..255] of the color
+     */
+    public static int argb(int alpha, int red, int green, int blue) {
+        return (alpha << 24) | (red << 16) | (green << 8) | blue;
+    }
+
+
+    /**
+     * Returns the brightness component of a color int.
+     *
+     * @return A value between 0.0f and 1.0f
+     * @hide Pending API council
+     */
+    public static float brightness(int color) {
+        int r = (color >> 16) & 0xFF;
+        int g = (color >> 8) & 0xFF;
+        int b = color & 0xFF;
+
+        int V = Math.max(b, Math.max(r, g));
+
+        return (V / 255.f);
+    }
+
 
     /**
      * Parse the color string, and return the corresponding color-int.

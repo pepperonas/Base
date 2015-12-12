@@ -16,6 +16,8 @@
 
 package com.pepperonas.jbasx.format;
 
+import com.pepperonas.jbasx.base.TextUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -43,9 +45,15 @@ public class TimeFormatUtils {
 
     public enum Daytime {
 
-        MORNING(0), AFTERNOON(1), EVENING(2), NIGHT(3);
+        Morning(0), Afternoon(1), Evening(2), Night(3);
 
         int d;
+
+
+        @Override
+        public String toString() {
+            return this.name();
+        }
 
 
         Daytime(int d) { this.d = d; }
@@ -58,17 +66,15 @@ public class TimeFormatUtils {
     public static final String UTC_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
 
-    public static String utcToLocal(String utcTime) {
-        String localTime = null;
+    public static String utcToLocal(Date date) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat(UTC_FORMAT);
-            Date date = sdf.parse(utcTime);
             sdf.applyPattern(DEFAULT_FORMAT);
-            localTime = sdf.format(date);
+            return sdf.format(date);
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
-        return localTime;
     }
 
 
@@ -80,7 +86,7 @@ public class TimeFormatUtils {
 
 
     public static String formatTime(Date date, String format) {
-        if (com.pepperonas.jbasx.base.TextUtils.isEmpty(format) || date == null) {
+        if (TextUtils.isEmpty(format) || date == null) {
             return null;
         }
         SimpleDateFormat sdf = new SimpleDateFormat(format);
@@ -95,7 +101,7 @@ public class TimeFormatUtils {
 
 
     public static long formatTime(String time, String format) {
-        if (com.pepperonas.jbasx.base.TextUtils.isEmpty(time)) {
+        if (TextUtils.isEmpty(time)) {
             return 0;
         }
         SimpleDateFormat sdf = new SimpleDateFormat(format);
@@ -113,9 +119,10 @@ public class TimeFormatUtils {
     /**
      * Use {@link Format}.
      *
+     * @param format The stamp's format.
      * @return The formatted timestamp.
      */
-    public static String stamp(Format format) {
+    public static String getTimestamp(Format format) {
         String dt = getStamp();
 
         String month = dt.substring(4, 6);
@@ -152,7 +159,7 @@ public class TimeFormatUtils {
     }
 
 
-    public static String getTimestamp(boolean showSeconds) {
+    public static String getTimestampLexical(boolean showSeconds) {
         if (showSeconds) return new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
         else return new SimpleDateFormat("yyyyMMddhhmm").format(new Date());
     }
@@ -183,10 +190,10 @@ public class TimeFormatUtils {
     public static Daytime getDaytime() {
         Calendar c = Calendar.getInstance();
         int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
-        if (timeOfDay >= 6 && timeOfDay < 12) return Daytime.MORNING;
-        else if (timeOfDay >= 12 && timeOfDay < 18) return Daytime.AFTERNOON;
-        else if (timeOfDay >= 18 && timeOfDay < 22) return Daytime.EVENING;
-        return Daytime.NIGHT;
+        if (timeOfDay >= 6 && timeOfDay < 12) return Daytime.Morning;
+        else if (timeOfDay >= 12 && timeOfDay < 18) return Daytime.Afternoon;
+        else if (timeOfDay >= 18 && timeOfDay < 22) return Daytime.Evening;
+        return Daytime.Night;
     }
 
 }

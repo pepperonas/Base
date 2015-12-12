@@ -1,9 +1,43 @@
 package com.pepperonas.jbasx.color;
 
+import com.pepperonas.jbasx.color.android.ColorXs;
+
 /**
  * @author Martin Pfeffer (pepperonas)
  */
 public class ColorUtils {
+
+    public static int convertBrightnessToMaxInt(int percent) {
+        if (percent >= 100) return 255;
+        else if (percent < 1) return 0;
+        return (int) ((float) percent * 2.55f);
+    }
+
+
+    public static String convertPercentToHexTransparency(int _p) {
+        String hex = Integer.toHexString((int) Math.round((Math.round((double) _p / 100d * 100) / 100.0d) * 255)).toUpperCase();
+        if (hex.length() == 1) hex = "0" + hex;
+        return String.valueOf(hex);
+    }
+
+
+    public static int convertPercentToIntegerHexTransparency(int percent) {
+        return Integer.parseInt(convertPercentToHexTransparency(percent).toLowerCase(), 16);
+    }
+
+
+    public static int setAlphaComponent(int color, int alpha) {
+        if (alpha < 0 || alpha > 255) {
+            throw new IllegalArgumentException("alpha must be between 0 and 255.");
+        }
+        return (color & 0x00ffffff) | (alpha << 24);
+    }
+
+
+    public static int setBrightness(String color, int brightnessInPercent) {
+        return ColorXs.parseColor("#" + ColorUtils.convertPercentToHexTransparency(brightnessInPercent) + color.replace("0x", ""));
+    }
+
 
     /**
      * Parse {@link com.pepperonas.jbasx.div.MaterialColor} to it's integer representation.
@@ -12,7 +46,7 @@ public class ColorUtils {
      * @return The color in it's integer representation.
      */
     public static int toInt(String color) {
-        return com.pepperonas.jbasx.color.android.ColorXs.parseColor(color);
+        return ColorXs.parseColor(color);
     }
 
 

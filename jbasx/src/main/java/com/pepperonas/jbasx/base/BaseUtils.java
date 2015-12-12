@@ -29,6 +29,11 @@ public class BaseUtils {
     private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
 
 
+    public static int convertToHex(int n) {
+        return Integer.valueOf(String.valueOf(n), 16);
+    }
+
+
     /**
      * Generate a random integer. The parameters specify the range,
      * in which the values are generated.
