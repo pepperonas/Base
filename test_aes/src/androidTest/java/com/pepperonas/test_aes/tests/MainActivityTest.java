@@ -151,17 +151,19 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
 
-    public void testGetEncryptedContent() {
-        assertTrue(AesPrefs.getEncryptedContent().length() != 0);
-    }
-
-
     public void testGetEncryptedKey() {
         assertTrue(AesPrefs.getEncryptedKey("string_key").length() != 0);
     }
 
 
-    public void testXGetExecutionTime() {
+    public void testXGetEncryptedContent() {
+        String s = AesPrefs.getEncryptedContent();
+        Log.d(TAG, "testGetEncryptedContent\n" + s + "\n");
+        assertTrue(s.length() != 0);
+    }
+
+
+    public void testYGetExecutionTime() {
         Log.e(TAG, "testGetExecutionTime " + AesPrefs.getExecutionTime() + " ms");
         assertTrue(AesPrefs.getExecutionTime() > 1 && AesPrefs.getExecutionTime() < 1000);
         AesPrefs.resetExecutionTime();
@@ -169,7 +171,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
 
-    public void testYDeleteAll() {
+    public void testZDeleteAll() {
         Log.d(TAG, "testDeleteAll " + AesPrefs.countEntries() + " (before)");
         AesPrefs.deleteAll();
         Log.d(TAG, "testDeleteAll " + AesPrefs.countEntries() + " (after)");
