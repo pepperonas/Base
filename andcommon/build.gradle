@@ -63,4 +63,7 @@ dependencies {
     compile project(':jbasx')
     compile files('libs/jbasx-0.1.1.jar')
     compile 'com.google.android.gms:play-services-basement:8.3.0'
+
+    testCompile 'junit:junit:4.12'
+    testCompile "org.mockito:mockito-core:1.9.5"
 }

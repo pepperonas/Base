@@ -82,7 +82,7 @@ public class AesPrefs {
         mLog = logMode;
         init(context, filename, password);
         initOrIncrementLaunchCounter();
-        storeInstallationDate();
+        initInstallationDate();
     }
 
 
@@ -208,6 +208,38 @@ public class AesPrefs {
     }
 
 
+    public static String getNullable(String key) {
+        long start = System.currentTimeMillis();
+        String param = key;
+
+        SharedPreferences sp = mCtx.getSharedPreferences(mFilename, Context.MODE_PRIVATE);
+
+        String _key = Crypt.encrypt(mPassword, key, mIv) + TAIL;
+        long iv = sp.getLong(_key, 0);
+        key = _key.substring(0, _key.length() - 1);
+
+        if (!sp.contains(key)) {
+            if (mLog != LogMode.NONE) {
+                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
+                           "Return value: null");
+            }
+            return null;
+        }
+
+        try {
+            mDuration += System.currentTimeMillis() - start;
+            String value = Crypt.decrypt(mPassword, sp.getString(key, ""), iv);
+            if (mLog == LogMode.ALL || mLog == LogMode.GET) {
+                Log.d(TAG, "get  " + param + " -> " + value);
+            }
+            return value;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
     public static void putInt(String key, int value) {
         long start = System.currentTimeMillis();
 
@@ -258,6 +290,38 @@ public class AesPrefs {
         } catch (Exception e) {
             e.printStackTrace();
             return defaultValue;
+        }
+    }
+
+
+    public static Integer getIntNullable(String key) {
+        long start = System.currentTimeMillis();
+        String param = key;
+
+        SharedPreferences sp = mCtx.getSharedPreferences(mFilename, Context.MODE_PRIVATE);
+
+        String _key = Crypt.encrypt(mPassword, key, mIv) + TAIL;
+        long iv = sp.getLong(_key, 0);
+        key = _key.substring(0, _key.length() - 1);
+
+        if (!sp.contains(key)) {
+            if (mLog != LogMode.NONE) {
+                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
+                           "Return value: null");
+            }
+            return null;
+        }
+
+        try {
+            mDuration += System.currentTimeMillis() - start;
+            int value = Integer.parseInt(Crypt.decrypt(mPassword, sp.getString(key, ""), iv));
+            if (mLog == LogMode.ALL || mLog == LogMode.GET) {
+                Log.d(TAG, "getInt  " + param + " -> " + value);
+            }
+            return value;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -316,6 +380,38 @@ public class AesPrefs {
     }
 
 
+    public static Long getLongNullable(String key) {
+        long start = System.currentTimeMillis();
+        String param = key;
+
+        SharedPreferences sp = mCtx.getSharedPreferences(mFilename, Context.MODE_PRIVATE);
+
+        String _key = Crypt.encrypt(mPassword, key, mIv) + TAIL;
+        long iv = sp.getLong(_key, 0);
+        key = _key.substring(0, _key.length() - 1);
+
+        if (!sp.contains(key)) {
+            if (mLog != LogMode.NONE) {
+                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
+                           "Return value: " + null);
+            }
+            return null;
+        }
+
+        try {
+            mDuration += System.currentTimeMillis() - start;
+            long value = Long.parseLong(Crypt.decrypt(mPassword, sp.getString(key, ""), iv));
+            if (mLog == LogMode.ALL || mLog == LogMode.GET) {
+                Log.d(TAG, "getLong  " + param + " -> " + value);
+            }
+            return value;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
     public static void putDouble(String key, double value) {
         long start = System.currentTimeMillis();
 
@@ -366,6 +462,38 @@ public class AesPrefs {
         } catch (Exception e) {
             e.printStackTrace();
             return defaultValue;
+        }
+    }
+
+
+    public static Double getDoubleNullable(String key) {
+        long start = System.currentTimeMillis();
+        String param = key;
+
+        SharedPreferences sp = mCtx.getSharedPreferences(mFilename, Context.MODE_PRIVATE);
+
+        String _key = Crypt.encrypt(mPassword, key, mIv) + TAIL;
+        long iv = sp.getLong(_key, 0);
+        key = _key.substring(0, _key.length() - 1);
+
+        if (!sp.contains(key)) {
+            if (mLog != LogMode.NONE) {
+                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
+                           "Return value: null");
+            }
+            return null;
+        }
+
+        try {
+            mDuration += System.currentTimeMillis() - start;
+            double value = Double.parseDouble(Crypt.decrypt(mPassword, sp.getString(key, ""), iv));
+            if (mLog == LogMode.ALL || mLog == LogMode.GET) {
+                Log.d(TAG, "getDouble  " + param + " -> " + value);
+            }
+            return value;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -424,6 +552,38 @@ public class AesPrefs {
     }
 
 
+    public static Float getFloatNullable(String key) {
+        long start = System.currentTimeMillis();
+        String param = key;
+
+        SharedPreferences sp = mCtx.getSharedPreferences(mFilename, Context.MODE_PRIVATE);
+
+        String _key = Crypt.encrypt(mPassword, key, mIv) + TAIL;
+        long iv = sp.getLong(_key, 0);
+        key = _key.substring(0, _key.length() - 1);
+
+        if (!sp.contains(key)) {
+            if (mLog != LogMode.NONE) {
+                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
+                           "Return value: null");
+            }
+            return null;
+        }
+
+        try {
+            mDuration += System.currentTimeMillis() - start;
+            float value = Float.parseFloat(Crypt.decrypt(mPassword, sp.getString(key, ""), iv));
+            if (mLog == LogMode.ALL || mLog == LogMode.GET) {
+                Log.d(TAG, "getFloat  " + param + " -> " + value);
+            }
+            return value;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
     public static void putBoolean(String key, boolean value) {
         long start = System.currentTimeMillis();
 
@@ -478,7 +638,7 @@ public class AesPrefs {
     }
 
 
-    public static Boolean getBooleanNullable(String key, Boolean defaultValue) {
+    public static Boolean getBooleanNullable(String key) {
         long start = System.currentTimeMillis();
         String param = key;
 
@@ -491,7 +651,7 @@ public class AesPrefs {
         if (!sp.contains(key)) {
             if (mLog != LogMode.NONE) {
                 Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
-                           "Return value: " + defaultValue);
+                           "Return value: null");
             }
             return null;
         }
@@ -505,7 +665,7 @@ public class AesPrefs {
             return value;
         } catch (Exception e) {
             e.printStackTrace();
-            return defaultValue;
+            return null;
         }
     }
 
@@ -623,27 +783,10 @@ public class AesPrefs {
     }
 
 
-    public static void initInt(String key, int value) {
-        LogMode tmp = mLog;
-        mLog = LogMode.NONE;
-        if (getInt(key, Integer.MIN_VALUE + 1) == Integer.MIN_VALUE + 1) {
-            putInt(key, value);
-        } else {
-            Log.w(TAG, "initInt failed ('" + key + "' already exists, value=" + (getInt(key, 0)) + ").");
-            mLog = tmp;
-            return;
-        }
-        mLog = tmp;
-        if (mLog == LogMode.ALL) {
-            Log.i(TAG, "initInt: '" + key + "' as " + value);
-        }
-    }
-
-
     public static void initString(String key, String value) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
-        if (get(key, "xeeee!q_").equals("xeeee!q_")) {
+        if (getNullable(key) == null) {
             put(key, value);
         } else {
             Log.w(TAG, "initString failed ('" + key + "' already exists, value=" + (get(key, "")) + ").");
@@ -657,10 +800,27 @@ public class AesPrefs {
     }
 
 
+    public static void initInt(String key, int value) {
+        LogMode tmp = mLog;
+        mLog = LogMode.NONE;
+        if (getIntNullable(key) == null) {
+            putInt(key, value);
+        } else {
+            Log.w(TAG, "initInt failed ('" + key + "' already exists, value=" + (getInt(key, 0)) + ").");
+            mLog = tmp;
+            return;
+        }
+        mLog = tmp;
+        if (mLog == LogMode.ALL) {
+            Log.i(TAG, "initInt: '" + key + "' as " + value);
+        }
+    }
+
+
     public static void initBoolean(String key, boolean value) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
-        if (getBooleanNullable(key, null) == null) {
+        if (getBooleanNullable(key) == null) {
             putBoolean(key, value);
         } else {
             Log.w(TAG, "initBoolean failed ('" + key + "' already exists, value=" + (getBoolean(key, false)) + ").");
@@ -674,45 +834,54 @@ public class AesPrefs {
     }
 
 
-    public static void initToggle(String key, boolean enabled) {
+    public static void initFloat(String key, float value) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
-        if (getInt(key, -1) == -1) {
-            putInt(key, (enabled ? 1 : 0));
+        if (getFloatNullable(key) == null) {
+            putFloat(key, value);
         } else {
-            Log.w(TAG, "initToggle failed (toggle '" + key + "' already exists, state=" + (getInt(key, 0) != 0) + ").");
+            Log.w(TAG, "initFloat failed ('" + key + "' already exists, value=" + (getFloat(key, value)) + ").");
             mLog = tmp;
             return;
         }
         mLog = tmp;
         if (mLog == LogMode.ALL) {
-            Log.i(TAG, "initToggle: '" + key + "' as " + enabled);
+            Log.i(TAG, "initFloat: '" + key + "' as " + value);
         }
     }
 
 
-    public static boolean toggle(String key) {
+    public static void initDouble(String key, double value) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
-        boolean state = getInt(key, 0) == 1;
-        putInt(key, state ? 1 : 0);
+        if (getDoubleNullable(key) == null) {
+            putDouble(key, value);
+        } else {
+            Log.w(TAG, "initDouble failed ('" + key + "' already exists, value=" + (getDouble(key, value)) + ").");
+            mLog = tmp;
+            return;
+        }
         mLog = tmp;
         if (mLog == LogMode.ALL) {
-            Log.i(TAG, "toggle: (old=" + state + ") current -> " + !state);
+            Log.i(TAG, "initDouble: '" + key + "' as " + value);
         }
-        return !state;
     }
 
 
-    public static boolean readToggle(String key) {
+    public static void initLong(String key, long value) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
-        boolean state = getInt(key, 0) == 1;
+        if (getLongNullable(key) == null) {
+            putLong(key, value);
+        } else {
+            Log.w(TAG, "initLong failed ('" + key + "' already exists, value=" + (getLong(key, value)) + ").");
+            mLog = tmp;
+            return;
+        }
         mLog = tmp;
         if (mLog == LogMode.ALL) {
-            Log.i(TAG, "readToggle: " + state);
+            Log.i(TAG, "initLong: '" + key + "' as " + value);
         }
-        return state;
     }
 
 
@@ -763,7 +932,7 @@ public class AesPrefs {
     public static void initOrIncrementLaunchCounter() {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
-        if (getInt("aes_app_launches", -1) == -1) {
+        if (getIntNullable("aes_app_launches") == null) {
             // first launch insert 0
             putInt("aes_app_launches", 0);
         } else {
@@ -810,10 +979,10 @@ public class AesPrefs {
     }
 
 
-    public static void storeInstallationDate() {
+    public static void initInstallationDate() {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
-        if (getLong("aes_inst_date", 0L) == 0L) {
+        if (getLongNullable("aes_inst_date") == null) {
             putLong("aes_inst_date", System.currentTimeMillis());
         }
         mLog = tmp;

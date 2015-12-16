@@ -32,14 +32,16 @@ public class AppUtils {
      */
     public static int getVersionCode() {
         try {
-            PackageInfo pi = AndBasx
-                    .getContext().getPackageManager().getPackageInfo(
-                            AndBasx.getContext().getPackageName(), 0);
+            PackageInfo pi = AndBasx.getContext().getPackageManager()
+                                    .getPackageInfo(AndBasx.getContext().getPackageName(), 0);
             return pi.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+            return -1;
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return -1;
         }
-        return -1;
     }
 
 
@@ -48,14 +50,16 @@ public class AppUtils {
      */
     public static String getVersionName() {
         try {
-            PackageInfo pi = AndBasx
-                    .getContext().getPackageManager().getPackageInfo(
-                            AndBasx.getContext().getPackageName(), 0);
+            PackageInfo pi = AndBasx.getContext().getPackageManager()
+                                    .getPackageInfo(AndBasx.getContext().getPackageName(), 0);
             return pi.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+            return "";
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return "";
         }
-        return "";
     }
 
 
@@ -64,10 +68,13 @@ public class AppUtils {
      */
     public static String getAppName() {
         try {
-            ApplicationInfo ai = AndBasx.getContext().getPackageManager().getApplicationInfo(
-                    AndBasx.getContext().getPackageName(), 0);
+            ApplicationInfo ai = AndBasx.getContext().getPackageManager()
+                                        .getApplicationInfo(AndBasx.getContext().getPackageName(), 0);
             return (String) (ai != null ? AndBasx.getContext().getPackageManager().getApplicationLabel(ai) : "");
         } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return "";
+        } catch (NullPointerException e) {
             e.printStackTrace();
             return "";
         }

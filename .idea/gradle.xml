@@ -18,7 +18,8 @@
             <option value="$PROJECT_DIR$/sample_preferencefragment" />
             <option value="$PROJECT_DIR$/sample_recordbreaker" />
             <option value="$PROJECT_DIR$/sample_splashview" />
-            <option value="$PROJECT_DIR$/sample_test_lib" />
+            <option value="$PROJECT_DIR$/sample_testlib" />
+            <option value="$PROJECT_DIR$/test_aes" />
           </set>
         </option>
         <option name="myModules">
@@ -33,7 +34,8 @@
             <option value="$PROJECT_DIR$/sample_preferencefragment" />
             <option value="$PROJECT_DIR$/sample_recordbreaker" />
             <option value="$PROJECT_DIR$/sample_splashview" />
-            <option value="$PROJECT_DIR$/sample_test_lib" />
+            <option value="$PROJECT_DIR$/sample_testlib" />
+            <option value="$PROJECT_DIR$/test_aes" />
           </set>
         </option>
       </GradleProjectSettings>
