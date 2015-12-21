@@ -39,6 +39,12 @@ public class Loader {
     }
 
 
+    public static int resolveDrawableId(String source) {
+        String uri = "drawable/" + source;
+        return AndBasx.getContext().getResources().getIdentifier(uri, null, AndBasx.getContext().getPackageName());
+    }
+
+
     public static int getAttr(Context context, int attrId) {
         TypedValue typedValue = new TypedValue();
         Resources.Theme theme = context.getTheme();

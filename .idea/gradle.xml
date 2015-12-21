@@ -19,7 +19,7 @@
             <option value="$PROJECT_DIR$/sample_recordbreaker" />
             <option value="$PROJECT_DIR$/sample_splashview" />
             <option value="$PROJECT_DIR$/sample_testlib" />
-            <option value="$PROJECT_DIR$/test_aes" />
+            <option value="$PROJECT_DIR$/test_aesprefs" />
           </set>
         </option>
         <option name="myModules">
@@ -35,7 +35,7 @@
             <option value="$PROJECT_DIR$/sample_recordbreaker" />
             <option value="$PROJECT_DIR$/sample_splashview" />
             <option value="$PROJECT_DIR$/sample_testlib" />
-            <option value="$PROJECT_DIR$/test_aes" />
+            <option value="$PROJECT_DIR$/test_aesprefs" />
           </set>
         </option>
       </GradleProjectSettings>

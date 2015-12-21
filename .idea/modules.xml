@@ -13,7 +13,7 @@
       <module fileurl="file://$PROJECT_DIR$/sample_recordbreaker/sample_recordbreaker.iml" filepath="$PROJECT_DIR$/sample_recordbreaker/sample_recordbreaker.iml" />
       <module fileurl="file://$PROJECT_DIR$/sample_splashview/sample_splashview.iml" filepath="$PROJECT_DIR$/sample_splashview/sample_splashview.iml" />
       <module fileurl="file://$PROJECT_DIR$/sample_testlib/sample_testlib.iml" filepath="$PROJECT_DIR$/sample_testlib/sample_testlib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/test_aes/test_aes.iml" filepath="$PROJECT_DIR$/test_aes/test_aes.iml" />
+      <module fileurl="file://$PROJECT_DIR$/test_aesprefs/test_aesprefs.iml" filepath="$PROJECT_DIR$/test_aesprefs/test_aesprefs.iml" />
     </modules>
   </component>
 </project>

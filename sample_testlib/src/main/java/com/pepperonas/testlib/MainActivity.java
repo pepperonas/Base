@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity
         extends AppCompatActivity
@@ -58,6 +60,8 @@ public class MainActivity
         //        AndroidStorageUtils.getAppsExternalFileDir();
         //        testBitmapUtils();
         //        testNetworkBaseUtils();
+
+        testTimerTask();
     }
 
 
@@ -172,6 +176,16 @@ public class MainActivity
         //            }
         //            exService.shutdownNow();
         //        }
+    }
+
+
+    private void testTimerTask() {
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+
+            }
+        }, 0, 1000);
     }
 
 }
