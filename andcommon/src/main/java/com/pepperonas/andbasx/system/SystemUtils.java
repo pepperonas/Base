@@ -27,11 +27,16 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.hardware.display.DisplayManager;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.view.Display;
 import android.view.MotionEvent;
 
 import com.pepperonas.andbasx.AndBasx;
@@ -56,16 +61,21 @@ public class SystemUtils {
     public static final int MIN_BRIGHTNESS = 0;
 
 
+    /**
+     * Is main thread boolean.
+     *
+     * @return the boolean
+     */
     public static boolean isMainThread() {
         return Looper.getMainLooper() == Looper.myLooper();
     }
 
 
     /**
-     * Handle action in {@link Activity#onRequestPermissionsResult}.
+     * Launch app settings.
      *
-     * @param activity    The calling {@link Activity}.
-     * @param requestCode The request code to handle in {@link Activity#onRequestPermissionsResult}.
+     * @param activity    the activity
+     * @param requestCode the request code
      */
     private void launchAppSettings(Activity activity, int requestCode) {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + activity.getPackageName()));
@@ -73,6 +83,11 @@ public class SystemUtils {
     }
 
 
+    /**
+     * Close entire app.
+     *
+     * @param activity the activity
+     */
     public static void closeEntireApp(Activity activity) {
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
@@ -83,6 +98,12 @@ public class SystemUtils {
     }
 
 
+    /**
+     * Is installed boolean.
+     *
+     * @param packageName the package name
+     * @return the boolean
+     */
     public static boolean isInstalled(String packageName) {
         PackageInfo packageInfo;
         if (TextUtils.isEmpty(packageName)) {
@@ -104,6 +125,11 @@ public class SystemUtils {
     }
 
 
+    /**
+     * Gets status bar height.
+     *
+     * @return the status bar height
+     */
     public static int getStatusBarHeight() {
         int height = 0;
         if (AndBasx.getContext() == null) {
@@ -118,6 +144,11 @@ public class SystemUtils {
     }
 
 
+    /**
+     * Uninstall app.
+     *
+     * @param packageName the package name
+     */
     public static void uninstallApp(String packageName) {
         boolean installed = isInstalled(packageName);
         if (!installed) {
@@ -137,6 +168,40 @@ public class SystemUtils {
     }
 
 
+    /**
+     * Is screen on boolean.
+     *
+     * @return the boolean
+     */
+    public static boolean isScreenOn() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+            DisplayManager dm = (DisplayManager) AndBasx.getContext().getSystemService(Context.DISPLAY_SERVICE);
+            for (Display display : dm.getDisplays()) {
+                return display.getState() != Display.STATE_OFF;
+            }
+        } else {
+            PowerManager powerManager = (PowerManager) AndBasx.getContext().getSystemService(Context.POWER_SERVICE);
+            return powerManager.isScreenOn();
+        }
+        return false;
+    }
+
+
+    /**
+     * Lock the screen.
+     */
+    public static void lockScreen() {
+        DevicePolicyManager deviceManager = (DevicePolicyManager)
+                AndBasx.getContext().getSystemService(Context.DEVICE_POLICY_SERVICE);
+        deviceManager.lockNow();
+    }
+
+
+    /**
+     * Gets system screen brightness.
+     *
+     * @return the system screen brightness
+     */
     public static int getSystemScreenBrightness() {
         int screenBrightness = 255;
         try {
@@ -150,6 +215,11 @@ public class SystemUtils {
     }
 
 
+    /**
+     * Sets system screen brightness.
+     *
+     * @param brightness the brightness
+     */
     public static void setSystemScreenBrightness(int brightness) {
         try {
             if (brightness < MIN_BRIGHTNESS) {
@@ -159,10 +229,8 @@ public class SystemUtils {
                 brightness = MAX_BRIGHTNESS;
             }
             ContentResolver resolver = AndBasx.getContext().getContentResolver();
-            Uri uri = Settings.System
-                    .getUriFor(Settings.System.SCREEN_BRIGHTNESS);
-            Settings.System.putInt           (resolver, Settings.System.SCREEN_BRIGHTNESS,
-                                   brightness);
+            Uri uri = Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS);
+            Settings.System.putInt(resolver, Settings.System.SCREEN_BRIGHTNESS, brightness);
             resolver.notifyChange(uri, null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -170,10 +238,27 @@ public class SystemUtils {
     }
 
 
+    /**
+     * Gets brightness.
+     *
+     * @return the brightness
+     */
+    public static int getBrightness() {
+        return Settings.System.getInt(
+                AndBasx.getContext().getContentResolver(),
+                android.provider.Settings.System.SCREEN_BRIGHTNESS, -1);
+    }
+
+
+    /**
+     * Gets brightness mode.
+     *
+     * @return the brightness mode
+     */
     public static int getBrightnessMode() {
         int brightnessMode = Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL;
         try {
-            brightnessMode = Settings.System.getInt       (
+            brightnessMode = Settings.System.getInt(
                     AndBasx.getContext().getContentResolver(),
                     Settings.System.SCREEN_BRIGHTNESS_MODE);
         } catch (Exception e) {
@@ -184,11 +269,13 @@ public class SystemUtils {
 
 
     /**
-     * @param brightnessMode 1 auto, 0 manual
+     * Sets brightness mode.
+     *
+     * @param brightnessMode the brightness mode
      */
     public static void setBrightnessMode(int brightnessMode) {
         try {
-            Settings.System.putInt                                        (
+            Settings.System.putInt(
                     AndBasx.getContext().getContentResolver(),
                     Settings.System.SCREEN_BRIGHTNESS_MODE, brightnessMode);
         } catch (Exception e) {
@@ -198,20 +285,25 @@ public class SystemUtils {
 
 
     /**
-     * Requires:
-     * {@link android.Manifest.permission#CHANGE_WIFI_STATE}
+     * Is airplane mode enabled boolean.
+     *
+     * @return the boolean
      */
-    public static void setWifiEnabled(boolean enable) {
-        try {
-            WifiManager wifiManager = (WifiManager)
-                    AndBasx.getContext().getSystemService(Context.WIFI_SERVICE);
-            wifiManager.setWifiEnabled(enable);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public static boolean isAirplaneModeEnabled() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            return Settings.System.getInt(AndBasx.getContext().getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) != 0;
+        } else {
+            return Settings.Global.getInt(AndBasx.getContext().getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) != 0;
         }
     }
 
 
+    /**
+     * Is wifi enabled boolean.
+     * {@link android.Manifest.permission#ACCESS_WIFI_STATE}
+     *
+     * @return the boolean
+     */
     public static boolean isWifiEnabled() {
         boolean enabled = false;
         try {
@@ -225,6 +317,72 @@ public class SystemUtils {
     }
 
 
+    /**
+     * Sets wifi enabled.
+     * {@link android.Manifest.permission#CHANGE_WIFI_STATE}
+     *
+     * @param enable the enable
+     */
+    public static void setWifiEnabled(boolean enable) {
+        try {
+            WifiManager wifiManager = (WifiManager)
+                    AndBasx.getContext().getSystemService(Context.WIFI_SERVICE);
+            wifiManager.setWifiEnabled(enable);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Is master sync enabled boolean.
+     * {@link android.Manifest.permission#READ_SYNC_SETTINGS}
+     *
+     * @return the boolean
+     */
+    public static boolean isMasterSyncEnabled() {
+        return ContentResolver.getMasterSyncAutomatically();
+    }
+
+
+    /**
+     * Is gps enabled boolean.
+     *
+     * @return the boolean
+     */
+    public static boolean isGpsEnabled() {
+        return ((LocationManager) AndBasx.getContext().getSystemService(Context.LOCATION_SERVICE))
+                .isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
+
+    /**
+     * Is gps network enabled boolean.
+     *
+     * @return the boolean
+     */
+    public static boolean isGpsNetworkEnabled() {
+        return ((LocationManager) AndBasx.getContext().getSystemService(Context.LOCATION_SERVICE))
+                .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+
+    /**
+     * Is gps passive enabled boolean.
+     *
+     * @return the boolean
+     */
+    public static boolean isGpsPassiveEnabled() {
+        return ((LocationManager) AndBasx.getContext().getSystemService(Context.LOCATION_SERVICE))
+                .isProviderEnabled(LocationManager.PASSIVE_PROVIDER);
+    }
+
+
+    /**
+     * Is rooted boolean.
+     *
+     * @return the boolean
+     */
     public static boolean isRooted() {
         String binaryName = "su";
         boolean rooted = false;
@@ -241,13 +399,11 @@ public class SystemUtils {
     }
 
 
-    public static void lockScreen() {
-        DevicePolicyManager deviceManager = (DevicePolicyManager)
-                AndBasx.getContext().getSystemService(Context.DEVICE_POLICY_SERVICE);
-        deviceManager.lockNow();
-    }
-
-
+    /**
+     * Input key event.
+     *
+     * @param keyCode the key code
+     */
     public static void inputKeyEvent(int keyCode) {
         try {
             runRootCmd("Input key-event: " + keyCode);
@@ -257,6 +413,12 @@ public class SystemUtils {
     }
 
 
+    /**
+     * Run cmd string.
+     *
+     * @param cmd the cmd
+     * @return the string
+     */
     public static String runCmd(String cmd) {
         if (TextUtils.isEmpty(cmd)) {
             return null;
@@ -292,6 +454,11 @@ public class SystemUtils {
     }
 
 
+    /**
+     * Run root cmd.
+     *
+     * @param cmd the cmd
+     */
     public static void runRootCmd(String cmd) {
         if (TextUtils.isEmpty(cmd)) {
             return;
@@ -327,6 +494,13 @@ public class SystemUtils {
     }
 
 
+    /**
+     * Gets distance.
+     *
+     * @param e1 the e 1
+     * @param e2 the e 2
+     * @return the distance
+     */
     public static int getDistance(MotionEvent e1, MotionEvent e2) {
         float x = e1.getX() - e2.getX();
         float y = e1.getY() - e2.getY();
@@ -334,6 +508,11 @@ public class SystemUtils {
     }
 
 
+    /**
+     * Gets max memory.
+     *
+     * @return the max memory
+     */
     public static long getMaxMemory() {
         Runtime runtime = Runtime.getRuntime();
         long maxMemory = runtime.maxMemory();
@@ -342,11 +521,21 @@ public class SystemUtils {
     }
 
 
+    /**
+     * Is debuggable boolean.
+     *
+     * @return the boolean
+     */
     public static boolean isDebuggable() {
         return ((AndBasx.getContext().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0);
     }
 
 
+    /**
+     * Gets application dir.
+     *
+     * @return the application dir
+     */
     public static String getApplicationDir() {
         PackageManager packageManager = AndBasx.getContext().getPackageManager();
         String packageName = AndBasx.getContext().getPackageName();

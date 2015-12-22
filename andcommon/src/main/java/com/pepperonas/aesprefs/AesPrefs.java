@@ -122,7 +122,7 @@ public class AesPrefs {
 
     public static String getEncryptedKey(String key) {
         SharedPreferences sp = mCtx.getSharedPreferences(
-                mFilename, Context.MODE_PRIVATE         );
+                mFilename, Context.MODE_PRIVATE);
 
         String _key = Crypt.encrypt(mPassword, key, mIv) + TAIL;
         return _key.substring(0, _key.length() - 1);
@@ -733,6 +733,20 @@ public class AesPrefs {
     }
 
 
+    public static String getNoLog(int stringId, String defaultValue) {
+        return getNoLog(mCtx.getString(stringId), defaultValue);
+    }
+
+
+    public static String getNoLog(String key, String defaultValue) {
+        LogMode tmp = mLog;
+        mLog = LogMode.NONE;
+        String s = get(key, defaultValue);
+        mLog = tmp;
+        return s;
+    }
+
+
     public static void putInt(int stringId, int value) {
         putInt(mCtx.getString(stringId), value);
     }
@@ -740,6 +754,20 @@ public class AesPrefs {
 
     public static int getInt(int stringId, int defaultValue) {
         return getInt(mCtx.getString(stringId), defaultValue);
+    }
+
+
+    public static int getIntNoLog(int stringId, int defaultValue) {
+        return getIntNoLog(mCtx.getString(stringId), defaultValue);
+    }
+
+
+    public static int getIntNoLog(String key, int defaultValue) {
+        LogMode tmp = mLog;
+        mLog = LogMode.NONE;
+        int i = getInt(key, defaultValue);
+        mLog = tmp;
+        return i;
     }
 
 
@@ -753,6 +781,20 @@ public class AesPrefs {
     }
 
 
+    public static long getLongNoLog(int stringId, long defaultValue) {
+        return getLongNoLog(mCtx.getString(stringId), defaultValue);
+    }
+
+
+    public static long getLongNoLog(String key, long defaultValue) {
+        LogMode tmp = mLog;
+        mLog = LogMode.NONE;
+        long l = getLong(key, defaultValue);
+        mLog = tmp;
+        return l;
+    }
+
+
     public static void putDouble(int stringId, double value) {
         putDouble(mCtx.getString(stringId), value);
     }
@@ -760,6 +802,20 @@ public class AesPrefs {
 
     public static double getDouble(int stringId, double defaultValue) {
         return getDouble(mCtx.getString(stringId), defaultValue);
+    }
+
+
+    public static double getDoubleNoLog(int stringId, double defaultValue) {
+        return getDoubleNoLog(mCtx.getString(stringId), defaultValue);
+    }
+
+
+    public static double getDoubleNoLog(String key, double defaultValue) {
+        LogMode tmp = mLog;
+        mLog = LogMode.NONE;
+        double d = getDouble(key, defaultValue);
+        mLog = tmp;
+        return d;
     }
 
 
@@ -773,6 +829,20 @@ public class AesPrefs {
     }
 
 
+    public static float getFloatNoLog(int stringId, float defaultValue) {
+        return getFloatNoLog(mCtx.getString(stringId), defaultValue);
+    }
+
+
+    public static float getFloatNoLog(String key, float defaultValue) {
+        LogMode tmp = mLog;
+        mLog = LogMode.NONE;
+        float f = getFloat(key, defaultValue);
+        mLog = tmp;
+        return f;
+    }
+
+
     public static void putBoolean(int stringId, boolean value) {
         putBoolean(mCtx.getString(stringId), value);
     }
@@ -780,6 +850,20 @@ public class AesPrefs {
 
     public static boolean getBoolean(int stringId, boolean defaultValue) {
         return getBoolean(mCtx.getString(stringId), defaultValue);
+    }
+
+
+    public static boolean getBooleanNoLog(int stringId, boolean defaultValue) {
+        return getBooleanNoLog(mCtx.getString(stringId), defaultValue);
+    }
+
+
+    public static boolean getBooleanNoLog(String key, boolean defaultValue) {
+        LogMode tmp = mLog;
+        mLog = LogMode.NONE;
+        boolean b = getBoolean(key, defaultValue);
+        mLog = tmp;
+        return b;
     }
 
 
@@ -800,6 +884,11 @@ public class AesPrefs {
     }
 
 
+    public static void initString(int keyId, String value) {
+        initString(mCtx.getString(keyId), value);
+    }
+
+
     public static void initInt(String key, int value) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
@@ -814,6 +903,11 @@ public class AesPrefs {
         if (mLog == LogMode.ALL) {
             Log.i(TAG, "initInt: '" + key + "' as " + value);
         }
+    }
+
+
+    public static void initInt(int keyId, int value) {
+        initInt(mCtx.getString(keyId), value);
     }
 
 
@@ -834,6 +928,11 @@ public class AesPrefs {
     }
 
 
+    public static void initBoolean(int keyId, boolean value) {
+        initBoolean(mCtx.getString(keyId), value);
+    }
+
+
     public static void initFloat(String key, float value) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
@@ -848,6 +947,11 @@ public class AesPrefs {
         if (mLog == LogMode.ALL) {
             Log.i(TAG, "initFloat: '" + key + "' as " + value);
         }
+    }
+
+
+    public static void initFloat(int keyId, float value) {
+        initFloat(mCtx.getString(keyId), value);
     }
 
 
@@ -868,6 +972,11 @@ public class AesPrefs {
     }
 
 
+    public static void initDouble(int keyId, double value) {
+        initDouble(mCtx.getString(keyId), value);
+    }
+
+
     public static void initLong(String key, long value) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
@@ -882,6 +991,11 @@ public class AesPrefs {
         if (mLog == LogMode.ALL) {
             Log.i(TAG, "initLong: '" + key + "' as " + value);
         }
+    }
+
+
+    public static void initLong(int keyId, long value) {
+        initLong(mCtx.getString(keyId), value);
     }
 
 

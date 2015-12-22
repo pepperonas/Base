@@ -66,6 +66,38 @@ public class IoUtils {
     }
 
 
+    public static List<String> readUtf8InList(File sourceFile) {
+        FileReader reader;
+        BufferedReader bufferedReader;
+
+        List<String> lines = new ArrayList<>();
+
+        try {
+            reader = new FileReader(sourceFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+        bufferedReader = new BufferedReader(reader);
+        String line;
+        try {
+            while (((line = bufferedReader.readLine()) != null)) {
+                lines.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bufferedReader.close();
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return lines;
+    }
+
+
     /**
      * Read the content of a ISO-8859-1 encoded file.
      *
