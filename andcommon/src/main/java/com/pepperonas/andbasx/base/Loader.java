@@ -20,6 +20,11 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.AttrRes;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 
@@ -30,7 +35,24 @@ import com.pepperonas.andbasx.AndBasx;
  */
 public class Loader {
 
-    public static Drawable getDrawable(int drawableId) {
+    /**
+     * G str string.
+     *
+     * @param stringId the string id
+     * @return the string
+     */
+    public static String gStr(@StringRes int stringId) {
+        return AndBasx.getContext().getString(stringId);
+    }
+
+
+    /**
+     * Gets drawable.
+     *
+     * @param drawableId the drawable id
+     * @return the drawable
+     */
+    public static Drawable getDrawable(@DrawableRes int drawableId) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return AndBasx.getContext().getResources().getDrawable(drawableId, AndBasx.getContext().getTheme());
         } else {
@@ -39,13 +61,26 @@ public class Loader {
     }
 
 
-    public static int resolveDrawableId(String source) {
+    /**
+     * Resolve drawable id int.
+     *
+     * @param source the source
+     * @return the int
+     */
+    public static int resolveDrawableId(@NonNull String source) {
         String uri = "drawable/" + source;
         return AndBasx.getContext().getResources().getIdentifier(uri, null, AndBasx.getContext().getPackageName());
     }
 
 
-    public static int getAttr(Context context, int attrId) {
+    /**
+     * Gets attr.
+     *
+     * @param context the context
+     * @param attrId  the attr id
+     * @return the attr
+     */
+    public static int getAttr(@NonNull Context context, @AttrRes int attrId) {
         TypedValue typedValue = new TypedValue();
         Resources.Theme theme = context.getTheme();
         theme.resolveAttribute(attrId, typedValue, true);
@@ -53,12 +88,24 @@ public class Loader {
     }
 
 
-    public static int getColor(int colorId) {
+    /**
+     * Gets color.
+     *
+     * @param colorId the color id
+     * @return the color
+     */
+    public static int getColor(@ColorRes int colorId) {
         return AndBasx.getContext().getResources().getColor(colorId);
     }
 
 
-    public static int getColorContextCompat(int colorId) {
+    /**
+     * Gets color context compat.
+     *
+     * @param colorId the color id
+     * @return the color context compat
+     */
+    public static int getColorContextCompat(@ColorRes int colorId) {
         return ContextCompat.getColor(AndBasx.getContext(), colorId);
     }
 

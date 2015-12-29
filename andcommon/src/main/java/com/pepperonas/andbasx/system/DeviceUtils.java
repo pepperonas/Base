@@ -31,6 +31,7 @@ import com.pepperonas.andbasx.AndBasx;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Martin Pfeffer (pepperonas)
@@ -202,6 +203,11 @@ public class DeviceUtils {
         WindowManager wm = (WindowManager) AndBasx.getContext().getSystemService(Context.WINDOW_SERVICE);
         wm.getDefaultDisplay().getMetrics(metrics);
         return metrics.densityDpi;
+    }
+
+
+    public static Locale getLocale() {
+        return AndBasx.getContext().getResources().getConfiguration().locale;
     }
 
 }

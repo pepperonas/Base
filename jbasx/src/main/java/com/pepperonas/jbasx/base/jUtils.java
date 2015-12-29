@@ -9,6 +9,12 @@ import java.util.List;
  */
 public class jUtils {
 
+    /**
+     * Fields list.
+     *
+     * @param clazz the clazz
+     * @return the list
+     */
     public static List<String> _fields(Class<?> clazz) {
         List<String> list = new ArrayList<>();
         Field[] fields = clazz.getFields();
@@ -19,6 +25,13 @@ public class jUtils {
     }
 
 
+    /**
+     * Fields list.
+     *
+     * @param clazz    the clazz
+     * @param modifier the modifier
+     * @return the list
+     */
     public static List<String> _fields(Class<?> clazz, int modifier) {
         List<String> list = new ArrayList<>();
         Field[] fields = clazz.getFields();
@@ -31,10 +44,16 @@ public class jUtils {
     }
 
 
-    public static String _stringValue(Field f) {
-        Object o = f;
+    /**
+     * String value string.
+     *
+     * @param field the field
+     * @return the string
+     */
+    public static String _stringValue(Field field) {
+        Object o = field;
         try {
-            return (String) f.get(o);
+            return (String) field.get(o);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
             return null;
@@ -42,10 +61,16 @@ public class jUtils {
     }
 
 
-    public static Integer _intValue(Field f) {
-        Object o = f;
+    /**
+     * Int value integer.
+     *
+     * @param field the field
+     * @return the integer
+     */
+    public static Integer _intValue(Field field) {
+        Object o = field;
         try {
-            return (Integer) f.get(o);
+            return (Integer) field.get(o);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
             return null;
@@ -53,10 +78,16 @@ public class jUtils {
     }
 
 
-    public static Float _floatValue(Field f) {
-        Object o = f;
+    /**
+     * Float value float.
+     *
+     * @param field the field
+     * @return the float
+     */
+    public static Float _floatValue(Field field) {
+        Object o = field;
         try {
-            return (Float) f.get(o);
+            return (Float) field.get(o);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
             return null;
@@ -64,10 +95,16 @@ public class jUtils {
     }
 
 
-    public static Double _doubleValue(Field f) {
-        Object o = f;
+    /**
+     * Double value double.
+     *
+     * @param field the field
+     * @return the double
+     */
+    public static Double _doubleValue(Field field) {
+        Object o = field;
         try {
-            return (Double) f.get(o);
+            return (Double) field.get(o);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
             return null;
@@ -75,10 +112,16 @@ public class jUtils {
     }
 
 
-    public static Long _longValue(Field f) {
-        Object o = f;
+    /**
+     * Long value long.
+     *
+     * @param field the field
+     * @return the long
+     */
+    public static Long _longValue(Field field) {
+        Object o = field;
         try {
-            return (Long) f.get(o);
+            return (Long) field.get(o);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
             return null;
@@ -86,6 +129,12 @@ public class jUtils {
     }
 
 
+    /**
+     * String values list.
+     *
+     * @param clazz the clazz
+     * @return the list
+     */
     public static List<String> _stringValues(Class<?> clazz) {
         List<String> list = new ArrayList<>();
         Field[] fields = clazz.getFields();

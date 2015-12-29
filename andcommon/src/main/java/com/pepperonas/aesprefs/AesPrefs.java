@@ -18,6 +18,7 @@ package com.pepperonas.aesprefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.Preference;
 import android.support.v7.appcompat.BuildConfig;
 import android.util.Log;
 
@@ -60,6 +61,11 @@ public class AesPrefs {
         private final int mode;
 
 
+        /**
+         * Instantiates a new Log mode.
+         *
+         * @param i the
+         */
         LogMode(int i) {this.mode = i;}
     }
 
@@ -67,17 +73,38 @@ public class AesPrefs {
     private static LogMode mLog = LogMode.DEFAULT;
 
 
+    /**
+     * Log mode.
+     *
+     * @param logMode the log mode
+     */
     public static void logMode(LogMode logMode) {
         mLog = logMode;
     }
 
 
+    /**
+     * Init.
+     *
+     * @param context  the context
+     * @param filename the filename
+     * @param password the password
+     * @param logMode  the log mode
+     */
     public static void init(Context context, String filename, String password, LogMode logMode) {
         mLog = logMode;
         init(context, filename, password);
     }
 
 
+    /**
+     * Init complete config.
+     *
+     * @param context  the context
+     * @param filename the filename
+     * @param password the password
+     * @param logMode  the log mode
+     */
     public static void initCompleteConfig(Context context, String filename, String password, LogMode logMode) {
         mLog = logMode;
         init(context, filename, password);
@@ -86,6 +113,13 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Init.
+     *
+     * @param context  the context
+     * @param filename the filename
+     * @param password the password
+     */
     public static void init(Context context, String filename, String password) {
         if (mLog != LogMode.NONE) {
             Log.i(TAG, "Initializing AesPrefs...");
@@ -120,15 +154,54 @@ public class AesPrefs {
     }
 
 
-    public static String getEncryptedKey(String key) {
-        SharedPreferences sp = mCtx.getSharedPreferences(
-                mFilename, Context.MODE_PRIVATE);
+    /**
+     * Decrypted key string.
+     * <p/>
+     * Resolves a encrypted key. A encrypted key is returned by
+     * {@link Preference.OnPreferenceClickListener}
+     * or {@link android.content.SharedPreferences.OnSharedPreferenceChangeListener}.
+     *
+     * @param encryptedKey the key
+     * @return the string
+     */
+    public static String decryptedKey(String encryptedKey) {
+        long start = System.currentTimeMillis();
+        encryptedKey = encryptedKey.substring(0, encryptedKey.length() - 1);
 
+        try {
+            String decryptedKey = Crypt.decrypt(mPassword, encryptedKey, mIv);
+            if (mLog == LogMode.ALL || mLog == LogMode.GET) {
+                Log.d(TAG, "Decrypted key: " + decryptedKey);
+            }
+            mDuration += System.currentTimeMillis() - start;
+            return decryptedKey;
+        } catch (Exception e) {
+            if (mLog == LogMode.ALL || mLog == LogMode.GET) {
+                Log.e(TAG, "Error while decrypting key.");
+            }
+            mDuration += System.currentTimeMillis() - start;
+            return "";
+        }
+    }
+
+
+    /**
+     * Gets encrypted key.
+     *
+     * @param key the key
+     * @return the encrypted key
+     */
+    public static String getEncryptedKey(String key) {
         String _key = Crypt.encrypt(mPassword, key, mIv) + TAIL;
         return _key.substring(0, _key.length() - 1);
     }
 
 
+    /**
+     * Register on shared preference change listener.
+     *
+     * @param listener the listener
+     */
     public static void registerOnSharedPreferenceChangeListener(
             SharedPreferences.OnSharedPreferenceChangeListener listener) {
 
@@ -137,6 +210,11 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Unregister on shared preference change listener.
+     *
+     * @param listener the listener
+     */
     public static void unregisterOnSharedPreferenceChangeListener(
             SharedPreferences.OnSharedPreferenceChangeListener listener) {
 
@@ -145,6 +223,70 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Sets click listeners on preferences.
+     *
+     * @param listener    the listener
+     * @param preferences the preferences
+     */
+    public static void setClickListenersOnPreferences(
+            Preference.OnPreferenceClickListener listener, Preference... preferences) {
+
+        for (Preference preference : preferences) {
+            preference.setOnPreferenceClickListener(listener);
+        }
+    }
+
+
+    /**
+     * Remove click listeners from preferences.
+     *
+     * @param preferences the preferences
+     */
+    public static void removeClickListenersFromPreferences(
+            Preference... preferences) {
+
+        for (Preference preference : preferences) {
+            preference.setOnPreferenceClickListener(null);
+        }
+    }
+
+
+    /**
+     * Sets change listeners on preferences.
+     *
+     * @param listener    the listener
+     * @param preferences the preferences
+     */
+    public static void setChangeListenersOnPreferences(
+            Preference.OnPreferenceChangeListener listener, Preference... preferences) {
+
+        for (Preference preference : preferences) {
+            preference.setOnPreferenceChangeListener(listener);
+        }
+    }
+
+
+    /**
+     * Remove change listeners from preferences.
+     *
+     * @param preferences the preferences
+     */
+    public static void removeChangeListenersFromPreferences(
+            Preference... preferences) {
+
+        for (Preference preference : preferences) {
+            preference.setOnPreferenceChangeListener(null);
+        }
+    }
+
+
+    /**
+     * Contains boolean.
+     *
+     * @param key the key
+     * @return the boolean
+     */
     public static boolean contains(String key) {
         SharedPreferences sp = mCtx.getSharedPreferences(mFilename, Context.MODE_PRIVATE);
         String _key = Crypt.encrypt(mPassword, key, mIv) + TAIL;
@@ -154,6 +296,12 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Put.
+     *
+     * @param key   the key
+     * @param value the value
+     */
     public static void put(String key, String value) {
         long start = System.currentTimeMillis();
 
@@ -176,6 +324,13 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Get string.
+     *
+     * @param key          the key
+     * @param defaultValue the default value
+     * @return the string
+     */
     public static String get(String key, String defaultValue) {
         long start = System.currentTimeMillis();
         String param = key;
@@ -188,8 +343,7 @@ public class AesPrefs {
 
         if (!sp.contains(key)) {
             if (mLog != LogMode.NONE) {
-                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
-                           "Return value: " + (defaultValue.isEmpty() ? "\"\"" : defaultValue));
+                Log.e(TAG, "WARNING: Key '" + param + "' not found (return: " + (defaultValue.isEmpty() ? "\"\"" : defaultValue) + ")");
             }
             return defaultValue;
         }
@@ -208,6 +362,12 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Gets nullable.
+     *
+     * @param key the key
+     * @return the nullable
+     */
     public static String getNullable(String key) {
         long start = System.currentTimeMillis();
         String param = key;
@@ -220,8 +380,7 @@ public class AesPrefs {
 
         if (!sp.contains(key)) {
             if (mLog != LogMode.NONE) {
-                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
-                           "Return value: null");
+                Log.e(TAG, "WARNING: Key '" + param + "' not found (return: null)");
             }
             return null;
         }
@@ -240,6 +399,12 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Put int.
+     *
+     * @param key   the key
+     * @param value the value
+     */
     public static void putInt(String key, int value) {
         long start = System.currentTimeMillis();
 
@@ -262,6 +427,13 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Gets int.
+     *
+     * @param key          the key
+     * @param defaultValue the default value
+     * @return the int
+     */
     public static int getInt(String key, int defaultValue) {
         long start = System.currentTimeMillis();
         String param = key;
@@ -274,8 +446,7 @@ public class AesPrefs {
 
         if (!sp.contains(key)) {
             if (mLog != LogMode.NONE) {
-                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
-                           "Return value: " + defaultValue);
+                Log.e(TAG, "WARNING: Key '" + param + "' not found (return: " + defaultValue + ")");
             }
             return defaultValue;
         }
@@ -294,6 +465,12 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Gets int nullable.
+     *
+     * @param key the key
+     * @return the int nullable
+     */
     public static Integer getIntNullable(String key) {
         long start = System.currentTimeMillis();
         String param = key;
@@ -306,8 +483,7 @@ public class AesPrefs {
 
         if (!sp.contains(key)) {
             if (mLog != LogMode.NONE) {
-                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
-                           "Return value: null");
+                Log.e(TAG, "WARNING: Key '" + param + "' not found (return: null)");
             }
             return null;
         }
@@ -326,6 +502,12 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Put long.
+     *
+     * @param key   the key
+     * @param value the value
+     */
     public static void putLong(String key, long value) {
         long start = System.currentTimeMillis();
 
@@ -348,6 +530,13 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Gets long.
+     *
+     * @param key          the key
+     * @param defaultValue the default value
+     * @return the long
+     */
     public static long getLong(String key, long defaultValue) {
         long start = System.currentTimeMillis();
         String param = key;
@@ -360,8 +549,7 @@ public class AesPrefs {
 
         if (!sp.contains(key)) {
             if (mLog != LogMode.NONE) {
-                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
-                           "Return value: " + defaultValue);
+                Log.e(TAG, "WARNING: Key '" + param + "' not found (return: " + defaultValue + ")");
             }
             return defaultValue;
         }
@@ -380,6 +568,12 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Gets long nullable.
+     *
+     * @param key the key
+     * @return the long nullable
+     */
     public static Long getLongNullable(String key) {
         long start = System.currentTimeMillis();
         String param = key;
@@ -392,8 +586,7 @@ public class AesPrefs {
 
         if (!sp.contains(key)) {
             if (mLog != LogMode.NONE) {
-                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
-                           "Return value: " + null);
+                Log.e(TAG, "WARNING: Key '" + param + "' not found (return: null)");
             }
             return null;
         }
@@ -412,6 +605,12 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Put double.
+     *
+     * @param key   the key
+     * @param value the value
+     */
     public static void putDouble(String key, double value) {
         long start = System.currentTimeMillis();
 
@@ -434,6 +633,13 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Gets double.
+     *
+     * @param key          the key
+     * @param defaultValue the default value
+     * @return the double
+     */
     public static double getDouble(String key, double defaultValue) {
         long start = System.currentTimeMillis();
         String param = key;
@@ -446,8 +652,7 @@ public class AesPrefs {
 
         if (!sp.contains(key)) {
             if (mLog != LogMode.NONE) {
-                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
-                           "Return value: " + defaultValue);
+                Log.e(TAG, "WARNING: Key '" + param + "' not found (return: " + defaultValue + ")");
             }
             return defaultValue;
         }
@@ -466,6 +671,12 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Gets double nullable.
+     *
+     * @param key the key
+     * @return the double nullable
+     */
     public static Double getDoubleNullable(String key) {
         long start = System.currentTimeMillis();
         String param = key;
@@ -478,8 +689,7 @@ public class AesPrefs {
 
         if (!sp.contains(key)) {
             if (mLog != LogMode.NONE) {
-                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
-                           "Return value: null");
+                Log.e(TAG, "WARNING: Key '" + param + "' not found (return: null)");
             }
             return null;
         }
@@ -498,6 +708,12 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Put float.
+     *
+     * @param key   the key
+     * @param value the value
+     */
     public static void putFloat(String key, float value) {
         long start = System.currentTimeMillis();
 
@@ -520,6 +736,13 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Gets float.
+     *
+     * @param key          the key
+     * @param defaultValue the default value
+     * @return the float
+     */
     public static float getFloat(String key, float defaultValue) {
         long start = System.currentTimeMillis();
         String param = key;
@@ -532,8 +755,7 @@ public class AesPrefs {
 
         if (!sp.contains(key)) {
             if (mLog != LogMode.NONE) {
-                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
-                           "Return value: " + defaultValue);
+                Log.e(TAG, "WARNING: Key '" + param + "' not found (return: " + defaultValue + ")");
             }
             return defaultValue;
         }
@@ -552,6 +774,12 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Gets float nullable.
+     *
+     * @param key the key
+     * @return the float nullable
+     */
     public static Float getFloatNullable(String key) {
         long start = System.currentTimeMillis();
         String param = key;
@@ -564,8 +792,7 @@ public class AesPrefs {
 
         if (!sp.contains(key)) {
             if (mLog != LogMode.NONE) {
-                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
-                           "Return value: null");
+                Log.e(TAG, "WARNING: Key '" + param + "' not found (return: null)");
             }
             return null;
         }
@@ -584,6 +811,12 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Put boolean.
+     *
+     * @param key   the key
+     * @param value the value
+     */
     public static void putBoolean(String key, boolean value) {
         long start = System.currentTimeMillis();
 
@@ -606,6 +839,13 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Gets boolean.
+     *
+     * @param key          the key
+     * @param defaultValue the default value
+     * @return the boolean
+     */
     public static boolean getBoolean(String key, boolean defaultValue) {
         long start = System.currentTimeMillis();
         String param = key;
@@ -618,8 +858,7 @@ public class AesPrefs {
 
         if (!sp.contains(key)) {
             if (mLog != LogMode.NONE) {
-                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
-                           "Return value: " + defaultValue);
+                Log.e(TAG, "WARNING: Key '" + param + "' not found (return: " + defaultValue + ")");
             }
             return defaultValue;
         }
@@ -638,6 +877,12 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Gets boolean nullable.
+     *
+     * @param key the key
+     * @return the boolean nullable
+     */
     public static Boolean getBooleanNullable(String key) {
         long start = System.currentTimeMillis();
         String param = key;
@@ -650,8 +895,7 @@ public class AesPrefs {
 
         if (!sp.contains(key)) {
             if (mLog != LogMode.NONE) {
-                Log.e(TAG, "WARNING: Key '" + param + "' not found.\n" +
-                           "Return value: null");
+                Log.e(TAG, "WARNING: Key '" + param + "' not found (return: null)");
             }
             return null;
         }
@@ -670,6 +914,12 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Store array.
+     *
+     * @param key    the key
+     * @param values the values
+     */
     public static void storeArray(String key, List<String> values) {
         long start = System.currentTimeMillis();
 
@@ -692,6 +942,12 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Restore array list.
+     *
+     * @param key the key
+     * @return the list
+     */
     public static List<String> restoreArray(String key) {
         long start = System.currentTimeMillis();
 
@@ -707,8 +963,7 @@ public class AesPrefs {
             for (int i = 0; i < size; i++) {
 
                 if (!sp.contains(key + "_" + i) && mLog != LogMode.NONE) {
-                    Log.e(TAG, "WARNING: Key '" + key + "_" + i + "' not found.\n" +
-                               "Return value: " + "new ArrayList<String>(0)");
+                    Log.e(TAG, "WARNING: Key '" + key + "_" + i + "' not found (return: " + "new ArrayList<String>(0))");
                     return new ArrayList<>();
                 }
 
@@ -723,21 +978,48 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Put.
+     *
+     * @param stringId the string id
+     * @param value    the value
+     */
     public static void put(int stringId, String value) {
         put(mCtx.getString(stringId), value);
     }
 
 
+    /**
+     * Get string.
+     *
+     * @param stringId     the string id
+     * @param defaultValue the default value
+     * @return the string
+     */
     public static String get(int stringId, String defaultValue) {
         return get(mCtx.getString(stringId), defaultValue);
     }
 
 
+    /**
+     * Gets no log.
+     *
+     * @param stringId     the string id
+     * @param defaultValue the default value
+     * @return the no log
+     */
     public static String getNoLog(int stringId, String defaultValue) {
         return getNoLog(mCtx.getString(stringId), defaultValue);
     }
 
 
+    /**
+     * Gets no log.
+     *
+     * @param key          the key
+     * @param defaultValue the default value
+     * @return the no log
+     */
     public static String getNoLog(String key, String defaultValue) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
@@ -747,21 +1029,48 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Put int.
+     *
+     * @param stringId the string id
+     * @param value    the value
+     */
     public static void putInt(int stringId, int value) {
         putInt(mCtx.getString(stringId), value);
     }
 
 
+    /**
+     * Gets int.
+     *
+     * @param stringId     the string id
+     * @param defaultValue the default value
+     * @return the int
+     */
     public static int getInt(int stringId, int defaultValue) {
         return getInt(mCtx.getString(stringId), defaultValue);
     }
 
 
+    /**
+     * Gets int no log.
+     *
+     * @param stringId     the string id
+     * @param defaultValue the default value
+     * @return the int no log
+     */
     public static int getIntNoLog(int stringId, int defaultValue) {
         return getIntNoLog(mCtx.getString(stringId), defaultValue);
     }
 
 
+    /**
+     * Gets int no log.
+     *
+     * @param key          the key
+     * @param defaultValue the default value
+     * @return the int no log
+     */
     public static int getIntNoLog(String key, int defaultValue) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
@@ -771,21 +1080,48 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Put long.
+     *
+     * @param stringId the string id
+     * @param value    the value
+     */
     public static void putLong(int stringId, long value) {
         putLong(mCtx.getString(stringId), value);
     }
 
 
+    /**
+     * Gets long.
+     *
+     * @param stringId     the string id
+     * @param defaultValue the default value
+     * @return the long
+     */
     public static long getLong(int stringId, long defaultValue) {
         return getLong(mCtx.getString(stringId), defaultValue);
     }
 
 
+    /**
+     * Gets long no log.
+     *
+     * @param stringId     the string id
+     * @param defaultValue the default value
+     * @return the long no log
+     */
     public static long getLongNoLog(int stringId, long defaultValue) {
         return getLongNoLog(mCtx.getString(stringId), defaultValue);
     }
 
 
+    /**
+     * Gets long no log.
+     *
+     * @param key          the key
+     * @param defaultValue the default value
+     * @return the long no log
+     */
     public static long getLongNoLog(String key, long defaultValue) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
@@ -795,21 +1131,48 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Put double.
+     *
+     * @param stringId the string id
+     * @param value    the value
+     */
     public static void putDouble(int stringId, double value) {
         putDouble(mCtx.getString(stringId), value);
     }
 
 
+    /**
+     * Gets double.
+     *
+     * @param stringId     the string id
+     * @param defaultValue the default value
+     * @return the double
+     */
     public static double getDouble(int stringId, double defaultValue) {
         return getDouble(mCtx.getString(stringId), defaultValue);
     }
 
 
+    /**
+     * Gets double no log.
+     *
+     * @param stringId     the string id
+     * @param defaultValue the default value
+     * @return the double no log
+     */
     public static double getDoubleNoLog(int stringId, double defaultValue) {
         return getDoubleNoLog(mCtx.getString(stringId), defaultValue);
     }
 
 
+    /**
+     * Gets double no log.
+     *
+     * @param key          the key
+     * @param defaultValue the default value
+     * @return the double no log
+     */
     public static double getDoubleNoLog(String key, double defaultValue) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
@@ -819,21 +1182,48 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Put float.
+     *
+     * @param stringId the string id
+     * @param value    the value
+     */
     public static void putFloat(int stringId, float value) {
         putFloat(mCtx.getString(stringId), value);
     }
 
 
+    /**
+     * Gets float.
+     *
+     * @param stringId     the string id
+     * @param defaultValue the default value
+     * @return the float
+     */
     public static float getFloat(int stringId, float defaultValue) {
         return getFloat(mCtx.getString(stringId), defaultValue);
     }
 
 
+    /**
+     * Gets float no log.
+     *
+     * @param stringId     the string id
+     * @param defaultValue the default value
+     * @return the float no log
+     */
     public static float getFloatNoLog(int stringId, float defaultValue) {
         return getFloatNoLog(mCtx.getString(stringId), defaultValue);
     }
 
 
+    /**
+     * Gets float no log.
+     *
+     * @param key          the key
+     * @param defaultValue the default value
+     * @return the float no log
+     */
     public static float getFloatNoLog(String key, float defaultValue) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
@@ -843,21 +1233,48 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Put boolean.
+     *
+     * @param stringId the string id
+     * @param value    the value
+     */
     public static void putBoolean(int stringId, boolean value) {
         putBoolean(mCtx.getString(stringId), value);
     }
 
 
+    /**
+     * Gets boolean.
+     *
+     * @param stringId     the string id
+     * @param defaultValue the default value
+     * @return the boolean
+     */
     public static boolean getBoolean(int stringId, boolean defaultValue) {
         return getBoolean(mCtx.getString(stringId), defaultValue);
     }
 
 
+    /**
+     * Gets boolean no log.
+     *
+     * @param stringId     the string id
+     * @param defaultValue the default value
+     * @return the boolean no log
+     */
     public static boolean getBooleanNoLog(int stringId, boolean defaultValue) {
         return getBooleanNoLog(mCtx.getString(stringId), defaultValue);
     }
 
 
+    /**
+     * Gets boolean no log.
+     *
+     * @param key          the key
+     * @param defaultValue the default value
+     * @return the boolean no log
+     */
     public static boolean getBooleanNoLog(String key, boolean defaultValue) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
@@ -867,6 +1284,12 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Init string.
+     *
+     * @param key   the key
+     * @param value the value
+     */
     public static void initString(String key, String value) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
@@ -884,11 +1307,23 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Init string.
+     *
+     * @param keyId the key id
+     * @param value the value
+     */
     public static void initString(int keyId, String value) {
         initString(mCtx.getString(keyId), value);
     }
 
 
+    /**
+     * Init int.
+     *
+     * @param key   the key
+     * @param value the value
+     */
     public static void initInt(String key, int value) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
@@ -906,11 +1341,23 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Init int.
+     *
+     * @param keyId the key id
+     * @param value the value
+     */
     public static void initInt(int keyId, int value) {
         initInt(mCtx.getString(keyId), value);
     }
 
 
+    /**
+     * Init boolean.
+     *
+     * @param key   the key
+     * @param value the value
+     */
     public static void initBoolean(String key, boolean value) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
@@ -928,11 +1375,23 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Init boolean.
+     *
+     * @param keyId the key id
+     * @param value the value
+     */
     public static void initBoolean(int keyId, boolean value) {
         initBoolean(mCtx.getString(keyId), value);
     }
 
 
+    /**
+     * Init float.
+     *
+     * @param key   the key
+     * @param value the value
+     */
     public static void initFloat(String key, float value) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
@@ -950,11 +1409,23 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Init float.
+     *
+     * @param keyId the key id
+     * @param value the value
+     */
     public static void initFloat(int keyId, float value) {
         initFloat(mCtx.getString(keyId), value);
     }
 
 
+    /**
+     * Init double.
+     *
+     * @param key   the key
+     * @param value the value
+     */
     public static void initDouble(String key, double value) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
@@ -972,11 +1443,23 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Init double.
+     *
+     * @param keyId the key id
+     * @param value the value
+     */
     public static void initDouble(int keyId, double value) {
         initDouble(mCtx.getString(keyId), value);
     }
 
 
+    /**
+     * Init long.
+     *
+     * @param key   the key
+     * @param value the value
+     */
     public static void initLong(String key, long value) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
@@ -994,21 +1477,44 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Init long.
+     *
+     * @param keyId the key id
+     * @param value the value
+     */
     public static void initLong(int keyId, long value) {
         initLong(mCtx.getString(keyId), value);
     }
 
 
+    /**
+     * Store array.
+     *
+     * @param stringId the string id
+     * @param values   the values
+     */
     public static void storeArray(int stringId, List<String> values) {
         storeArray(mCtx.getString(stringId), values);
     }
 
 
+    /**
+     * Restore array list.
+     *
+     * @param stringId the string id
+     * @return the list
+     */
     public static List<String> restoreArray(int stringId) {
         return restoreArray(mCtx.getString(stringId));
     }
 
 
+    /**
+     * Gets encrypted content.
+     *
+     * @return the encrypted content
+     */
     public static String getEncryptedContent() {
         Map<String, ?> sp = mCtx.getSharedPreferences(mFilename, Context.MODE_PRIVATE).getAll();
 
@@ -1023,6 +1529,11 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Count entries int.
+     *
+     * @return the int
+     */
     public static int countEntries() {
         Map<String, ?> prefs = mCtx.getSharedPreferences(mFilename, Context.MODE_PRIVATE).getAll();
         int ctr = 0;
@@ -1037,12 +1548,18 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Delete all.
+     */
     public static void deleteAll() {
         SharedPreferences sp = mCtx.getSharedPreferences(mFilename, Context.MODE_PRIVATE);
         sp.edit().clear().apply();
     }
 
 
+    /**
+     * Init or increment launch counter.
+     */
     public static void initOrIncrementLaunchCounter() {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
@@ -1056,6 +1573,11 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Gets launch counter.
+     *
+     * @return the launch counter
+     */
     public static int getLaunchCounter() {
         return AesPrefs.getInt("aes_app_launches", 0);
     }
@@ -1093,6 +1615,9 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Init installation date.
+     */
     public static void initInstallationDate() {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
@@ -1103,11 +1628,19 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Gets installation date.
+     *
+     * @return the installation date
+     */
     public static long getInstallationDate() {
         return getLong("aes_inst_date", 0L);
     }
 
 
+    /**
+     * Print installation date.
+     */
     public static void printInstallationDate() {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
@@ -1116,16 +1649,27 @@ public class AesPrefs {
     }
 
 
+    /**
+     * Reset execution time.
+     */
     public static void resetExecutionTime() {
         mDuration = 0L;
     }
 
 
+    /**
+     * Gets execution time.
+     *
+     * @return the execution time
+     */
     public static long getExecutionTime() {
         return mDuration;
     }
 
 
+    /**
+     * Print execution time.
+     */
     public static void printExecutionTime() {
         Log.i(TAG, "Execution time: " + String.valueOf(NumberFormatUtils.decimalPlaces((double) mDuration / 1000, 3) + " sec."));
     }
@@ -1133,17 +1677,30 @@ public class AesPrefs {
 
     public static class Version {
 
+        /**
+         * Show version info.
+         */
         public static void showVersionInfo() {
             Log.i(TAG, "---VERSION-INFO---");
             Log.w(TAG, getVersionInfo());
         }
 
 
+        /**
+         * Gets version name.
+         *
+         * @return the version name
+         */
         public static String getVersionName() {
             return BuildConfig.VERSION_NAME;
         }
 
 
+        /**
+         * Gets version info.
+         *
+         * @return the version info
+         */
         public static String getVersionInfo() {
             return "aesprefs-" + getVersionName() + ".aar";
         }

@@ -84,6 +84,8 @@ public class RsaUtils {
     /**
      * Encrypt text.
      *
+     * @param publicKey the public key
+     * @param data      the data
      * @return The encrypted bytes.
      */
     public static byte[] encryptText(File publicKey, String data) {
@@ -105,6 +107,8 @@ public class RsaUtils {
     /**
      * Encrypt bytes.
      *
+     * @param publicKey the public key
+     * @param bytes     the bytes
      * @return The encrypted bytes.
      */
     public static byte[] encryptBytes(File publicKey, byte[] bytes) {
@@ -126,6 +130,8 @@ public class RsaUtils {
     /**
      * Encrypt file.
      *
+     * @param publicKey the public key
+     * @param file      the file
      * @return The encrypted bytes.
      */
     public static byte[] encryptFile(File publicKey, File file) {
@@ -148,6 +154,8 @@ public class RsaUtils {
     /**
      * Decrypt data.
      *
+     * @param privateKey the private key
+     * @param data       the data
      * @return The decrypted text.
      */
     public static String decryptText(File privateKey, byte[] data) {
@@ -170,6 +178,8 @@ public class RsaUtils {
     /**
      * Decrypt data.
      *
+     * @param privateKey the private key
+     * @param data       the data
      * @return The decrypted bytes.
      */
     public static byte[] decryptBytes(File privateKey, byte[] data) {
@@ -188,6 +198,15 @@ public class RsaUtils {
     }
 
 
+    /**
+     * Save key boolean.
+     *
+     * @param destDir        the dest dir
+     * @param fileName       the file name
+     * @param modulus        the modulus
+     * @param publicExponent the public exponent
+     * @return the boolean
+     */
     private static boolean saveKey(File destDir, String fileName, BigInteger modulus, BigInteger publicExponent) {
         try {
             FileOutputStream fos = new FileOutputStream(destDir + File.separator + fileName);
@@ -210,6 +229,7 @@ public class RsaUtils {
     /**
      * Read public-key from a file.
      *
+     * @param publicKey the public key
      * @return The public key.
      */
     private static PublicKey readPublicKeyFromFile(File publicKey) {
@@ -238,6 +258,7 @@ public class RsaUtils {
     /**
      * Read the private-key from a file.
      *
+     * @param privateKey the private key
      * @return The private key.
      */
     private static PrivateKey readPrivateKeyFromFile(File privateKey) {

@@ -72,4 +72,27 @@ public class TimeFormatUtilsTest {
                           || daytime.toString().equals("Evening")
                           || daytime.toString().equals("Night"));
     }
+
+
+    @Test
+    public void testToTimeString() throws Exception {
+        String timeString = TimeFormatUtils.toTimeString(60L * 60L * 1000L, false, false);
+        System.out.println(timeString);
+
+        timeString = TimeFormatUtils.toTimeString(60L * 60L * 1000L, false, true);
+        System.out.println(timeString);
+
+        timeString = TimeFormatUtils.toTimeString(60L * 60L * 100L, false, false);
+        System.out.println(timeString);
+
+        timeString = TimeFormatUtils.toTimeString(60L * 60L * 10L, false, false);
+        System.out.println(timeString);
+
+        timeString = TimeFormatUtils.toTimeString(60L * 60L * 10L, true, false);
+        System.out.println(timeString);
+
+        timeString = TimeFormatUtils.toTimeString(60L * 60L * 10L, true, true);
+        System.out.println(timeString);
+
+    }
 }

@@ -7,6 +7,12 @@ import com.pepperonas.jbasx.color.android.ColorXs;
  */
 public class ColorUtils {
 
+    /**
+     * Convert brightness to max int int.
+     *
+     * @param percent the percent
+     * @return the int
+     */
     public static int convertBrightnessToMaxInt(int percent) {
         if (percent >= 100) return 255;
         else if (percent < 1) return 0;
@@ -14,6 +20,12 @@ public class ColorUtils {
     }
 
 
+    /**
+     * Convert percent to hex transparency string.
+     *
+     * @param _p the p
+     * @return the string
+     */
     public static String convertPercentToHexTransparency(int _p) {
         String hex = Integer.toHexString((int) Math.round((Math.round((double) _p / 100d * 100) / 100.0d) * 255)).toUpperCase();
         if (hex.length() == 1) hex = "0" + hex;
@@ -21,11 +33,24 @@ public class ColorUtils {
     }
 
 
+    /**
+     * Convert percent to integer hex transparency int.
+     *
+     * @param percent the percent
+     * @return the int
+     */
     public static int convertPercentToIntegerHexTransparency(int percent) {
         return Integer.parseInt(convertPercentToHexTransparency(percent).toLowerCase(), 16);
     }
 
 
+    /**
+     * Sets alpha component.
+     *
+     * @param color the color
+     * @param alpha the alpha
+     * @return the alpha component
+     */
     public static int setAlphaComponent(int color, int alpha) {
         if (alpha < 0 || alpha > 255) {
             throw new IllegalArgumentException("alpha must be between 0 and 255.");
@@ -34,6 +59,13 @@ public class ColorUtils {
     }
 
 
+    /**
+     * Sets brightness.
+     *
+     * @param color               the color
+     * @param brightnessInPercent the brightness in percent
+     * @return the brightness
+     */
     public static int setBrightness(String color, int brightnessInPercent) {
         return ColorXs.parseColor("#" + ColorUtils.convertPercentToHexTransparency(brightnessInPercent) + color.replace("0x", ""));
     }

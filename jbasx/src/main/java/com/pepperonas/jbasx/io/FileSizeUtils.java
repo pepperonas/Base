@@ -38,6 +38,7 @@ public class FileSizeUtils {
      * Returns the file size in kilobyte.
      *
      * @param fileSize The size of the file {@link File#length()}
+     * @return the long
      */
     public static long fileSizeInKB(long fileSize) {
         return fileSizeInKB(fileSize, 2);
@@ -47,7 +48,9 @@ public class FileSizeUtils {
     /**
      * Returns the file size in kilobyte.
      *
-     * @param fileSize The size of the file {@link File#length()}
+     * @param fileSize  The size of the file {@link File#length()}
+     * @param precision the precision
+     * @return the long
      */
     public static long fileSizeInKB(long fileSize, int precision) {
         return (long) NumberFormatUtils.decimalPlaces((double) fileSize / 1024, precision);
@@ -58,6 +61,7 @@ public class FileSizeUtils {
      * Returns the file size in megabyte.
      *
      * @param fileSize The size of the file {@link File#length()}
+     * @return the double
      */
     public static double fileSizeInMB(double fileSize) {
         return fileSizeInMB(fileSize, 4);
@@ -67,7 +71,9 @@ public class FileSizeUtils {
     /**
      * Returns the file size in megabyte.
      *
-     * @param fileSize The size of the file {@link File#length()}
+     * @param fileSize  The size of the file {@link File#length()}
+     * @param precision the precision
+     * @return the double
      */
     public static double fileSizeInMB(double fileSize, int precision) {
         return NumberFormatUtils.decimalPlaces((fileSize / Math.pow(1024, 2)), precision);
@@ -78,6 +84,7 @@ public class FileSizeUtils {
      * Returns the file size in gigabyte.
      *
      * @param fileSize The size of the file {@link File#length()}
+     * @return the double
      */
     public static double fileSizeInGB(double fileSize) {
         return fileSizeInGB(fileSize, 4);
@@ -87,7 +94,9 @@ public class FileSizeUtils {
     /**
      * Returns the file size in gigabyte.
      *
-     * @param fileSize The size of the file {@link File#length()}
+     * @param fileSize  The size of the file {@link File#length()}
+     * @param precision the precision
+     * @return the double
      */
     public static double fileSizeInGB(double fileSize, int precision) {
         return NumberFormatUtils.decimalPlaces(fileSize / Math.pow(1024, 3), precision);
@@ -98,6 +107,7 @@ public class FileSizeUtils {
      * Returns the file size in terabyte.
      *
      * @param fileSize The size of the file {@link File#length()}
+     * @return the double
      */
     public static double fileSizeInTB(double fileSize) {
         return fileSizeInTB(fileSize, 4);
@@ -107,7 +117,9 @@ public class FileSizeUtils {
     /**
      * Returns the file size in terabyte.
      *
-     * @param fileSize The size of the file {@link File#length()}
+     * @param fileSize  The size of the file {@link File#length()}
+     * @param precision the precision
+     * @return the double
      */
     public static double fileSizeInTB(double fileSize, int precision) {
         return NumberFormatUtils.decimalPlaces(fileSize / Math.pow(1024, 4), precision);
@@ -116,12 +128,12 @@ public class FileSizeUtils {
 
     /**
      * Returns the file size.
-     * <p/>
      *
      * @param fileSize  The size of the file, also see {@link File#length()}.
      * @param precision The decimal places.
      * @param unit      Use {@link #KB}, {@link #MB} {@link #GB}, or {@link #TB}.
      * @param showUnit  Use {@code true}, or {@code false}.
+     * @return the string
      */
     public static String formatFileSize(long fileSize, int precision, int unit, boolean showUnit) {
         String s = "#,";
@@ -133,12 +145,12 @@ public class FileSizeUtils {
 
     /**
      * Returns the file size.
-     * <p/>
      *
      * @param fileSize  The size of the file, also see {@link File#length()}.
      * @param precision The decimal places.
      * @param unit      Use {@link #KB}, {@link #MB} {@link #GB}, or {@link #TB}.
      * @param showUnit  Use {@code true}, or {@code false}.
+     * @return the string
      */
     public static String formatFileSize(double fileSize, int precision, int unit, boolean showUnit) {
         String s = "#,";
@@ -148,6 +160,15 @@ public class FileSizeUtils {
     }
 
 
+    /**
+     * Apply decimal format string.
+     *
+     * @param fileSize the file size
+     * @param unit     the unit
+     * @param df       the df
+     * @param b        the b
+     * @return the string
+     */
     private static String applyDecimalFormat(long fileSize, int unit, DecimalFormat df, boolean b) {
         switch (unit) {
             case MB: return df.format(fileSize / Math.pow(1024, 2)) + (b ? " MB" : "");

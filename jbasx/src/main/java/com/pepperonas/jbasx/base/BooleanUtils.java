@@ -24,24 +24,52 @@ public class BooleanUtils {
     private static final String TAG = "BooleanUtils";
 
 
+    /**
+     * String equals boolean.
+     *
+     * @param arg     the arg
+     * @param strings the strings
+     * @return the boolean
+     */
     public static boolean stringEquals(CharSequence arg, String... strings) {
         for (String s : strings) if (s.equals(arg)) return true;
         return false;
     }
 
 
+    /**
+     * String contains boolean.
+     *
+     * @param arg     the arg
+     * @param strings the strings
+     * @return the boolean
+     */
     public static boolean stringContains(CharSequence arg, String... strings) {
         for (String s : strings) if (s.contains(arg)) return true;
         return false;
     }
 
 
+    /**
+     * String equals ignore case boolean.
+     *
+     * @param arg     the arg
+     * @param strings the strings
+     * @return the boolean
+     */
     public static boolean stringEqualsIgnoreCase(String arg, String... strings) {
         for (String s : strings) if (s.toLowerCase().equals(arg.toLowerCase())) return true;
         return false;
     }
 
 
+    /**
+     * String contains ignore case boolean.
+     *
+     * @param arg     the arg
+     * @param strings the strings
+     * @return the boolean
+     */
     public static boolean stringContainsIgnoreCase(String arg, String... strings) {
         for (String s : strings) if (s.toLowerCase().contains(arg.toLowerCase())) return true;
         return false;

@@ -17,6 +17,10 @@ public class StringUtils {
 
     /**
      * Splits a String based on a single character, which is usually faster than regex-based String.split().
+     *
+     * @param string    the string
+     * @param delimiter the delimiter
+     * @return the string [ ]
      */
     public static String[] fastSplit(String string, char delimiter) {
         List<String> list = new ArrayList<String>();
@@ -44,6 +48,9 @@ public class StringUtils {
      * URL-Encodes a given string using UTF-8 (some web pages have problems with UTF-8 and umlauts, consider
      * {@link #encodeUrlIso(String)} also). No UnsupportedEncodingException to handle as it is dealt with in this
      * method.
+     *
+     * @param stringToEncode the string to encode
+     * @return the string
      */
     public static String encodeUrl(String stringToEncode) {
         try {
@@ -57,6 +64,9 @@ public class StringUtils {
     /**
      * URL-encodes a given string using ISO-8859-1, which may work better with web pages and umlauts compared to UTF-8.
      * No UnsupportedEncodingException to handle as it is dealt with in this method.
+     *
+     * @param stringToEncode the string to encode
+     * @return the string
      */
     public static String encodeUrlIso(String stringToEncode) {
         try {
@@ -70,6 +80,9 @@ public class StringUtils {
     /**
      * URL-Decodes a given string using UTF-8. No UnsupportedEncodingException to handle as it is dealt with in this
      * method.
+     *
+     * @param stringToDecode the string to decode
+     * @return the string
      */
     public static String decodeUrl(String stringToDecode) {
         try {
@@ -83,6 +96,9 @@ public class StringUtils {
     /**
      * URL-Decodes a given string using ISO-8859-1. No UnsupportedEncodingException to handle as it is dealt with in
      * this method.
+     *
+     * @param stringToDecode the string to decode
+     * @return the string
      */
     public static String decodeUrlIso(String stringToDecode) {
         try {
@@ -97,6 +113,7 @@ public class StringUtils {
      * Generates the MD5 digest for a given String based on UTF-8. The digest is padded with zeroes in the front if
      * necessary.
      *
+     * @param stringToEncode the string to encode
      * @return MD5 digest (32 characters).
      */
     public static String generateMD5String(String stringToEncode) {
@@ -108,13 +125,23 @@ public class StringUtils {
      * Generates the SHA-1 digest for a given String based on UTF-8. The digest is padded with zeroes in the front if
      * necessary. The SHA-1 algorithm is considers to produce less collisions than MD5.
      *
-     * @return SHA-1 digest (40 characters).
+     * @param stringToEncode the string to encode
+     * @return SHA -1 digest (40 characters).
      */
     public static String generateSHA1String(String stringToEncode) {
         return generateDigestString(stringToEncode, "SHA-1", "UTF-8", 40);
     }
 
 
+    /**
+     * Generate digest string string.
+     *
+     * @param stringToEncode the string to encode
+     * @param digestAlgo     the digest algo
+     * @param encoding       the encoding
+     * @param lengthToPad    the length to pad
+     * @return the string
+     */
     public static String
     generateDigestString(String stringToEncode, String digestAlgo, String encoding, int lengthToPad) {
         // Loosely inspired by http://workbench.cadenhead.org/news/1428/creating-md5-hashed-passwords-java
@@ -133,6 +160,13 @@ public class StringUtils {
     }
 
 
+    /**
+     * To hex string string.
+     *
+     * @param bytes       the bytes
+     * @param lengthToPad the length to pad
+     * @return the string
+     */
     public static String toHexString(byte[] bytes, int lengthToPad) {
         BigInteger hash = new BigInteger(1, bytes);
         String digest = hash.toString(16);
@@ -178,6 +212,10 @@ public class StringUtils {
      * Cuts the string at the end if it's longer than maxLength and appends "..." to it. The length of the resulting
      * string including "..." is always less or equal to the given maxLength. It's valid to pass a null text; in this
      * case null is returned.
+     *
+     * @param text      the text
+     * @param maxLength the max length
+     * @return the string
      */
     public static String ellipsize(String text, int maxLength) {
         if (text != null && text.length() > maxLength) {
@@ -187,6 +225,13 @@ public class StringUtils {
     }
 
 
+    /**
+     * Split lines string [ ].
+     *
+     * @param text           the text
+     * @param skipEmptyLines the skip empty lines
+     * @return the string [ ]
+     */
     public static String[] splitLines(String text, boolean skipEmptyLines) {
         if (skipEmptyLines) {
             return text.split("[\n\r]+");
@@ -196,6 +241,13 @@ public class StringUtils {
     }
 
 
+    /**
+     * Find lines containing list.
+     *
+     * @param text       the text
+     * @param searchText the search text
+     * @return the list
+     */
     public static List<String> findLinesContaining(String text, String searchText) {
         String[] splitLinesSkipEmpty = splitLines(text, true);
         List<String> matching = new ArrayList<String>();
@@ -211,6 +263,9 @@ public class StringUtils {
     /**
      * Returns a concatenated string consisting of the given lines seperated by a new line character \n. The last line
      * does not have a \n at the end.
+     *
+     * @param lines the lines
+     * @return the string
      */
     public static String concatLines(List<String> lines) {
         StringBuilder builder = new StringBuilder();
@@ -225,6 +280,12 @@ public class StringUtils {
     }
 
 
+    /**
+     * Join iterable on comma string.
+     *
+     * @param iterable the iterable
+     * @return the string
+     */
     public static String joinIterableOnComma(Iterable<?> iterable) {
         if (iterable != null) {
 
@@ -243,6 +304,12 @@ public class StringUtils {
     }
 
 
+    /**
+     * Join array on comma string.
+     *
+     * @param array the array
+     * @return the string
+     */
     public static String joinArrayOnComma(int[] array) {
         if (array != null) {
             StringBuilder buf = new StringBuilder();
@@ -260,6 +327,12 @@ public class StringUtils {
     }
 
 
+    /**
+     * Join array on comma string.
+     *
+     * @param array the array
+     * @return the string
+     */
     public static String joinArrayOnComma(String[] array) {
         if (array != null) {
             StringBuilder buf = new StringBuilder();
@@ -276,11 +349,26 @@ public class StringUtils {
     }
 
 
+    /**
+     * Pad start string.
+     *
+     * @param string    the string
+     * @param minLength the min length
+     * @return the string
+     */
     public static String padStart(String string, int minLength) {
         return padStart(string, minLength, ' ');
     }
 
 
+    /**
+     * Pad start string.
+     *
+     * @param string    the string
+     * @param minLength the min length
+     * @param padChar   the pad char
+     * @return the string
+     */
     public static String padStart(String string, int minLength, char padChar) {
         if (string.length() >= minLength) {
             return string;
@@ -294,11 +382,26 @@ public class StringUtils {
     }
 
 
+    /**
+     * Pad end string.
+     *
+     * @param string    the string
+     * @param minLength the min length
+     * @return the string
+     */
     public static String padEnd(String string, int minLength) {
         return padEnd(string, minLength, ' ');
     }
 
 
+    /**
+     * Pad end string.
+     *
+     * @param string    the string
+     * @param minLength the min length
+     * @param padChar   the pad char
+     * @return the string
+     */
     public static String padEnd(String string, int minLength, char padChar) {
         if (string.length() >= minLength) {
             return string;

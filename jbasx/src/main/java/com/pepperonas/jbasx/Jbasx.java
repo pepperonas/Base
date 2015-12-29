@@ -22,26 +22,51 @@ public class Jbasx {
     private static String mUid = "";
 
 
+    /**
+     * Gets unique log id.
+     *
+     * @return the unique log id
+     */
     public static String getUniqueLogId() {
         return mUid;
     }
 
 
+    /**
+     * Write log boolean.
+     *
+     * @return the boolean
+     */
     public static boolean writeLog() {
         return mFileLog;
     }
 
 
+    /**
+     * Write log with stamp boolean.
+     *
+     * @return the boolean
+     */
     public static boolean writeLogWithStamp() {
         return mTimestamp;
     }
 
 
+    /**
+     * Gets log file name.
+     *
+     * @return the log file name
+     */
     public static String getLogFileName() {
         return mLogFileName;
     }
 
 
+    /**
+     * Gets log file path.
+     *
+     * @return the log file path
+     */
     public static String getLogFilePath() {
         return mLogFilePath;
     }
@@ -53,6 +78,11 @@ public class Jbasx {
         private final int mode;
 
 
+        /**
+         * Instantiates a new Log mode.
+         *
+         * @param i the
+         */
         LogMode(int i) {this.mode = i;}
     }
 
@@ -60,12 +90,18 @@ public class Jbasx {
     public static LogMode mLog = LogMode.DEFAULT;
 
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) { }
 
 
     /**
      * Set the log behaviour.
      *
+     * @param logMode the log mode
      * @see LogMode
      */
     public static void setLog(LogMode logMode) {
@@ -89,6 +125,11 @@ public class Jbasx {
     }
 
 
+    /**
+     * Sets unique identifier.
+     *
+     * @param uniqueIdentifier the unique identifier
+     */
     public static void setUniqueIdentifier(String uniqueIdentifier) {
         mUid = uniqueIdentifier;
     }
@@ -105,8 +146,9 @@ public class Jbasx {
 
 
         /**
-         * @return <p>---JBASX---<br>
-         * {@value #LIBRARY_NAME}-{@value #VERSION_NAME}</p>
+         * Gets version info.
+         *
+         * @return <p>---JBASX---<br> {@value #LIBRARY_NAME}-{@value #VERSION_NAME}</p>
          */
         public static String getVersionInfo() {
             return "---JBASX---\n" +
@@ -115,12 +157,16 @@ public class Jbasx {
 
 
         /**
+         * Version name string.
+         *
          * @return '{@value #VERSION_NAME}'
          */
         public static String versionName() { return VERSION_NAME; }
 
 
         /**
+         * Version info string.
+         *
          * @return '{@value #LIBRARY_NAME}-{@value #VERSION_NAME}'
          */
         public static String versionInfo() {
@@ -129,6 +175,8 @@ public class Jbasx {
 
 
         /**
+         * Gets license.
+         *
          * @return the license text.
          */
         public static String getLicense() {

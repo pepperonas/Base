@@ -37,11 +37,24 @@ public class FileUtils {
     private static final int IO_BUFFER_SIZE = 16384;
 
 
+    /**
+     * Create boolean.
+     *
+     * @param absPath the abs path
+     * @return the boolean
+     */
     public static boolean create(String absPath) {
         return create(absPath, false);
     }
 
 
+    /**
+     * Create boolean.
+     *
+     * @param absPath the abs path
+     * @param force   the force
+     * @return the boolean
+     */
     public static boolean create(String absPath, boolean force) {
         if (TextUtils.isEmpty(absPath)) {
             if (Jbasx.mLog == Jbasx.LogMode.ALL) {
@@ -73,11 +86,24 @@ public class FileUtils {
     }
 
 
+    /**
+     * Mk dirs boolean.
+     *
+     * @param absPath the abs path
+     * @return the boolean
+     */
     public static boolean mkDirs(String absPath) {
         return mkDirs(absPath, false);
     }
 
 
+    /**
+     * Mk dirs boolean.
+     *
+     * @param absPath the abs path
+     * @param force   the force
+     * @return the boolean
+     */
     public static boolean mkDirs(String absPath, boolean force) {
         File file = new File(absPath);
         if (exists(absPath) && !isFolder(absPath)) {
@@ -99,6 +125,12 @@ public class FileUtils {
     }
 
 
+    /**
+     * Exists boolean.
+     *
+     * @param absPath the abs path
+     * @return the boolean
+     */
     public static boolean exists(String absPath) {
         if (TextUtils.isEmpty(absPath)) {
             return false;
@@ -108,11 +140,24 @@ public class FileUtils {
     }
 
 
+    /**
+     * Exists boolean.
+     *
+     * @param file the file
+     * @return the boolean
+     */
     public static boolean exists(File file) {
         return file != null && file.exists();
     }
 
 
+    /**
+     * Child of boolean.
+     *
+     * @param childPath  the child path
+     * @param parentPath the parent path
+     * @return the boolean
+     */
     public static boolean childOf(String childPath, String parentPath) {
         if (TextUtils.isEmpty(childPath) || TextUtils.isEmpty(parentPath)) {
             return false;
@@ -151,6 +196,12 @@ public class FileUtils {
     }
 
 
+    /**
+     * Clean path string.
+     *
+     * @param absPath the abs path
+     * @return the string
+     */
     public static String cleanPath(String absPath) {
         if (TextUtils.isEmpty(absPath)) {
             if (Jbasx.mLog == Jbasx.LogMode.ALL) {
@@ -171,6 +222,12 @@ public class FileUtils {
     }
 
 
+    /**
+     * Size long.
+     *
+     * @param absPath the abs path
+     * @return the long
+     */
     public static long size(String absPath) {
         if (TextUtils.isEmpty(absPath)) {
             if (Jbasx.mLog == Jbasx.LogMode.ALL) {
@@ -183,6 +240,12 @@ public class FileUtils {
     }
 
 
+    /**
+     * Size long.
+     *
+     * @param file the file
+     * @return the long
+     */
     public static long size(File file) {
         if (!exists(file)) {
             if (Jbasx.mLog == Jbasx.LogMode.ALL) {
@@ -209,11 +272,26 @@ public class FileUtils {
     }
 
 
+    /**
+     * Copy boolean.
+     *
+     * @param sourceFile the source file
+     * @param destPath   the dest path
+     * @return the boolean
+     */
     public static boolean copy(File sourceFile, String destPath) {
         return copy(sourceFile, destPath, false);
     }
 
 
+    /**
+     * Copy boolean.
+     *
+     * @param sourceFile the source file
+     * @param destPath   the dest path
+     * @param force      the force
+     * @return the boolean
+     */
     public static boolean copy(File sourceFile, String destPath, boolean force) {
         if (sourceFile == null) {
             if (Jbasx.mLog == Jbasx.LogMode.ALL) {
@@ -270,26 +348,62 @@ public class FileUtils {
     }
 
 
+    /**
+     * Move boolean.
+     *
+     * @param sourcePath the source path
+     * @param destPath   the dest path
+     * @return the boolean
+     */
     public static boolean move(String sourcePath, String destPath) {
         return copy(new File(sourcePath), destPath, false) && delete(sourcePath);
     }
 
 
+    /**
+     * Move boolean.
+     *
+     * @param sourceFile the source file
+     * @param destPath   the dest path
+     * @return the boolean
+     */
     public static boolean move(File sourceFile, String destPath) {
         return copy(sourceFile, destPath, false) && delete(sourceFile);
     }
 
 
+    /**
+     * Move boolean.
+     *
+     * @param sourcePath the source path
+     * @param destPath   the dest path
+     * @param force      the force
+     * @return the boolean
+     */
     public static boolean move(String sourcePath, String destPath, boolean force) {
         return copy(new File(sourcePath), destPath, force) && delete(sourcePath);
     }
 
 
+    /**
+     * Move boolean.
+     *
+     * @param sourceFile the source file
+     * @param destPath   the dest path
+     * @param force      the force
+     * @return the boolean
+     */
     public static boolean move(File sourceFile, String destPath, boolean force) {
         return copy(sourceFile, destPath, force) && delete(sourceFile);
     }
 
 
+    /**
+     * Delete boolean.
+     *
+     * @param absPath the abs path
+     * @return the boolean
+     */
     public static boolean delete(String absPath) {
         if (TextUtils.isEmpty(absPath)) {
             return false;
@@ -300,11 +414,23 @@ public class FileUtils {
     }
 
 
+    /**
+     * Delete boolean.
+     *
+     * @param file the file
+     * @return the boolean
+     */
     public static boolean delete(File file) {
         return exists(file) && file.delete();
     }
 
 
+    /**
+     * Delete if empty boolean.
+     *
+     * @param absPath the abs path
+     * @return the boolean
+     */
     public static boolean deleteIfEmpty(String absPath) {
         if (TextUtils.isEmpty(absPath)) {
             return false;
@@ -315,6 +441,12 @@ public class FileUtils {
     }
 
 
+    /**
+     * Delete if empty boolean.
+     *
+     * @param file the file
+     * @return the boolean
+     */
     public static boolean deleteIfEmpty(File file) {
         if (!exists(file)) {
             return false;
@@ -329,17 +461,35 @@ public class FileUtils {
     }
 
 
+    /**
+     * Is file boolean.
+     *
+     * @param absPath the abs path
+     * @return the boolean
+     */
     public static boolean isFile(String absPath) {
         boolean exists = exists(absPath);
         return exists && new File(absPath).isFile();
     }
 
 
+    /**
+     * Is file boolean.
+     *
+     * @param file the file
+     * @return the boolean
+     */
     public static boolean isFile(File file) {
         return file != null && file.isFile();
     }
 
 
+    /**
+     * Is folder boolean.
+     *
+     * @param absPath the abs path
+     * @return the boolean
+     */
     public static boolean isFolder(String absPath) {
         boolean exists = exists(absPath);
         if (!exists) {
@@ -351,6 +501,12 @@ public class FileUtils {
     }
 
 
+    /**
+     * Gets name.
+     *
+     * @param file the file
+     * @return the name
+     */
     public static String getName(File file) {
         if (file == null) {
             if (Jbasx.mLog == Jbasx.LogMode.ALL) {
@@ -366,6 +522,12 @@ public class FileUtils {
     }
 
 
+    /**
+     * Gets name.
+     *
+     * @param absPath the abs path
+     * @return the name
+     */
     public static String getName(String absPath) {
         if (TextUtils.isEmpty(absPath)) {
             if (Jbasx.mLog == Jbasx.LogMode.ALL) {
@@ -385,6 +547,12 @@ public class FileUtils {
     }
 
 
+    /**
+     * Gets parent.
+     *
+     * @param file the file
+     * @return the parent
+     */
     public static String getParent(File file) {
         if (file == null) {
             if (Jbasx.mLog == Jbasx.LogMode.ALL) {
@@ -400,6 +568,12 @@ public class FileUtils {
     }
 
 
+    /**
+     * Gets parent.
+     *
+     * @param absPath the abs path
+     * @return the parent
+     */
     public static String getParent(String absPath) {
         if (TextUtils.isEmpty(absPath)) {
             if (Jbasx.mLog == Jbasx.LogMode.ALL) {
@@ -413,6 +587,12 @@ public class FileUtils {
     }
 
 
+    /**
+     * Gets stem.
+     *
+     * @param file the file
+     * @return the stem
+     */
     public static String getStem(File file) {
         if (file == null) {
             if (Jbasx.mLog == Jbasx.LogMode.ALL) {
@@ -427,6 +607,12 @@ public class FileUtils {
     }
 
 
+    /**
+     * Gets stem.
+     *
+     * @param fileName the file name
+     * @return the stem
+     */
     public static String getStem(String fileName) {
         if (TextUtils.isEmpty(fileName)) {
             if (Jbasx.mLog == Jbasx.LogMode.ALL) {
@@ -444,6 +630,12 @@ public class FileUtils {
     }
 
 
+    /**
+     * Gets extension.
+     *
+     * @param file the file
+     * @return the extension
+     */
     public static String getExtension(File file) {
         if (file == null) {
             if (Jbasx.mLog == Jbasx.LogMode.ALL) {
@@ -458,6 +650,12 @@ public class FileUtils {
     }
 
 
+    /**
+     * Gets extension.
+     *
+     * @param fileName the file name
+     * @return the extension
+     */
     public static String getExtension(String fileName) {
         if (TextUtils.isEmpty(fileName)) {
             if (Jbasx.mLog == Jbasx.LogMode.ALL) {
@@ -477,6 +675,13 @@ public class FileUtils {
     }
 
 
+    /**
+     * Matches extension boolean.
+     *
+     * @param file       the file
+     * @param extensions the extensions
+     * @return the boolean
+     */
     public static boolean matchesExtension(File file, String... extensions) {
         for (String s : extensions) {
             if (file.getName().endsWith(s)) {

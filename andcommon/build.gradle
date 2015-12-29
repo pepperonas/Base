@@ -6,7 +6,7 @@ buildscript {
 }
 
 apply plugin: 'com.android.library'
-
+apply plugin: 'maven'
 
 repositories {
     jcenter()
@@ -39,6 +39,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        abortOnError false
+    }
     libraryVariants.all { variant ->
         variant.outputs.each { output ->
             def outputFile = output.outputFile
@@ -55,12 +58,63 @@ android {
     }
 }
 
+android.libraryVariants.all { variant ->
+    def name = variant.buildType.name
+    def task = project.tasks.create "jar${name.capitalize()}", Jar
+    task.dependsOn variant.javaCompile
+    task.from variant.javaCompile.destinationDir
+    artifacts.add('archives', task);
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    failOnError false
+    source = android.sourceSets.main.java.sourceFiles
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+//task androidJavadocs(type: Javadoc) {
+//    source = android.sourceSets.main.java.srcDirs
+//}
+//
+//task androidJavadocsJar(type: Jar) {
+//    classifier = 'javadoc'
+//    baseName = "andcommon"
+//    from androidJavadocs.destinationDir
+//}
+//
+//task androidSourcesJar(type: Jar) {
+//    classifier = 'sources'
+//    baseName = "andcommon"
+//    from android.sourceSets.main.java.srcDirs
+//}
+//
+//artifacts {
+////    archives packageReleaseJar
+//    archives androidSourcesJar
+//    archives androidJavadocsJar
+//}
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.google.android.gms:play-services:8.4.0'
+    compile 'com.android.support:support-annotations:23.1.1'
     compile project(':jbasx')
     compile files('libs/jbasx-0.1.1.jar')
 

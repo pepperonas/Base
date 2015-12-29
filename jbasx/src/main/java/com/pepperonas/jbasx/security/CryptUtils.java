@@ -33,6 +33,14 @@ public class CryptUtils {
     private static final String TAG = "CryptUtils";
 
 
+    /**
+     * Aes encrypt string.
+     *
+     * @param password the password
+     * @param text     the text
+     * @param iv       the iv
+     * @return the string
+     */
     public static String aesEncrypt(String password, String text, long iv) {
         Cipher cipher = null;
         SecretKeySpec key;
@@ -81,6 +89,14 @@ public class CryptUtils {
     }
 
 
+    /**
+     * Aes decrypt string.
+     *
+     * @param password    the password
+     * @param cryptedText the crypted text
+     * @param iv          the iv
+     * @return the string
+     */
     public static String aesDecrypt(String password, String cryptedText, long iv) {
         Cipher cipher = null;
         SecretKeySpec key;

@@ -27,6 +27,13 @@ public class Networker implements Callable<List<String>> {
     private int timeout;
 
 
+    /**
+     * Instantiates a new Networker.
+     *
+     * @param mode           the mode
+     * @param networkAddress the network address
+     * @param timeout        the timeout
+     */
     public Networker(Mode mode, String networkAddress, int timeout) {
         this.mode = mode;
         this.networkAddress = networkAddress;

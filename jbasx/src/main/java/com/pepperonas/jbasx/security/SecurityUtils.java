@@ -29,6 +29,12 @@ public class SecurityUtils {
     private static final String TAG = "SecurityUtils";
 
 
+    /**
+     * Gets md 5.
+     *
+     * @param text the text
+     * @return the md 5
+     */
     public static String getMD5(String text) {
         String md5;
         if (TextUtils.isEmpty(text)) {
@@ -64,6 +70,12 @@ public class SecurityUtils {
     }
 
 
+    /**
+     * Bytes 2 hex string.
+     *
+     * @param bytes the bytes
+     * @return the string
+     */
     public static String bytes2Hex(byte[] bytes) {
         String hs = "";
         String stmp;
@@ -79,6 +91,12 @@ public class SecurityUtils {
     }
 
 
+    /**
+     * Gets sha 1.
+     *
+     * @param text the text
+     * @return the sha 1
+     */
     public static String getSHA1(String text) {
         if (TextUtils.isEmpty(text)) {
             return null;

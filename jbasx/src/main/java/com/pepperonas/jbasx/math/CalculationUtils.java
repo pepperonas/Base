@@ -24,11 +24,24 @@ public class CalculationUtils {
     private static final String TAG = "CalculationUtils";
 
 
+    /**
+     * Percent double.
+     *
+     * @param percentageValue the percentage value
+     * @param basicValue      the basic value
+     * @return the double
+     */
     public static double percent(double percentageValue, double basicValue) {
         return (percentageValue * (double) 100 / basicValue);
     }
 
 
+    /**
+     * Round to half float.
+     *
+     * @param x the x
+     * @return the float
+     */
     public static float roundToHalf(float x) {
         return (float) (Math.ceil(x * 2) / 2);
     }

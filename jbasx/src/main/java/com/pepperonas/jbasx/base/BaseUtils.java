@@ -29,6 +29,12 @@ public class BaseUtils {
     private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
 
 
+    /**
+     * Convert to hex int.
+     *
+     * @param n the n
+     * @return the int
+     */
     public static int convertToHex(int n) {
         return Integer.valueOf(String.valueOf(n), 16);
     }
@@ -49,7 +55,9 @@ public class BaseUtils {
 
 
     /**
-     * @return The timestamp in milliseconds.
+     * Timestamp ms long.
+     *
+     * @return the long
      */
     public static long tsMs() {
         return System.currentTimeMillis();
@@ -57,6 +65,8 @@ public class BaseUtils {
 
 
     /**
+     * Timestamp ns long.
+     *
      * @return The timestamp in nanoseconds.
      */
     public static long tsNs() {
@@ -65,9 +75,9 @@ public class BaseUtils {
 
 
     /**
-     * Retrieve an unique ID.
+     * Generate unique id int.
      *
-     * @return The ID.
+     * @return the int
      */
     public static int generateUniqueId() {
         for (; ; ) {

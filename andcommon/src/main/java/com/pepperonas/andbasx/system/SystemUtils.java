@@ -17,8 +17,7 @@
 package com.pepperonas.andbasx.system;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
+import android.app.ActivityManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -26,21 +25,27 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.hardware.display.DisplayManager;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.Display;
 import android.view.MotionEvent;
 
 import com.pepperonas.andbasx.AndBasx;
 import com.pepperonas.andbasx.base.ToastUtils;
+import com.pepperonas.andbasx.datatype.InstalledApp;
 import com.pepperonas.jbasx.log.Log;
 
 import java.io.ByteArrayOutputStream;
@@ -48,6 +53,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,6 +65,11 @@ public class SystemUtils {
 
     public static final int MAX_BRIGHTNESS = 255;
     public static final int MIN_BRIGHTNESS = 0;
+
+
+    public enum NetworkType {
+        Mobile, Wifi
+    }
 
 
     /**
@@ -77,7 +88,7 @@ public class SystemUtils {
      * @param activity    the activity
      * @param requestCode the request code
      */
-    private void launchAppSettings(Activity activity, int requestCode) {
+    public static void launchAppSettings(Activity activity, int requestCode) {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + activity.getPackageName()));
         activity.startActivityForResult(intent, requestCode);
     }
@@ -126,6 +137,55 @@ public class SystemUtils {
 
 
     /**
+     * Gets installed app infos.
+     *
+     * @return the installed apps
+     */
+    public static List<ApplicationInfo> getInstalledAppInfos() {
+        final PackageManager packageManager = AndBasx.getContext().getPackageManager();
+        return packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+    }
+
+
+    /**
+     * Gets installed app names.
+     *
+     * @return the installed app names
+     */
+    public static List<String> getInstalledAppNames() {
+        final Intent intent = new Intent(Intent.ACTION_MAIN, null);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        PackageManager packageManager = AndBasx.getContext().getPackageManager();
+        List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
+        List<String> appNames = new ArrayList<>();
+        for (ResolveInfo resolveInfo : activities) {
+            appNames.add(resolveInfo.loadLabel(packageManager).toString());
+        }
+        return appNames;
+    }
+
+
+    /**
+     * Gets installed apps.
+     *
+     * @return the installed apps
+     */
+    public static List<InstalledApp> getInstalledApps() {
+        List<InstalledApp> installedApps = new ArrayList<>();
+        PackageManager packageManager = AndBasx.getContext().getApplicationContext().getPackageManager();
+        for (ApplicationInfo ai : getInstalledAppInfos()) {
+            try {
+                ai = packageManager.getApplicationInfo(ai.packageName, 0);
+            } catch (final Exception e) {
+                ai = null;
+            }
+            installedApps.add(new InstalledApp(ai, (String) (ai != null ? packageManager.getApplicationLabel(ai) : "(unknown)")));
+        }
+        return installedApps;
+    }
+
+
+    /**
      * Gets status bar height.
      *
      * @return the status bar height
@@ -165,6 +225,24 @@ public class SystemUtils {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             AndBasx.getContext().startActivity(intent);
         }
+    }
+
+
+    /**
+     * Is service running boolean.
+     *
+     * @param context      the context
+     * @param serviceClass the service class
+     * @return the boolean
+     */
+    public static boolean isServiceRunning(Context context, Class<?> serviceClass) {
+
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) return true;
+        }
+        return false;
     }
 
 
@@ -299,6 +377,20 @@ public class SystemUtils {
 
 
     /**
+     * Is network available boolean.
+     * {@link android.Manifest.permission#ACCESS_NETWORK_STATE}
+     *
+     * @return the boolean
+     */
+    public static boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) AndBasx.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+
+    /**
      * Is wifi enabled boolean.
      * {@link android.Manifest.permission#ACCESS_WIFI_STATE}
      *
@@ -331,6 +423,65 @@ public class SystemUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    /**
+     * Gets network type.
+     * {@link android.Manifest.permission#ACCESS_NETWORK_STATE}
+     *
+     * @return the network type
+     */
+    public static NetworkType getNetworkType() {
+        ConnectivityManager conMan = (ConnectivityManager) AndBasx.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo.State mobile = conMan.getNetworkInfo(0).getState();
+        NetworkInfo.State wifi = conMan.getNetworkInfo(1).getState();
+        if (mobile == NetworkInfo.State.CONNECTED || mobile == NetworkInfo.State.CONNECTING) {
+            return NetworkType.Mobile;
+        } else if (wifi == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTING) {
+            return NetworkType.Wifi;
+        }
+        if (AndBasx.mLog == AndBasx.LogMode.ALL || AndBasx.mLog == AndBasx.LogMode.DEFAULT) {
+            Log.w(TAG, "getNetworkType " + "invalid NetworkType.");
+        }
+        return null;
+    }
+
+
+    /**
+     * Gets carrier name.
+     *
+     * @return the carrier name
+     */
+    public static String getCarrierName() {
+        TelephonyManager manager = (TelephonyManager) AndBasx.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        return manager.getNetworkOperatorName();
+    }
+
+
+    /**
+     * Gets wifi name.
+     * {@link android.Manifest.permission#CHANGE_WIFI_STATE}
+     *
+     * @return the wifi name
+     */
+    public static String getWifiName() {
+        WifiManager wifiManager = (WifiManager) AndBasx.getContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo info = wifiManager.getConnectionInfo();
+        return info.getSSID();
+    }
+
+
+    /**
+     * Gets wifi signal strength.
+     *
+     * @return the wifi signal strength
+     */
+    public static int getWifiSignalStrength() {
+        WifiManager wifiManager = (WifiManager) AndBasx.getContext().getSystemService(Context.WIFI_SERVICE);
+        int numberOfLevels = 101;
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        return WifiManager.calculateSignalLevel(wifiInfo.getRssi(), numberOfLevels);
     }
 
 

@@ -27,6 +27,13 @@ public class XmlUtils {
     private static final String TAG = "XmlUtils";
 
 
+    /**
+     * Wrap string.
+     *
+     * @param key   the key
+     * @param value the value
+     * @return the string
+     */
     public static String wrap(String key, String value) {
         if (Jbasx.mLog == Jbasx.LogMode.ALL) {
             Log.d(TAG, "wrap: " + "<" + key + ">" + value + "</" + key + ">");
@@ -35,6 +42,12 @@ public class XmlUtils {
     }
 
 
+    /**
+     * Unwrap string.
+     *
+     * @param xmlString the xml string
+     * @return the string
+     */
     public static String unwrap(String xmlString) {
         if (Jbasx.mLog == Jbasx.LogMode.ALL) {
             Log.d(TAG, "unwrap: " + xmlString.split(">")[1].split("</")[0]);
@@ -43,6 +56,13 @@ public class XmlUtils {
     }
 
 
+    /**
+     * Wrap all string.
+     *
+     * @param key    the key
+     * @param values the values
+     * @return the string
+     */
     public static String wrapAll(String key, String... values) {
         String result = "";
         int i = 0;
@@ -54,6 +74,12 @@ public class XmlUtils {
     }
 
 
+    /**
+     * Unwrap all string [ ].
+     *
+     * @param xmlString the xml string
+     * @return the string [ ]
+     */
     public static String[] unwrapAll(String xmlString) {
         String[] xmls = xmlString.split("><");
         String[] result = new String[xmls.length];

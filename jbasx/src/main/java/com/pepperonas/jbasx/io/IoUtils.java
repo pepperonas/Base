@@ -29,11 +29,23 @@ public class IoUtils {
     private static final String TAG = "IoUtils";
 
 
+    /**
+     * Read utf 8 string.
+     *
+     * @param sourcePath the source path
+     * @return the string
+     */
     public static String readUtf8(String sourcePath) {
         return readUtf8(new File(sourcePath));
     }
 
 
+    /**
+     * Read utf 8 string.
+     *
+     * @param sourceFile the source file
+     * @return the string
+     */
     public static String readUtf8(File sourceFile) {
         FileReader reader;
         BufferedReader bufferedReader;
@@ -66,6 +78,12 @@ public class IoUtils {
     }
 
 
+    /**
+     * Read utf 8 in list list.
+     *
+     * @param sourceFile the source file
+     * @return the list
+     */
     public static List<String> readUtf8InList(File sourceFile) {
         FileReader reader;
         BufferedReader bufferedReader;
@@ -102,6 +120,8 @@ public class IoUtils {
      * Read the content of a ISO-8859-1 encoded file.
      *
      * @param sourceFile File with data which should be read.
+     * @return the string
+     * @throws IOException the io exception
      */
     public static String readIso8859(File sourceFile) throws IOException {
         FileInputStream fis = null;
@@ -170,6 +190,13 @@ public class IoUtils {
     }
 
 
+    /**
+     * Write boolean.
+     *
+     * @param inputStream the input stream
+     * @param destFile    the dest file
+     * @return the boolean
+     */
     public static boolean write(InputStream inputStream, File destFile) {
         OutputStream outputStream = null;
 
@@ -218,6 +245,13 @@ public class IoUtils {
     }
 
 
+    /**
+     * Write buffered.
+     *
+     * @param output  the output
+     * @param text    the text
+     * @param bufSize the buf size
+     */
     public static void writeBuffered(File output, String text, int bufSize) {
         FileWriter writer = null;
         BufferedWriter bufferedWriter = null;
@@ -249,6 +283,13 @@ public class IoUtils {
     }
 
 
+    /**
+     * Write buffered.
+     *
+     * @param output  the output
+     * @param records the records
+     * @param bufSize the buf size
+     */
     public static void writeBuffered(File output, List<String> records, int bufSize) {
         FileWriter writer = null;
         BufferedWriter bufferedWriter = null;
@@ -278,6 +319,12 @@ public class IoUtils {
     }
 
 
+    /**
+     * Write.
+     *
+     * @param output the output
+     * @param bytes  the bytes
+     */
     public static void write(File output, byte[] bytes) {
         FileOutputStream fos = null;
 
@@ -299,6 +346,12 @@ public class IoUtils {
     }
 
 
+    /**
+     * To byte array byte [ ].
+     *
+     * @param file the file
+     * @return the byte [ ]
+     */
     public static byte[] toByteArray(File file) {
         FileInputStream fis = null;
 
@@ -324,6 +377,12 @@ public class IoUtils {
     }
 
 
+    /**
+     * Convert file to input stream input stream.
+     *
+     * @param file the file
+     * @return the input stream
+     */
     public static InputStream convertFileToInputStream(File file) {
         try {
             return new FileInputStream(file);
@@ -334,12 +393,24 @@ public class IoUtils {
     }
 
 
+    /**
+     * Convert stream to string string.
+     *
+     * @param inputStream the input stream
+     * @return the string
+     */
     public static String convertStreamToString(InputStream inputStream) {
         java.util.Scanner s = new java.util.Scanner(inputStream).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
     }
 
 
+    /**
+     * Write.
+     *
+     * @param records the records
+     * @param writer  the writer
+     */
     private static void write(List<String> records, Writer writer) {
         try {
             for (String record : records) {

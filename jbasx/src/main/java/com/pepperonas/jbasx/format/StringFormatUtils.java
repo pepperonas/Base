@@ -38,30 +38,65 @@ public class StringFormatUtils {
     public static final String regIpAddress = "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
 
 
+    /**
+     * Format decimal string.
+     *
+     * @param value     the value
+     * @param precision the precision
+     * @return the string
+     */
     public static String formatDecimal(double value, int precision) {
         DecimalFormat df = getDecimalFormat(precision, "#");
         return df.format(value);
     }
 
 
+    /**
+     * Format decimal string.
+     *
+     * @param value     the value
+     * @param precision the precision
+     * @return the string
+     */
     public static String formatDecimal(String value, int precision) {
         DecimalFormat df = getDecimalFormat(precision, "#");
         return df.format(value);
     }
 
 
+    /**
+     * Format decimal force precision string.
+     *
+     * @param value     the value
+     * @param precision the precision
+     * @return the string
+     */
     public static String formatDecimalForcePrecision(double value, int precision) {
         DecimalFormat df = getDecimalFormat(precision, "0");
         return df.format(value);
     }
 
 
+    /**
+     * Format decimal force precision string.
+     *
+     * @param value     the value
+     * @param precision the precision
+     * @return the string
+     */
     public static String formatDecimalForcePrecision(String value, int precision) {
         DecimalFormat df = getDecimalFormat(precision, "0");
         return df.format(value);
     }
 
 
+    /**
+     * Cut text string.
+     *
+     * @param text      the text
+     * @param maxLength the max length
+     * @return the string
+     */
     public static String cutText(String text, int maxLength) {
         if (TextUtils.isEmpty(text) || maxLength < 0) {
             return text;
@@ -74,6 +109,12 @@ public class StringFormatUtils {
     }
 
 
+    /**
+     * Is email boolean.
+     *
+     * @param text the text
+     * @return the boolean
+     */
     public static boolean isEmail(CharSequence text) {
         if (TextUtils.isEmpty(text)) {
             return false;
@@ -85,6 +126,12 @@ public class StringFormatUtils {
     }
 
 
+    /**
+     * Is ip 4 address boolean.
+     *
+     * @param text the text
+     * @return the boolean
+     */
     public static boolean isIp4Address(CharSequence text) {
         if (TextUtils.isEmpty(text)) {
             return false;
@@ -96,6 +143,12 @@ public class StringFormatUtils {
     }
 
 
+    /**
+     * Stringify string.
+     *
+     * @param t the t
+     * @return the string
+     */
     public static String stringify(Throwable t) {
         if (t == null) {
             return null;
@@ -107,6 +160,12 @@ public class StringFormatUtils {
     }
 
 
+    /**
+     * Extract urls list.
+     *
+     * @param text the text
+     * @return the list
+     */
     public static List<String> extractUrls(CharSequence text) {
         List<String> urls = new ArrayList<String>();
 
@@ -119,6 +178,13 @@ public class StringFormatUtils {
     }
 
 
+    /**
+     * Gets decimal format.
+     *
+     * @param precision the precision
+     * @param force     the force
+     * @return the decimal format
+     */
     private static DecimalFormat getDecimalFormat(int precision, String force) {
         String s = force + ".";
         for (int i = 0; i < precision; i++) s += force;
