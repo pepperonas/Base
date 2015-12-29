@@ -181,7 +181,8 @@ public class TimeFormatUtils {
     /**
      * Utc to local string.
      *
-     * @param date the date
+     * @param date   the date
+     * @param locale the locale
      * @return the string
      */
     public static String utcToLocal(Date date, Locale locale) {
@@ -215,6 +216,7 @@ public class TimeFormatUtils {
      *
      * @param time   the time
      * @param format the format
+     * @param locale the locale
      * @return the string
      */
     public static String formatTime(long time, String format, Locale locale) {
@@ -245,6 +247,7 @@ public class TimeFormatUtils {
      *
      * @param date   the date
      * @param format the format
+     * @param locale the locale
      * @return the string
      */
     public static String formatTime(Date date, String format, Locale locale) {
@@ -276,6 +279,7 @@ public class TimeFormatUtils {
      * @param timeStr   the time str
      * @param srcFormat the src format
      * @param dstFormat the dst format
+     * @param locale    the locale
      * @return the string
      */
     public static String formatTime(String timeStr, String srcFormat, String dstFormat, Locale locale) {
@@ -312,6 +316,7 @@ public class TimeFormatUtils {
      *
      * @param time   the time
      * @param format the format
+     * @param locale the locale
      * @return the long
      */
     public static long formatTime(String time, String format, Locale locale) {
@@ -389,6 +394,7 @@ public class TimeFormatUtils {
      * Gets timestamp lexical.
      *
      * @param showSeconds the show seconds
+     * @param locale      the locale
      * @return the timestamp lexical
      */
     public static String getTimestampLexical(boolean showSeconds, Locale locale) {
@@ -410,6 +416,7 @@ public class TimeFormatUtils {
     /**
      * Gets timestamp millis.
      *
+     * @param locale the locale
      * @return the timestamp millis
      */
     public static String getTimestampMillis(Locale locale) {
@@ -446,6 +453,27 @@ public class TimeFormatUtils {
         else if (timeOfDay >= 12 && timeOfDay < 18) return Daytime.Afternoon;
         else if (timeOfDay >= 18 && timeOfDay < 22) return Daytime.Evening;
         return Daytime.Night;
+    }
+
+
+    /**
+     * Timestamp to millis long.
+     * <p/>
+     * Get milliseconds from a SQL-timestamp (such as '2015-12-29 13:05:13').
+     *
+     * @param timestamp the timestamp
+     * @return the long
+     */
+    public static long timestampToMillis(String timestamp) {
+        int y = Integer.parseInt(timestamp.substring(0, 4));
+        int m = Integer.parseInt(timestamp.substring(5, 7)) - 1;
+        int d = Integer.parseInt(timestamp.substring(8, 10));
+        int h = Integer.parseInt(timestamp.substring(11, 13));
+        int min = Integer.parseInt(timestamp.substring(14, 16));
+        int sec = Integer.parseInt(timestamp.substring(17, 19));
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(y, m, d, h, min, sec);
+        return calendar.getTimeInMillis();
     }
 
 }

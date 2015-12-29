@@ -35,7 +35,7 @@
 <body>
 <h1>RecordBreaker-0.0.1</h1>
 
-<p>Enter your application data and click submit. Please note: If you leave the duration field empty, the key will expire after 24h automatically.</p>
+<p>Enter your application data and click submit. Please note: If you leave the duration field empty, the appId will expire after 24h automatically.</p>
 
 
 <!--FORM-->

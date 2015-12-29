@@ -3,12 +3,12 @@
                   android:title="Notifications">
 
     <CheckBoxPreference
-        android:key="notification_key_01"
+        android:appId="notification_key_01"
         android:title="Get notifications"
         android:summary="Enable notifications"/>
 
     <Preference
-        android:key="notification_key_02"
+        android:appId="notification_key_02"
         android:title="Send test notification"/>
 
 </PreferenceScreen>

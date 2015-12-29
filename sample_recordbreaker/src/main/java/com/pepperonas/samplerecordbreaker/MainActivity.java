@@ -51,8 +51,8 @@ public class MainActivity extends AppCompatActivity implements OnRecordResolvedL
 
     @Override
     public void onRecordBreakerSuccess(RecordBreaker.Status success, String... params) {
-        Log.i(TAG, "onRecordBreakerSuccess: " + success.name());
-        Log.d(TAG, "onRecordBreakerSuccess", params);
+        Log.i(TAG, "onUserRegistered: " + success.name());
+        Log.d(TAG, "onUserRegistered", params);
 
         if (params[0].contains("background")) {
             RelativeLayout rl = (RelativeLayout) MainActivity.this.findViewById(R.id.main_rl);
@@ -64,6 +64,6 @@ public class MainActivity extends AppCompatActivity implements OnRecordResolvedL
 
     @Override
     public void onRecordBreakerFailed(RecordBreaker.Status error) {
-        Log.e(TAG, "onRecordBreakerFailed: " + error.name());
+        Log.e(TAG, "onFailed: " + error.name());
     }
 }

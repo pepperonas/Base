@@ -73,6 +73,16 @@ public class SystemUtils {
 
 
     /**
+     * Gets android id.
+     *
+     * @return the android id
+     */
+    public static String getAndroidId() {
+        return Settings.Secure.getString(AndBasx.getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+    }
+
+
+    /**
      * Is main thread boolean.
      *
      * @return the boolean

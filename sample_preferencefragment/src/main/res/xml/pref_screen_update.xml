@@ -3,12 +3,12 @@
                   android:title="Updates">
 
     <CheckBoxPreference
-        android:key="update_key_01"
+        android:appId="update_key_01"
         android:title="Update automatically"
         android:summary="Get faster updates"/>
 
     <Preference
-        android:key="update_key_02"
+        android:appId="update_key_02"
         android:title="Check for updates"/>
 
 </PreferenceScreen>

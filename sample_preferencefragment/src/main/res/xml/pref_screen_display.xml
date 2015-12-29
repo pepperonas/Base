@@ -3,16 +3,16 @@
                   android:title="Display">
 
     <CheckBoxPreference
-        android:key="screen_key_01"
+        android:appId="screen_key_01"
         android:title="Full brightness"
         android:summary="Enable a brighter screen"/>
 
     <Preference
-        android:key="screen_key_02"
+        android:appId="screen_key_02"
         android:title="Show test image"/>
 
     <EditTextPreference
-        android:key="screen_key_03"
+        android:appId="screen_key_03"
         android:title="Screen params"
         android:summary="Enter your screen params"/>
 
