@@ -75,6 +75,8 @@ public class TimeFormatUtils {
     public static final String DEFAULT_FORMAT_YMD_HMS = "yyyy-MM-dd HH:mm:ss";
     public static final String DEFAULT_FORMAT_YMD_HM = "yyyy-MM-dd HH:mm";
     public static final String DEFAULT_FORMAT_MD_HM = "MM-dd HH:mm";
+    public static final String DEFAULT_FORMAT_DMY_HM = "dd.MM.yyyy HH:mm";
+    public static final String DEFAULT_FORMAT_DMY_HMS = "dd.MM.yyyy HH:mm:ss";
 
     public static final String LOG_FORMAT = "yyyy.MM.dd HH:mm:ss:SSS";
 

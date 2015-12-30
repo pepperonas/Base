@@ -16,6 +16,8 @@
 
 package com.pepperonas.andbasx.base;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 
 import com.pepperonas.andbasx.AndBasx;
@@ -34,10 +36,17 @@ public class ClipboardUtils {
      * @param text The text to be copied.
      */
     @SuppressWarnings("deprecation")
-    public static void setClipboard(CharSequence text) {
+    public static void setClipboardOlderApis(CharSequence text) {
         android.text.ClipboardManager clipboard = (android.text.ClipboardManager)
                 AndBasx.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
         clipboard.setText(text);
+    }
+
+
+    public static void setClipboard(CharSequence text) {
+        ClipboardManager clipboard = (ClipboardManager) AndBasx.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("label", text);
+        clipboard.setPrimaryClip(clip);
     }
 
 

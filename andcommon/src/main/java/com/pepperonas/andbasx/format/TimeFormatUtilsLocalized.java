@@ -30,6 +30,8 @@ public class TimeFormatUtilsLocalized {
     public static final String DEFAULT_FORMAT_YMD_HMS = TimeFormatUtils.DEFAULT_FORMAT_YMD_HMS;
     public static final String DEFAULT_FORMAT_YMD_HM = TimeFormatUtils.DEFAULT_FORMAT_YMD_HM;
     public static final String DEFAULT_FORMAT_MD_HM = TimeFormatUtils.DEFAULT_FORMAT_MD_HM;
+    public static final String DEFAULT_FORMAT_DMY_HM = TimeFormatUtils.DEFAULT_FORMAT_DMY_HM;
+    public static final String DEFAULT_FORMAT_DMY_HMS = TimeFormatUtils.DEFAULT_FORMAT_DMY_HMS;
 
     public static final String LOG_FORMAT = TimeFormatUtils.LOG_FORMAT;
 
