@@ -19,10 +19,12 @@ package com.pepperonas.aesprefs;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.Preference;
-import android.support.v7.appcompat.BuildConfig;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.pepperonas.andbasx.system.AppUtils;
+import com.pepperonas.andcommon.BuildConfig;
 import com.pepperonas.jbasx.format.NumberFormatUtils;
 import com.pepperonas.jbasx.format.TimeFormatUtils;
 
@@ -78,7 +80,7 @@ public class AesPrefs {
      *
      * @param logMode the log mode
      */
-    public static void logMode(LogMode logMode) {
+    public static void logMode(@NonNull LogMode logMode) {
         mLog = logMode;
     }
 
@@ -91,8 +93,10 @@ public class AesPrefs {
      * @param password the password
      * @param logMode  the log mode
      */
-    public static void init(Context context, String filename, String password, LogMode logMode) {
-        mLog = logMode;
+    public static void init(@NonNull Context context, @NonNull String filename, @NonNull String password, @Nullable LogMode logMode) {
+        if (logMode == null) {
+            mLog = LogMode.NONE;
+        } else mLog = logMode;
         init(context, filename, password);
     }
 
@@ -105,8 +109,10 @@ public class AesPrefs {
      * @param password the password
      * @param logMode  the log mode
      */
-    public static void initCompleteConfig(Context context, String filename, String password, LogMode logMode) {
-        mLog = logMode;
+    public static void initCompleteConfig(@NonNull Context context, @NonNull String filename, @NonNull String password, @Nullable LogMode logMode) {
+        if (logMode == null) {
+            mLog = LogMode.NONE;
+        } else mLog = logMode;
         init(context, filename, password);
         initOrIncrementLaunchCounter();
         initInstallationDate();
@@ -120,7 +126,7 @@ public class AesPrefs {
      * @param filename the filename
      * @param password the password
      */
-    public static void init(Context context, String filename, String password) {
+    public static void init(@NonNull Context context, @NonNull String filename, @NonNull String password) {
         if (mLog != LogMode.NONE) {
             Log.i(TAG, "Initializing AesPrefs...");
         }
@@ -164,7 +170,7 @@ public class AesPrefs {
      * @param encryptedKey the key
      * @return the string
      */
-    public static String decryptedKey(String encryptedKey) {
+    public static String decryptedKey(@NonNull String encryptedKey) {
         long start = System.currentTimeMillis();
         encryptedKey = encryptedKey.substring(0, encryptedKey.length() - 1);
 
@@ -191,7 +197,7 @@ public class AesPrefs {
      * @param key the key
      * @return the encrypted key
      */
-    public static String getEncryptedKey(String key) {
+    public static String getEncryptedKey(@NonNull String key) {
         String _key = Crypt.encrypt(mPassword, key, mIv) + TAIL;
         return _key.substring(0, _key.length() - 1);
     }
@@ -203,7 +209,7 @@ public class AesPrefs {
      * @param listener the listener
      */
     public static void registerOnSharedPreferenceChangeListener(
-            SharedPreferences.OnSharedPreferenceChangeListener listener) {
+            @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener) {
 
         SharedPreferences sp = mCtx.getSharedPreferences(mFilename, Context.MODE_PRIVATE);
         sp.registerOnSharedPreferenceChangeListener(listener);
@@ -216,7 +222,7 @@ public class AesPrefs {
      * @param listener the listener
      */
     public static void unregisterOnSharedPreferenceChangeListener(
-            SharedPreferences.OnSharedPreferenceChangeListener listener) {
+            @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener) {
 
         SharedPreferences sp = mCtx.getSharedPreferences(mFilename, Context.MODE_PRIVATE);
         sp.unregisterOnSharedPreferenceChangeListener(listener);
@@ -230,7 +236,7 @@ public class AesPrefs {
      * @param preferences the preferences
      */
     public static void setClickListenersOnPreferences(
-            Preference.OnPreferenceClickListener listener, Preference... preferences) {
+            @NonNull Preference.OnPreferenceClickListener listener, @NonNull Preference... preferences) {
 
         for (Preference preference : preferences) {
             preference.setOnPreferenceClickListener(listener);
@@ -244,7 +250,7 @@ public class AesPrefs {
      * @param preferences the preferences
      */
     public static void removeClickListenersFromPreferences(
-            Preference... preferences) {
+            @NonNull Preference... preferences) {
 
         for (Preference preference : preferences) {
             preference.setOnPreferenceClickListener(null);
@@ -259,7 +265,7 @@ public class AesPrefs {
      * @param preferences the preferences
      */
     public static void setChangeListenersOnPreferences(
-            Preference.OnPreferenceChangeListener listener, Preference... preferences) {
+            @NonNull Preference.OnPreferenceChangeListener listener, @NonNull Preference... preferences) {
 
         for (Preference preference : preferences) {
             preference.setOnPreferenceChangeListener(listener);
@@ -273,7 +279,7 @@ public class AesPrefs {
      * @param preferences the preferences
      */
     public static void removeChangeListenersFromPreferences(
-            Preference... preferences) {
+            @NonNull Preference... preferences) {
 
         for (Preference preference : preferences) {
             preference.setOnPreferenceChangeListener(null);
@@ -287,7 +293,7 @@ public class AesPrefs {
      * @param key the key
      * @return the boolean
      */
-    public static boolean contains(String key) {
+    public static boolean contains(@NonNull String key) {
         SharedPreferences sp = mCtx.getSharedPreferences(mFilename, Context.MODE_PRIVATE);
         String _key = Crypt.encrypt(mPassword, key, mIv) + TAIL;
         long iv = sp.getLong(_key, 0);
@@ -302,7 +308,7 @@ public class AesPrefs {
      * @param key   the key
      * @param value the value
      */
-    public static void put(String key, String value) {
+    public static void put(@NonNull String key, @Nullable String value) {
         long start = System.currentTimeMillis();
 
         long iv = System.currentTimeMillis();
@@ -331,7 +337,8 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the string
      */
-    public static String get(String key, String defaultValue) {
+    @Nullable
+    public static String get(@NonNull String key, @Nullable String defaultValue) {
         long start = System.currentTimeMillis();
         String param = key;
 
@@ -343,7 +350,10 @@ public class AesPrefs {
 
         if (!sp.contains(key)) {
             if (mLog != LogMode.NONE) {
-                Log.e(TAG, "WARNING: Key '" + param + "' not found (return: " + (defaultValue.isEmpty() ? "\"\"" : defaultValue) + ")");
+                if (defaultValue == null) {
+                    Log.e(TAG, "WARNING: Key '" + param + "' not found (return:  null)");
+                } else
+                    Log.e(TAG, "WARNING: Key '" + param + "' not found (return: " + (defaultValue.isEmpty() ? "\"\"" : defaultValue) + ")");
             }
             return defaultValue;
         }
@@ -368,7 +378,8 @@ public class AesPrefs {
      * @param key the key
      * @return the nullable
      */
-    public static String getNullable(String key) {
+    @Nullable
+    public static String getNullable(@NonNull String key) {
         long start = System.currentTimeMillis();
         String param = key;
 
@@ -405,7 +416,7 @@ public class AesPrefs {
      * @param key   the key
      * @param value the value
      */
-    public static void putInt(String key, int value) {
+    public static void putInt(@NonNull String key, int value) {
         long start = System.currentTimeMillis();
 
         long iv = System.currentTimeMillis();
@@ -434,7 +445,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the int
      */
-    public static int getInt(String key, int defaultValue) {
+    public static int getInt(@NonNull String key, int defaultValue) {
         long start = System.currentTimeMillis();
         String param = key;
 
@@ -471,7 +482,8 @@ public class AesPrefs {
      * @param key the key
      * @return the int nullable
      */
-    public static Integer getIntNullable(String key) {
+    @Nullable
+    public static Integer getIntNullable(@NonNull String key) {
         long start = System.currentTimeMillis();
         String param = key;
 
@@ -508,7 +520,7 @@ public class AesPrefs {
      * @param key   the key
      * @param value the value
      */
-    public static void putLong(String key, long value) {
+    public static void putLong(@NonNull String key, long value) {
         long start = System.currentTimeMillis();
 
         long iv = System.currentTimeMillis();
@@ -537,7 +549,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the long
      */
-    public static long getLong(String key, long defaultValue) {
+    public static long getLong(@NonNull String key, long defaultValue) {
         long start = System.currentTimeMillis();
         String param = key;
 
@@ -574,7 +586,8 @@ public class AesPrefs {
      * @param key the key
      * @return the long nullable
      */
-    public static Long getLongNullable(String key) {
+    @Nullable
+    public static Long getLongNullable(@NonNull String key) {
         long start = System.currentTimeMillis();
         String param = key;
 
@@ -611,7 +624,7 @@ public class AesPrefs {
      * @param key   the key
      * @param value the value
      */
-    public static void putDouble(String key, double value) {
+    public static void putDouble(@NonNull String key, double value) {
         long start = System.currentTimeMillis();
 
         long iv = System.currentTimeMillis();
@@ -640,7 +653,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the double
      */
-    public static double getDouble(String key, double defaultValue) {
+    public static double getDouble(@NonNull String key, double defaultValue) {
         long start = System.currentTimeMillis();
         String param = key;
 
@@ -677,7 +690,8 @@ public class AesPrefs {
      * @param key the key
      * @return the double nullable
      */
-    public static Double getDoubleNullable(String key) {
+    @Nullable
+    public static Double getDoubleNullable(@NonNull String key) {
         long start = System.currentTimeMillis();
         String param = key;
 
@@ -714,7 +728,7 @@ public class AesPrefs {
      * @param key   the key
      * @param value the value
      */
-    public static void putFloat(String key, float value) {
+    public static void putFloat(@NonNull String key, float value) {
         long start = System.currentTimeMillis();
 
         long iv = System.currentTimeMillis();
@@ -743,7 +757,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the float
      */
-    public static float getFloat(String key, float defaultValue) {
+    public static float getFloat(@NonNull String key, float defaultValue) {
         long start = System.currentTimeMillis();
         String param = key;
 
@@ -780,7 +794,8 @@ public class AesPrefs {
      * @param key the key
      * @return the float nullable
      */
-    public static Float getFloatNullable(String key) {
+    @Nullable
+    public static Float getFloatNullable(@NonNull String key) {
         long start = System.currentTimeMillis();
         String param = key;
 
@@ -817,7 +832,7 @@ public class AesPrefs {
      * @param key   the key
      * @param value the value
      */
-    public static void putBoolean(String key, boolean value) {
+    public static void putBoolean(@NonNull String key, boolean value) {
         long start = System.currentTimeMillis();
 
         long iv = System.currentTimeMillis();
@@ -846,7 +861,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the boolean
      */
-    public static boolean getBoolean(String key, boolean defaultValue) {
+    public static boolean getBoolean(@NonNull String key, boolean defaultValue) {
         long start = System.currentTimeMillis();
         String param = key;
 
@@ -883,7 +898,8 @@ public class AesPrefs {
      * @param key the key
      * @return the boolean nullable
      */
-    public static Boolean getBooleanNullable(String key) {
+    @Nullable
+    public static Boolean getBooleanNullable(@NonNull String key) {
         long start = System.currentTimeMillis();
         String param = key;
 
@@ -920,7 +936,7 @@ public class AesPrefs {
      * @param key    the key
      * @param values the values
      */
-    public static void storeArray(String key, List<String> values) {
+    public static void storeArray(@NonNull String key, @NonNull List<String> values) {
         long start = System.currentTimeMillis();
 
         long iv = System.currentTimeMillis();
@@ -948,7 +964,7 @@ public class AesPrefs {
      * @param key the key
      * @return the list
      */
-    public static List<String> restoreArray(String key) {
+    public static List<String> restoreArray(@NonNull String key) {
         long start = System.currentTimeMillis();
 
         SharedPreferences sp = mCtx.getSharedPreferences(mFilename, Context.MODE_PRIVATE);
@@ -984,7 +1000,7 @@ public class AesPrefs {
      * @param stringId the string id
      * @param value    the value
      */
-    public static void put(int stringId, String value) {
+    public static void putRes(int stringId, @NonNull String value) {
         put(mCtx.getString(stringId), value);
     }
 
@@ -996,7 +1012,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the string
      */
-    public static String get(int stringId, String defaultValue) {
+    public static String getRes(int stringId, @NonNull String defaultValue) {
         return get(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1008,7 +1024,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the no log
      */
-    public static String getNoLog(int stringId, String defaultValue) {
+    public static String getNoLogRes(int stringId, @NonNull String defaultValue) {
         return getNoLog(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1020,7 +1036,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the no log
      */
-    public static String getNoLog(String key, String defaultValue) {
+    public static String getNoLog(@NonNull String key, @NonNull String defaultValue) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
         String s = get(key, defaultValue);
@@ -1035,7 +1051,7 @@ public class AesPrefs {
      * @param stringId the string id
      * @param value    the value
      */
-    public static void putInt(int stringId, int value) {
+    public static void putIntRes(int stringId, int value) {
         putInt(mCtx.getString(stringId), value);
     }
 
@@ -1047,7 +1063,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the int
      */
-    public static int getInt(int stringId, int defaultValue) {
+    public static int getIntRes(int stringId, int defaultValue) {
         return getInt(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1059,7 +1075,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the int no log
      */
-    public static int getIntNoLog(int stringId, int defaultValue) {
+    public static int getIntNoLogRes(int stringId, int defaultValue) {
         return getIntNoLog(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1071,7 +1087,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the int no log
      */
-    public static int getIntNoLog(String key, int defaultValue) {
+    public static int getIntNoLog(@NonNull String key, int defaultValue) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
         int i = getInt(key, defaultValue);
@@ -1086,7 +1102,7 @@ public class AesPrefs {
      * @param stringId the string id
      * @param value    the value
      */
-    public static void putLong(int stringId, long value) {
+    public static void putLongRes(int stringId, long value) {
         putLong(mCtx.getString(stringId), value);
     }
 
@@ -1098,7 +1114,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the long
      */
-    public static long getLong(int stringId, long defaultValue) {
+    public static long getLongRes(int stringId, long defaultValue) {
         return getLong(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1110,7 +1126,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the long no log
      */
-    public static long getLongNoLog(int stringId, long defaultValue) {
+    public static long getLongNoLogRes(int stringId, long defaultValue) {
         return getLongNoLog(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1122,7 +1138,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the long no log
      */
-    public static long getLongNoLog(String key, long defaultValue) {
+    public static long getLongNoLog(@NonNull String key, long defaultValue) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
         long l = getLong(key, defaultValue);
@@ -1137,7 +1153,7 @@ public class AesPrefs {
      * @param stringId the string id
      * @param value    the value
      */
-    public static void putDouble(int stringId, double value) {
+    public static void putDoubleRes(int stringId, double value) {
         putDouble(mCtx.getString(stringId), value);
     }
 
@@ -1149,7 +1165,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the double
      */
-    public static double getDouble(int stringId, double defaultValue) {
+    public static double getDoubleRes(int stringId, double defaultValue) {
         return getDouble(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1161,7 +1177,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the double no log
      */
-    public static double getDoubleNoLog(int stringId, double defaultValue) {
+    public static double getDoubleNoLogRes(int stringId, double defaultValue) {
         return getDoubleNoLog(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1173,7 +1189,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the double no log
      */
-    public static double getDoubleNoLog(String key, double defaultValue) {
+    public static double getDoubleNoLog(@NonNull String key, double defaultValue) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
         double d = getDouble(key, defaultValue);
@@ -1188,7 +1204,7 @@ public class AesPrefs {
      * @param stringId the string id
      * @param value    the value
      */
-    public static void putFloat(int stringId, float value) {
+    public static void putFloatRes(int stringId, float value) {
         putFloat(mCtx.getString(stringId), value);
     }
 
@@ -1200,7 +1216,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the float
      */
-    public static float getFloat(int stringId, float defaultValue) {
+    public static float getFloatRes(int stringId, float defaultValue) {
         return getFloat(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1212,7 +1228,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the float no log
      */
-    public static float getFloatNoLog(int stringId, float defaultValue) {
+    public static float getFloatNoLogRes(int stringId, float defaultValue) {
         return getFloatNoLog(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1224,7 +1240,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the float no log
      */
-    public static float getFloatNoLog(String key, float defaultValue) {
+    public static float getFloatNoLog(@NonNull String key, float defaultValue) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
         float f = getFloat(key, defaultValue);
@@ -1239,7 +1255,7 @@ public class AesPrefs {
      * @param stringId the string id
      * @param value    the value
      */
-    public static void putBoolean(int stringId, boolean value) {
+    public static void putBooleanRes(int stringId, boolean value) {
         putBoolean(mCtx.getString(stringId), value);
     }
 
@@ -1251,7 +1267,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the boolean
      */
-    public static boolean getBoolean(int stringId, boolean defaultValue) {
+    public static boolean getBooleanRes(int stringId, boolean defaultValue) {
         return getBoolean(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1263,7 +1279,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the boolean no log
      */
-    public static boolean getBooleanNoLog(int stringId, boolean defaultValue) {
+    public static boolean getBooleanNoLogRes(int stringId, boolean defaultValue) {
         return getBooleanNoLog(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1275,7 +1291,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the boolean no log
      */
-    public static boolean getBooleanNoLog(String key, boolean defaultValue) {
+    public static boolean getBooleanNoLog(@NonNull String key, boolean defaultValue) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
         boolean b = getBoolean(key, defaultValue);
@@ -1290,7 +1306,7 @@ public class AesPrefs {
      * @param key   the key
      * @param value the value
      */
-    public static void initString(String key, String value) {
+    public static void initString(@NonNull String key, @NonNull String value) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
         if (getNullable(key) == null) {
@@ -1313,7 +1329,7 @@ public class AesPrefs {
      * @param keyId the key id
      * @param value the value
      */
-    public static void initString(int keyId, String value) {
+    public static void initStringRes(int keyId, @NonNull String value) {
         initString(mCtx.getString(keyId), value);
     }
 
@@ -1324,7 +1340,7 @@ public class AesPrefs {
      * @param key   the key
      * @param value the value
      */
-    public static void initInt(String key, int value) {
+    public static void initInt(@NonNull String key, int value) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
         if (getIntNullable(key) == null) {
@@ -1347,7 +1363,7 @@ public class AesPrefs {
      * @param keyId the key id
      * @param value the value
      */
-    public static void initInt(int keyId, int value) {
+    public static void initIntRes(int keyId, int value) {
         initInt(mCtx.getString(keyId), value);
     }
 
@@ -1358,7 +1374,7 @@ public class AesPrefs {
      * @param key   the key
      * @param value the value
      */
-    public static void initBoolean(String key, boolean value) {
+    public static void initBoolean(@NonNull String key, boolean value) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
         if (getBooleanNullable(key) == null) {
@@ -1381,7 +1397,7 @@ public class AesPrefs {
      * @param keyId the key id
      * @param value the value
      */
-    public static void initBoolean(int keyId, boolean value) {
+    public static void initBooleanRes(int keyId, boolean value) {
         initBoolean(mCtx.getString(keyId), value);
     }
 
@@ -1392,7 +1408,7 @@ public class AesPrefs {
      * @param key   the key
      * @param value the value
      */
-    public static void initFloat(String key, float value) {
+    public static void initFloat(@NonNull String key, float value) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
         if (getFloatNullable(key) == null) {
@@ -1415,7 +1431,7 @@ public class AesPrefs {
      * @param keyId the key id
      * @param value the value
      */
-    public static void initFloat(int keyId, float value) {
+    public static void initFloatRes(int keyId, float value) {
         initFloat(mCtx.getString(keyId), value);
     }
 
@@ -1426,7 +1442,7 @@ public class AesPrefs {
      * @param key   the key
      * @param value the value
      */
-    public static void initDouble(String key, double value) {
+    public static void initDouble(@NonNull String key, double value) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
         if (getDoubleNullable(key) == null) {
@@ -1449,7 +1465,7 @@ public class AesPrefs {
      * @param keyId the key id
      * @param value the value
      */
-    public static void initDouble(int keyId, double value) {
+    public static void initDoubleRes(int keyId, double value) {
         initDouble(mCtx.getString(keyId), value);
     }
 
@@ -1460,7 +1476,7 @@ public class AesPrefs {
      * @param key   the key
      * @param value the value
      */
-    public static void initLong(String key, long value) {
+    public static void initLong(@NonNull String key, long value) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
         if (getLongNullable(key) == null) {
@@ -1483,7 +1499,7 @@ public class AesPrefs {
      * @param keyId the key id
      * @param value the value
      */
-    public static void initLong(int keyId, long value) {
+    public static void initLongRes(int keyId, long value) {
         initLong(mCtx.getString(keyId), value);
     }
 
@@ -1494,7 +1510,7 @@ public class AesPrefs {
      * @param stringId the string id
      * @param values   the values
      */
-    public static void storeArray(int stringId, List<String> values) {
+    public static void storeArrayRes(int stringId, List<String> values) {
         storeArray(mCtx.getString(stringId), values);
     }
 
@@ -1505,7 +1521,8 @@ public class AesPrefs {
      * @param stringId the string id
      * @return the list
      */
-    public static List<String> restoreArray(int stringId) {
+    @Nullable
+    public static List<String> restoreArrayRes(int stringId) {
         return restoreArray(mCtx.getString(stringId));
     }
 
@@ -1515,6 +1532,7 @@ public class AesPrefs {
      *
      * @return the encrypted content
      */
+    @Nullable
     public static String getEncryptedContent() {
         Map<String, ?> sp = mCtx.getSharedPreferences(mFilename, Context.MODE_PRIVATE).getAll();
 
