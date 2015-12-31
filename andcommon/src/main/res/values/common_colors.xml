@@ -16,5 +16,16 @@
   -->
 
 <resources>
+    <!--Base-->
     <color name="transparent">#00000000</color>
+    <color name="base_grey_600">#757575</color>
+
+    <!--Stock-Android-->
+    <color name="stock_android_primary_dark">#21272B</color>
+    <color name="stock_android_primary">#263238</color>
+    <color name="stock_android_accent">#85D3CC</color>
+    <color name="stock_android_teal">#009688</color>
+    <color name="stock_android_teal_dark">#384248</color>
+    <color name="stock_android_white">#FFFFFF</color>
+
 </resources>
