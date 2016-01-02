@@ -17,7 +17,6 @@
 package com.pepperonas.andbasx;
 
 import android.content.Context;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 
 import com.pepperonas.andcommon.BuildConfig;
@@ -135,43 +134,6 @@ public class AndBasx {
         AndBasx.setLog(LogMode.ALL);
 
         File logFile = AndBasx.getContext().getExternalCacheDir();
-        if (logFile != null) {
-            Jbasx.setLogWriter(logFile.getAbsolutePath(), mLogFileName, false);
-        } else {
-            if (AndBasx.mLog == LogMode.ALL || AndBasx.mLog == LogMode.DEFAULT) {
-                com.pepperonas.jbasx.log.Log.e(TAG, "storeLogFileInAppsDataDir - failed (LogFile does not exist).");
-            }
-        }
-    }
-
-
-    /**
-     * Writes a log-file in the device external directory (such as '/storage/emulated/0').
-     *
-     * @param fileName     Name of the log-file.
-     * @param setTimeStamp Whenever a timestamp should be set or not.
-     */
-    public static void storeLogFileOnExternalStorage(String fileName, boolean setTimeStamp) {
-        AndBasx.setLog(LogMode.ALL);
-
-        File logFile = Environment.getExternalStorageDirectory();
-        if (logFile != null) {
-            Jbasx.setLogWriter(logFile.getAbsolutePath(), fileName, setTimeStamp);
-        } else {
-            if (AndBasx.mLog == LogMode.ALL || AndBasx.mLog == LogMode.DEFAULT) {
-                com.pepperonas.jbasx.log.Log.e(TAG, "storeLogFileInAppsDataDir - failed (LogFile does not exist).");
-            }
-        }
-    }
-
-
-    /**
-     * Writes a log-file in the device external directory (such as '/storage/emulated/0').
-     */
-    public static void storeLogFileOnExternalStorage() {
-        AndBasx.setLog(LogMode.ALL);
-
-        File logFile = Environment.getExternalStorageDirectory();
         if (logFile != null) {
             Jbasx.setLogWriter(logFile.getAbsolutePath(), mLogFileName, false);
         } else {

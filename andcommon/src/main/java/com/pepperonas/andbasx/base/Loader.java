@@ -25,7 +25,6 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 
 import com.pepperonas.andbasx.AndBasx;
@@ -96,17 +95,6 @@ public class Loader {
      */
     public static int getColor(@ColorRes int colorId) {
         return AndBasx.getContext().getResources().getColor(colorId);
-    }
-
-
-    /**
-     * Gets color context compat.
-     *
-     * @param colorId the color id
-     * @return the color context compat
-     */
-    public static int getColorContextCompat(@ColorRes int colorId) {
-        return ContextCompat.getColor(AndBasx.getContext(), colorId);
     }
 
 }
