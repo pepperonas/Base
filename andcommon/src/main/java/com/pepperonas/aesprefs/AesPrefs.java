@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Martin Pfeffer
+ * Copyright (c) 2016 Martin Pfeffer
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import android.content.SharedPreferences;
 import android.preference.Preference;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.util.Log;
 
 import com.pepperonas.andbasx.system.AppUtils;
@@ -35,14 +36,15 @@ import java.util.Map;
 /**
  * @author Martin Pfeffer (pepperonas)
  */
+
 public class AesPrefs {
+
+    private static final String TAIL = "=";
 
     /**
      * Constants
      */
     private static final String TAG = "AesPrefs";
-
-    private static final String TAIL = "=";
 
     /**
      * Member
@@ -936,7 +938,7 @@ public class AesPrefs {
      * @param key    the key
      * @param values the values
      */
-    public static void storeArray(@NonNull String key, @NonNull List<String> values) {
+    public static void storeArray(@NonNull String key, @Nullable List<String> values) {
         long start = System.currentTimeMillis();
 
         long iv = System.currentTimeMillis();
@@ -1000,7 +1002,7 @@ public class AesPrefs {
      * @param stringId the string id
      * @param value    the value
      */
-    public static void putRes(int stringId, @NonNull String value) {
+    public static void putRes(@StringRes int stringId, @Nullable String value) {
         put(mCtx.getString(stringId), value);
     }
 
@@ -1012,7 +1014,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the string
      */
-    public static String getRes(int stringId, @NonNull String defaultValue) {
+    public static String getRes(@StringRes int stringId, @Nullable String defaultValue) {
         return get(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1024,7 +1026,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the no log
      */
-    public static String getNoLogRes(int stringId, @NonNull String defaultValue) {
+    public static String getNoLogRes(@StringRes int stringId, @Nullable String defaultValue) {
         return getNoLog(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1036,7 +1038,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the no log
      */
-    public static String getNoLog(@NonNull String key, @NonNull String defaultValue) {
+    public static String getNoLog(@NonNull String key, @Nullable String defaultValue) {
         LogMode tmp = mLog;
         mLog = LogMode.NONE;
         String s = get(key, defaultValue);
@@ -1051,7 +1053,7 @@ public class AesPrefs {
      * @param stringId the string id
      * @param value    the value
      */
-    public static void putIntRes(int stringId, int value) {
+    public static void putIntRes(@StringRes int stringId, int value) {
         putInt(mCtx.getString(stringId), value);
     }
 
@@ -1063,7 +1065,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the int
      */
-    public static int getIntRes(int stringId, int defaultValue) {
+    public static int getIntRes(@StringRes int stringId, int defaultValue) {
         return getInt(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1075,7 +1077,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the int no log
      */
-    public static int getIntNoLogRes(int stringId, int defaultValue) {
+    public static int getIntNoLogRes(@StringRes int stringId, int defaultValue) {
         return getIntNoLog(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1102,7 +1104,7 @@ public class AesPrefs {
      * @param stringId the string id
      * @param value    the value
      */
-    public static void putLongRes(int stringId, long value) {
+    public static void putLongRes(@StringRes int stringId, long value) {
         putLong(mCtx.getString(stringId), value);
     }
 
@@ -1114,7 +1116,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the long
      */
-    public static long getLongRes(int stringId, long defaultValue) {
+    public static long getLongRes(@StringRes int stringId, long defaultValue) {
         return getLong(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1126,7 +1128,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the long no log
      */
-    public static long getLongNoLogRes(int stringId, long defaultValue) {
+    public static long getLongNoLogRes(@StringRes int stringId, long defaultValue) {
         return getLongNoLog(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1153,7 +1155,7 @@ public class AesPrefs {
      * @param stringId the string id
      * @param value    the value
      */
-    public static void putDoubleRes(int stringId, double value) {
+    public static void putDoubleRes(@StringRes int stringId, double value) {
         putDouble(mCtx.getString(stringId), value);
     }
 
@@ -1165,7 +1167,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the double
      */
-    public static double getDoubleRes(int stringId, double defaultValue) {
+    public static double getDoubleRes(@StringRes int stringId, double defaultValue) {
         return getDouble(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1177,7 +1179,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the double no log
      */
-    public static double getDoubleNoLogRes(int stringId, double defaultValue) {
+    public static double getDoubleNoLogRes(@StringRes int stringId, double defaultValue) {
         return getDoubleNoLog(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1204,7 +1206,7 @@ public class AesPrefs {
      * @param stringId the string id
      * @param value    the value
      */
-    public static void putFloatRes(int stringId, float value) {
+    public static void putFloatRes(@StringRes int stringId, float value) {
         putFloat(mCtx.getString(stringId), value);
     }
 
@@ -1216,7 +1218,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the float
      */
-    public static float getFloatRes(int stringId, float defaultValue) {
+    public static float getFloatRes(@StringRes int stringId, float defaultValue) {
         return getFloat(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1228,7 +1230,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the float no log
      */
-    public static float getFloatNoLogRes(int stringId, float defaultValue) {
+    public static float getFloatNoLogRes(@StringRes int stringId, float defaultValue) {
         return getFloatNoLog(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1255,7 +1257,7 @@ public class AesPrefs {
      * @param stringId the string id
      * @param value    the value
      */
-    public static void putBooleanRes(int stringId, boolean value) {
+    public static void putBooleanRes(@StringRes int stringId, boolean value) {
         putBoolean(mCtx.getString(stringId), value);
     }
 
@@ -1267,7 +1269,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the boolean
      */
-    public static boolean getBooleanRes(int stringId, boolean defaultValue) {
+    public static boolean getBooleanRes(@StringRes int stringId, boolean defaultValue) {
         return getBoolean(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1279,7 +1281,7 @@ public class AesPrefs {
      * @param defaultValue the default value
      * @return the boolean no log
      */
-    public static boolean getBooleanNoLogRes(int stringId, boolean defaultValue) {
+    public static boolean getBooleanNoLogRes(@StringRes int stringId, boolean defaultValue) {
         return getBooleanNoLog(mCtx.getString(stringId), defaultValue);
     }
 
@@ -1329,7 +1331,7 @@ public class AesPrefs {
      * @param keyId the key id
      * @param value the value
      */
-    public static void initStringRes(int keyId, @NonNull String value) {
+    public static void initStringRes(@StringRes int keyId, @NonNull String value) {
         initString(mCtx.getString(keyId), value);
     }
 
@@ -1363,7 +1365,7 @@ public class AesPrefs {
      * @param keyId the key id
      * @param value the value
      */
-    public static void initIntRes(int keyId, int value) {
+    public static void initIntRes(@StringRes int keyId, int value) {
         initInt(mCtx.getString(keyId), value);
     }
 
@@ -1397,7 +1399,7 @@ public class AesPrefs {
      * @param keyId the key id
      * @param value the value
      */
-    public static void initBooleanRes(int keyId, boolean value) {
+    public static void initBooleanRes(@StringRes int keyId, boolean value) {
         initBoolean(mCtx.getString(keyId), value);
     }
 
@@ -1431,7 +1433,7 @@ public class AesPrefs {
      * @param keyId the key id
      * @param value the value
      */
-    public static void initFloatRes(int keyId, float value) {
+    public static void initFloatRes(@StringRes int keyId, float value) {
         initFloat(mCtx.getString(keyId), value);
     }
 
@@ -1465,7 +1467,7 @@ public class AesPrefs {
      * @param keyId the key id
      * @param value the value
      */
-    public static void initDoubleRes(int keyId, double value) {
+    public static void initDoubleRes(@StringRes int keyId, double value) {
         initDouble(mCtx.getString(keyId), value);
     }
 
@@ -1499,7 +1501,7 @@ public class AesPrefs {
      * @param keyId the key id
      * @param value the value
      */
-    public static void initLongRes(int keyId, long value) {
+    public static void initLongRes(@StringRes int keyId, long value) {
         initLong(mCtx.getString(keyId), value);
     }
 
@@ -1510,7 +1512,7 @@ public class AesPrefs {
      * @param stringId the string id
      * @param values   the values
      */
-    public static void storeArrayRes(int stringId, List<String> values) {
+    public static void storeArrayRes(@StringRes int stringId, List<String> values) {
         storeArray(mCtx.getString(stringId), values);
     }
 
@@ -1522,7 +1524,7 @@ public class AesPrefs {
      * @return the list
      */
     @Nullable
-    public static List<String> restoreArrayRes(int stringId) {
+    public static List<String> restoreArrayRes(@StringRes int stringId) {
         return restoreArray(mCtx.getString(stringId));
     }
 
