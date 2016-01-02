@@ -24,7 +24,7 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 11
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 10
         versionName "0.1.1"
@@ -87,37 +87,16 @@ artifacts {
     archives javadocJar
 }
 
-//task androidJavadocs(type: Javadoc) {
-//    source = android.sourceSets.main.java.srcDirs
-//}
-//
-//task androidJavadocsJar(type: Jar) {
-//    classifier = 'javadoc'
-//    baseName = "andcommon"
-//    from androidJavadocs.destinationDir
-//}
-//
-//task androidSourcesJar(type: Jar) {
-//    classifier = 'sources'
-//    baseName = "andcommon"
-//    from android.sourceSets.main.java.srcDirs
-//}
-//
-//artifacts {
-////    archives packageReleaseJar
-//    archives androidSourcesJar
-//    archives androidJavadocsJar
-//}
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:support-v4:23.1.1'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.google.android.gms:play-services:8.4.0'
     compile 'com.android.support:support-annotations:23.1.1'
     compile project(':jbasx')
     compile files('libs/jbasx-0.1.1.jar')
-
     testCompile 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-core:1.9.5"
+    testCompile 'org.mockito:mockito-core:1.9.5'
 }

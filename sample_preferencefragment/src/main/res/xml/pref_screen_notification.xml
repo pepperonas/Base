@@ -2,13 +2,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   android:title="Notifications">
 
-    <CheckBoxPreference
-        android:appId="notification_key_01"
-        android:title="Get notifications"
-        android:summary="Enable notifications"/>
+    <!--<CheckBoxPreference-->
+        <!--android:appId="notification_key_01"-->
+        <!--android:title="Get notifications"-->
+        <!--android:summary="Enable notifications"/>-->
 
-    <Preference
-        android:appId="notification_key_02"
-        android:title="Send test notification"/>
+    <!--<Preference-->
+        <!--android:appId="notification_key_02"-->
+        <!--android:title="Send test notification"/>-->
 
 </PreferenceScreen>

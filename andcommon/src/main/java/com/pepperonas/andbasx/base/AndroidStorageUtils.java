@@ -42,7 +42,7 @@ public class AndroidStorageUtils {
 
     /**
      * Checks if the app has permission to write to device storage.
-     * <p>
+     * <p/>
      * If the app does not has permission then the user will be prompted to grant permissions.
      *
      * @param activity The calling activity.
