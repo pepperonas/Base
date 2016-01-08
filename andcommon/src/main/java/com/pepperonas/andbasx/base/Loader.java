@@ -54,9 +54,7 @@ public class Loader {
     public static Drawable getDrawable(@DrawableRes int drawableId) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return AndBasx.getContext().getResources().getDrawable(drawableId, AndBasx.getContext().getTheme());
-        } else {
-            return AndBasx.getContext().getResources().getDrawable(drawableId);
-        }
+        } else return AndBasx.getContext().getResources().getDrawable(drawableId);
     }
 
 
@@ -94,7 +92,9 @@ public class Loader {
      * @return the color
      */
     public static int getColor(@ColorRes int colorId) {
-        return AndBasx.getContext().getResources().getColor(colorId);
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+            return AndBasx.getContext().getColor(colorId);
+        } else return AndBasx.getContext().getResources().getColor(colorId);
     }
 
 }

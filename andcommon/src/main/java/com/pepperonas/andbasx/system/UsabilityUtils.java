@@ -46,6 +46,15 @@ public class UsabilityUtils {
     }
 
 
+    public static void launchShareAppIntent(Activity activity, String packageName, String text) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, text + " " + "https://play.google.com/store/apps/details?id=" + packageName);
+        sendIntent.setType("text/plain");
+        activity.startActivity(sendIntent);
+    }
+
+
     public static boolean launchAppOrPlayStore(String packageName) {
         PackageManager manager = AndBasx.getContext().getPackageManager();
         boolean result = false;
@@ -80,7 +89,7 @@ public class UsabilityUtils {
         Intent intent = new Intent(AndBasx.getContext(), clazz);
         int pendingIntentId = 198964;
 
-        PendingIntent pendingIntent = PendingIntent.getActivity                                 (
+        PendingIntent pendingIntent = PendingIntent.getActivity(
                 AndBasx.getContext(), pendingIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         AlarmManager am = (AlarmManager)
