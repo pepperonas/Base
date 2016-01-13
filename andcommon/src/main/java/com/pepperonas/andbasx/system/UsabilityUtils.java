@@ -46,6 +46,11 @@ public class UsabilityUtils {
     }
 
 
+    public static void launchAppStore(Activity activity, String packageName) {
+        activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + packageName)));
+    }
+
+
     public static void launchShareAppIntent(Activity activity, String packageName, String text) {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
