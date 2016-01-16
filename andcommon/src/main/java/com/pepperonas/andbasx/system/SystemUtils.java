@@ -16,6 +16,7 @@
 
 package com.pepperonas.andbasx.system;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.admin.DevicePolicyManager;
@@ -77,6 +78,7 @@ public class SystemUtils {
      *
      * @return the android id
      */
+    @TargetApi(Build.VERSION_CODES.CUPCAKE)
     public static String getAndroidId() {
         return Settings.Secure.getString(AndBasx.getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
     }
@@ -228,7 +230,7 @@ public class SystemUtils {
 
         boolean isRooted = isRooted();
         if (isRooted) {
-            runRootCmd("pm uninstall " + packageName);
+            runAsRoot(new String[]{"pm uninstall " + packageName});
         } else {
             Uri uri = Uri.parse("package:" + packageName);
             Intent intent = new Intent(Intent.ACTION_DELETE, uri);
@@ -261,6 +263,7 @@ public class SystemUtils {
      *
      * @return the boolean
      */
+    @TargetApi(Build.VERSION_CODES.ECLAIR_MR1)
     public static boolean isScreenOn() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
             DisplayManager dm = (DisplayManager) AndBasx.getContext().getSystemService(Context.DISPLAY_SERVICE);
@@ -278,6 +281,7 @@ public class SystemUtils {
     /**
      * Lock the screen.
      */
+    @TargetApi(Build.VERSION_CODES.FROYO)
     public static void lockScreen() {
         DevicePolicyManager deviceManager = (DevicePolicyManager)
                 AndBasx.getContext().getSystemService(Context.DEVICE_POLICY_SERVICE);
@@ -501,6 +505,7 @@ public class SystemUtils {
      *
      * @return the boolean
      */
+    @TargetApi(Build.VERSION_CODES.ECLAIR)
     public static boolean isMasterSyncEnabled() {
         return ContentResolver.getMasterSyncAutomatically();
     }
@@ -567,7 +572,7 @@ public class SystemUtils {
      */
     public static void inputKeyEvent(int keyCode) {
         try {
-            runRootCmd("Input key-event: " + keyCode);
+            runAsRoot(new String[]{"Input key-event: " + keyCode});
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -615,40 +620,55 @@ public class SystemUtils {
     }
 
 
-    /**
-     * Run root cmd.
-     *
-     * @param cmd the cmd
-     */
-    public static void runRootCmd(String cmd) {
-        if (TextUtils.isEmpty(cmd)) {
-            return;
-        }
-        Process process;
+    //    /**
+    //     * Run root cmd.
+    //     *
+    //     * @param cmd the cmd
+    //     */
+    //    public static void runRootCmd(String cmd) {
+    //        if (TextUtils.isEmpty(cmd)) {
+    //            return;
+    //        }
+    //        Process process;
+    //        try {
+    //            process = Runtime.getRuntime().exec("su");
+    //            DataOutputStream os = new DataOutputStream(
+    //                    process.getOutputStream());
+    //            os.writeBytes(cmd + " ;\n");
+    //            os.flush();
+    //
+    //            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    //            int read;
+    //            InputStream errIs = process.getErrorStream();
+    //            while ((read = errIs.read()) != -1) {
+    //                baos.write(read);
+    //            }
+    //            baos.write('\n');
+    //
+    //            InputStream inIs = process.getInputStream();
+    //            while ((read = inIs.read()) != -1) {
+    //                baos.write(read);
+    //            }
+    //
+    //            byte[] data = baos.toByteArray();
+    //            String result = new String(data);
+    //
+    //            Log.d(TAG, "runRootCmd result: " + result);
+    //        } catch (IOException e) {
+    //            e.printStackTrace();
+    //        }
+    //    }
+
+
+    public static void runAsRoot(String[] cmds) {
         try {
-            process = Runtime.getRuntime().exec("su");
-            DataOutputStream os = new DataOutputStream(
-                    process.getOutputStream());
-            os.writeBytes(cmd + " ;\n");
+            Process p = Runtime.getRuntime().exec("su");
+            DataOutputStream os = new DataOutputStream(p.getOutputStream());
+            for (String tmpCmd : cmds) {
+                os.writeBytes(tmpCmd + "\n");
+            }
+            os.writeBytes("exit\n");
             os.flush();
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            int read;
-            InputStream errIs = process.getErrorStream();
-            while ((read = errIs.read()) != -1) {
-                baos.write(read);
-            }
-            baos.write('\n');
-
-            InputStream inIs = process.getInputStream();
-            while ((read = inIs.read()) != -1) {
-                baos.write(read);
-            }
-
-            byte[] data = baos.toByteArray();
-            String result = new String(data);
-
-            Log.d(TAG, "runRootCmd result: " + result);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -687,6 +707,7 @@ public class SystemUtils {
      *
      * @return the boolean
      */
+    @TargetApi(Build.VERSION_CODES.DONUT)
     public static boolean isDebuggable() {
         return ((AndBasx.getContext().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0);
     }

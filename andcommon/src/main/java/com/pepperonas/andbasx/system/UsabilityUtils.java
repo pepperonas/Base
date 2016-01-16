@@ -16,19 +16,18 @@
 
 package com.pepperonas.andbasx.system;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.common.AccountPicker;
 import com.pepperonas.andbasx.AndBasx;
 
 /**
@@ -60,6 +59,7 @@ public class UsabilityUtils {
     }
 
 
+    @TargetApi(Build.VERSION_CODES.CUPCAKE)
     public static boolean launchAppOrPlayStore(String packageName) {
         PackageManager manager = AndBasx.getContext().getPackageManager();
         boolean result = false;
@@ -80,14 +80,14 @@ public class UsabilityUtils {
     }
 
 
-    public static void launchAccountPicker(Activity activity, int requestCode) {
-        try {
-            Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE}, false, null, null, null, null);
-            activity.startActivityForResult(intent, requestCode);
-        } catch (ActivityNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void launchAccountPicker(Activity activity, int requestCode) {
+//        try {
+//            Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE}, false, null, null, null, null);
+//            activity.startActivityForResult(intent, requestCode);
+//        } catch (ActivityNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
     public static void restartApplication(Class<?> clazz) {
@@ -128,6 +128,7 @@ public class UsabilityUtils {
      *
      * @param activity the calling {@link Activity}
      */
+    @TargetApi(Build.VERSION_CODES.CUPCAKE)
     public static void keepKeyboardHidden(Activity activity) {
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
@@ -136,6 +137,7 @@ public class UsabilityUtils {
     /**
      * Toggle the current keyboard-state.
      */
+    @TargetApi(Build.VERSION_CODES.CUPCAKE)
     public static void changeKeyboardState() {
         InputMethodManager imm = (InputMethodManager) AndBasx.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
