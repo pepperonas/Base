@@ -620,46 +620,6 @@ public class SystemUtils {
     }
 
 
-    //    /**
-    //     * Run root cmd.
-    //     *
-    //     * @param cmd the cmd
-    //     */
-    //    public static void runRootCmd(String cmd) {
-    //        if (TextUtils.isEmpty(cmd)) {
-    //            return;
-    //        }
-    //        Process process;
-    //        try {
-    //            process = Runtime.getRuntime().exec("su");
-    //            DataOutputStream os = new DataOutputStream(
-    //                    process.getOutputStream());
-    //            os.writeBytes(cmd + " ;\n");
-    //            os.flush();
-    //
-    //            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    //            int read;
-    //            InputStream errIs = process.getErrorStream();
-    //            while ((read = errIs.read()) != -1) {
-    //                baos.write(read);
-    //            }
-    //            baos.write('\n');
-    //
-    //            InputStream inIs = process.getInputStream();
-    //            while ((read = inIs.read()) != -1) {
-    //                baos.write(read);
-    //            }
-    //
-    //            byte[] data = baos.toByteArray();
-    //            String result = new String(data);
-    //
-    //            Log.d(TAG, "runRootCmd result: " + result);
-    //        } catch (IOException e) {
-    //            e.printStackTrace();
-    //        }
-    //    }
-
-
     public static void runAsRoot(String[] cmds) {
         try {
             Process p = Runtime.getRuntime().exec("su");
